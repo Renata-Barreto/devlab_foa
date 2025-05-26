@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles_ferramenta.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="stylesheet" href="css/profile-dropdown-menu.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/chamar_html.js" defer></script>
+    <script src="js/menu-drop.js" defer></script>
+    <script src="js/haburguer.js"></script>
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=leMFOrsd"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="js/firebase_conf.js"></script>
+    
+    <title>Video + Editor de Código</title>
+</head>
+<body>
+    <nav class="navbar" id="navbar"> </nav>
+
+    <main>
+        <div class="video-section">
+            <iframe src="https://www.youtube.com/embed/wm5Jr0mCY5s" 
+                    title="YouTube video" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+        </div>
+        
+        
+        <div class="editor-section">
+            <textarea id="codeEditor" placeholder="Escreva seu código JavaScript aqui..."></textarea>
+            <button onclick="runCode()">Executar Código</button>
+            <div class="output-section" id="output"></div>
+        </div>
+    </main>
+
+<!-- funciona!! nao acredito nisso * DESABILITANDO APENAS PARA DEIXAR ARRUMADO-->
+<footer class="footer" id="footer"></footer>
+ 
+<script src="js/chamar_html.js" defer></script>
+<script src="js/menu-drop.js" defer></script>
+<script src="js/haburguer.js"></script>  
+<script src="js/script_ferramenta.js"></script>  
+<script src="js/script_speak.js"></script>
+</body>
+</html>

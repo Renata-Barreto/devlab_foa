@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriais</title>
+    <script src="js/chamar_html.js"></script>
+    <script src="js/menu-drop.js"></script>
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/profile-dropdown-menu.css">
+    <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon">
+<!-- firebase -->
+   
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="js/firebase_conf.js"></script>
+    <style>
+        *{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.search {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    max-width: 100%;
+    margin-top: 100px;
+}
+.search img{
+    max-width: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.search h1{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    max-width: 100px;
+    font-style: italic;
+    font-size: 30px;
+    color: #2f2841;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.cursos {
+    max-width: 100%;
+    padding: 70px;
+    background-color: #f7f7f7;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+.cards {
+    display: flex;
+    flex-flow: column wrap;
+    flex-basis: auto;
+    flex-shrink: 1;
+    flex-grow: 1;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    max-width: 100%;
+}
+.cards img:hover {
+    box-shadow: 2px 2px 3px 3px #311452;
+    cursor: pointer;
+}
+
+.cards img {
+    border-radius: 15px;
+    padding: 20px;
+    margin: 25px;
+    max-width: 100px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: center;
+}
+
+
+</style>
+</head>
+<body>
+    <nav id="navbar" class="navbar"></nav>
+
+    <section class="search">
+
+    </section>
+
+    <section class="cursos">
+        <div class="cards"><img src="imagens/noto-v1--thinking-face.png" alt=""id="logica"><p>LÓGICA DE PROGRAMAÇÃO</p></div>
+        <div class="cards"><img src="imagens/devicon--html5.png" alt=""><p>HTML</p></div>
+        <div class="cards"><img src="imagens/devicon--css3.png" alt=""><p>CSS</p></div>
+        <div class="cards"><img src="imagens/devicon--javascript.png" alt=""><p>JAVASCRIPT</p></div>
+        <div class="cards"><img src="imagens/devicon--python.png" alt=""><p>PYTHON</p></div>
+    </section>
+    <style>
+        
+        .fab-fa-facebook img, .fab-fa-instagram img {
+            width: 30px;
+            padding: 10px;
+            margin: 5px;
+        }
+
+        .fab-fa-facebook img:hover, .fab-fa-instagram img:hover {
+            width: 40px;
+        }
+    </style>
+    <footer id="footer" class="footer"></footer>
+
+    </style>
+    <script>
+        document.getElementById("logica").addEventListener("click", ()=> {
+            window.location.href="tutorial.html"
+        })
+    </script>
+    
+</body>
+</html>

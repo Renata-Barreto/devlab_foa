@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personalização de Perfil</title>
+
+    
+   
+    <style>
+      /* Estilo global */
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Container do formulário */
+      #personalizacaoForm {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 750px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      /* Estilo das colunas */
+      .left-column, .right-column {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+      }
+
+      /* Títulos de cada seção */
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      /* Canvas */
+      #canvas {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid #007bff;
+        background: #f0f0f0;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Seletor de cores */
+      #colorPicker {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .color-block {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      .color-block:hover {
+        border-color: #007bff;
+        transform: scale(1.1);
+      }
+
+      /* Estilo da bio */
+      textarea {
+        width: 100%;
+        height: 120px;
+        padding: 15px;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+        resize: none;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: border 0.3s ease;
+      }
+
+      textarea:focus {
+        border-color: #007bff;
+        outline: none;
+      }
+
+      /* Estilo do botão */
+      button {
+        padding: 12px 30px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      /* Estilo para o seletor de imagem */
+      input[type="file"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+        cursor: pointer;
+      }
+
+      input[type="file"]:hover {
+        border-color: #007bff;
+      }
+
+      /* Linhas separadoras */
+      .separator {
+        width: 100%;
+        height: 1px;
+        background-color: #ddd;
+        margin: 20px 0;
+      }
+
+      /* Responsividade */
+      @media (min-width: 768px) {
+        #personalizacaoForm {
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        .left-column, .right-column {
+          width: 48%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <form id="personalizacaoForm">
+      <div class="left-column">
+        <div class="section-title">Foto de Perfil</div>
+        <canvas id="canvas" width="120" height="120"></canvas>
+        <div id="colorPicker" style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;"></div>
+      </div>
+
+      <div class="right-column">
+        <div class="section-title">Sua Bio</div>
+        <textarea id="bio" placeholder="Conte um pouco sobre você..."></textarea>
+        <div class="separator"></div>
+      
+        <div class="section-title">Alterar Foto</div>
+        <input type="file" id="foto" accept="image/*" /><br>
+        <button type="submit">Salvar</button>
+      </div>
+    </form>
+    
+  </body>
+  <script src="js/personalizacao.js"></script>
+  <script>
+    async function fetchUserData(user) {
+  const nome = user.nome_usr || user.email_usr.split("@")[0];
+  const inicial = nome.charAt(0).toUpperCase();
+  document.getElementById("canvas").setAttribute("data-inicial", inicial);
+
+  if (user.Perfil?.prf_pfl) {
+    const img = new Image();
+    img.src = user.Perfil.prf_pfl.startsWith('data:image')
+      ? user.Perfil.prf_pfl
+      : `http://127.0.0.1:3000${user.Perfil.prf_pfl}`;
+    img.onload = () => {
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, 120, 120);
+    };
+  } else {
+    generateAvatar(inicial);
+  }
+
+  if (user.Perfil?.des_pfl) {
+    document.getElementById("bio").value = user.Perfil.des_pfl;
+  }
+
+  createService();
+}
+  </script>
+</html>

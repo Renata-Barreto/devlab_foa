@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+  <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <link rel="stylesheet" href="css/profile-dropdown-menu.css">
+  <link rel="stylesheet" href="css/hamburguer.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/body_adm.css">
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=leMFOrsd"></script>
+    <script src="js/chamar_html.js"></script>
+    <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <!-- firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="js/firebase_conf.js"></script>
+    <title>Página do Administrador</title>
+</head>
+<body>
+  <nav class="navbar" id="navbar"></nav>    
+  <main>
+    
+
+    <div class="foto">
+        <p>FOTO</p>
+        <img src="imagens/julio.png" alt="Foto do Usuário">
+    </div>
+
+    <div class="dados">
+        <h3>DADOS</h3>
+        <p>Nome: Nome do Usuário</p>
+        <p>Cargo: Administrador</p>
+        <p>Especialidade: TI</p>
+        <p>Data de Entrada: 01/01/2024</p>
+        <p>Email: exemplo@exemplo.com</p>
+        <p>Celular: (00) 00000-0000</p>
+        <p>LinkedIn: linkedin.com/exemplo</p>
+        <p>Facebook: facebook.com/exemplo</p>
+        <p>Instagram: instagram.com/exemplo</p>
+    </div>
+
+    <div class="mensagem">
+        <h3>Escrever Mensagem</h3>
+        <textarea placeholder="Digite sua mensagem..."></textarea>
+        <button>Enviar</button>
+    </div>
+
+    <div class="botoes">
+        <button onclick="listarUsuarios()">Listar Usuários</button>
+        <button onclick="link_mensagens()">Visualizar mensagens</button>
+        <button onclick="cadastrar()">Cadastrar</button>
+    </div>
+    
+</main>
+<div id="listausr">
+        
+</div>
+
+    <script src="js/scriptlogin.js"></script>
+    <script src="js/menu-drop.js"></script>
+    <script>
+        // Carrega as informações do usuário do localStorage
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+        if (usuarioLogado) {
+            document.getElementById('fotoPerfil').src = usuarioLogado.foto;
+            document.getElementById('nomeUsuario').textContent = usuarioLogado.nome;
+        } else {
+            alert('Nenhum usuário logado!');
+        }
+
+      
+    document.addEventListener('DOMContentLoaded', function () {
+      const hamburgerMenu = document.querySelector('.hamburger-menu');
+      const navLinks = document.querySelector('.nav_links');
+
+      hamburgerMenu.addEventListener('click', function (event) {
+        event.stopPropagation();
+        navLinks.classList.toggle('open');
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!navLinks.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+          navLinks.classList.remove('open');
+        }
+      });
+    });
+    function entrar() {
+      document.getElementById('linkIndex').click();
+    }
+
+    </script>
+    <script>
+      function link_mensagens() {
+          window.location.href = "mensagens.html";
+      }
+  </script>
+
+<!--Inicio rodapé-->
+<footer class="footer" id="footer"></footer>
+<!--Fim do rodapé-->
+
+<script src="js/script_speak.js"></script>
+<script src="js/menu-drop.js" defer></script>
+</body>
+</html>
+

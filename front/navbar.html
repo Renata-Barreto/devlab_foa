@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=leMFOrsd"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  
+
+  </head>
+
+<div class="nav_logo">
+  <a href="index.html"> <img src="imagens/tema_claro.png" alt="Logo" class="logo-img"> </a></div>
+  <ul class="nav_links">
+    <li><a href="index.html" id="link-home" onmouseover="speakText('Início')">
+      <i class="fa-solid fa-house"></i> Início</a></li>
+    <li><a href="tuttestes.html" id="link-tutorial" onmouseover="speakText('Tutoriais')">
+      <i class="fa-solid fa-book"></i> Tutoriais</a></li>
+    <li><a href="teste-ferramenta.html" id="link-ferramenta" onmouseover="speakText('Exercícios')">
+      <i class="fa-solid fa-flask"></i> Exercícios</a></li>
+    <li><a href="forum.html" id="link-forum" onmouseover="speakText('Fórum')">
+      <i class="fa-solid fa-comments"></i> Fórum</a></li>
+    <li><a href="sobre.html" id="link-sobre" onmouseover="speakText('Sobre nós')">
+      <i class="fa-solid fa-info-circle"></i> Sobre Nós</a></li>
+    <li><a href="contato.html" id="link-contato" onmouseover="speakText('Contato')">
+      <i class="fa-solid fa-phone"></i> Contato</a></li>
+  </ul>
+  
+
+    <!--o bagulho do perfil loucura-->
+   
+    <div class="profile-dropdown">
+      <div class="profile-dropdown-btn">
+        <div class="profile-img">
+        </div>
+        <span id="nome_entrar" onmouseover="speakText('Entrar')">
+        </span>
+      </div>
+
+      <ul class="profile-dropdown-list">
+        <li class="profile-dropdown-list-item" id="link-perfil" onmouseover="speakText('Perfil')">
+          <a href="#" id="Perfil">
+            <i class="fa-regular fa-user"></i>
+            Perfil
+          </a>
+        </li>
+        <li class="profile-dropdown-list-item" id="link-posts" onmouseover="speakText('Posts')">
+          <a href="#" id="Posts">
+            <i class="fa-regular fa-comments"></i>
+            Posts
+          </a>
+        </li>
+        <li class="profile-dropdown-list-item" id="link-engajamento" onmouseover="speakText('Engajamento')">
+          <a href="#">
+            <i class="fa-solid fa-chart-line"></i>
+            Engajamento
+          </a>
+        </li>
+        <li class="profile-dropdown-list-item" id="link-conf" onmouseover="speakText('Configurações')">
+          <a href="#">
+            <i class="fa-solid fa-sliders"></i>
+            Configurações
+          </a>
+        </li>
+        <li class="profile-dropdown-list-item" id="link-suporte" onmouseover="speakText('Suporte')">
+          <a href="#">
+            <i class="fa-regular fa-circle-question"></i>
+            Ajuda e Suporte
+          </a>
+        </li>
+        <hr>
+        <li class="profile-dropdown-list-item" id="link-deslogar" onmouseover="speakText('Deslogar')">
+          <a href="#" id="Deslogar">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            Deslogar
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  <div class="hamburger-menu" onclick="toggleMenu()">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+  </html>

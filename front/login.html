@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <title>Login - DevLab</title>
+    <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+    <!-- firebase -->
+     
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+</head>
+<body>
+    <a id="linkIndex" href="tutorialteste.html" style="display: none;"></a>
+    <nav class="navbar">
+        <div class="nav_logo">
+            <a href="index.html"> <img src="imagens/tema_claro.png" alt="Logo" class="logo-img"> </a>
+        </div>
+        <ul class="nav-ul nav_links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="tutorial.html">Tutoriais</a></li>
+            <li><a href="teste-ferramenta.html">Exercícios</a></li>
+            <li><a href="forum.html">Fórum</a></li>
+            <li><a href="sobre.html">Sobre nós</a></li>
+            <li><a href="contato.html">Contato</a></li>
+
+        </ul>
+        <div class="hamburger-menu" onclick="toggleMenu()">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+    </nav>
+    <div class="main-login">
+        <div class="left-login">
+            <h1>Bem vindo de volta! </h1>
+            <img src="videos/Coding workshop-amico.svg" class="left-login-image" alt="">
+        </div>
+        <div class="right-login">
+            <div class="card-login">
+              
+      <div class="switch-buttons" id="toggleButton" onclick="togglePage()">
+        <div id="indicator"></div>
+        <span class="left">LOGIN</span>
+        <span class="right">CADASTRO</span>
+      </div>
+                <h1>Entrar</h1>
+                <!-- <div class="social-icons">
+                    <a href="#" id="login-github" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" id="google-login" aria-label="Google"><i class="fab fa-google"></i></a>
+                </div> -->
+              <div id="alertBox" class="hidden">
+                <div class="alertContent">
+                    <p id="alertMessage"></p>
+                    <button id="alertOkButton">OK</button>
+                </div>
+            </div>
+                <form id="loginForm">
+                  <div class="textfild">
+                    <input type="email" placeholder="Email" id="email" autocomplete="email" required>
+                    <i class="fas fa-envelope icons"></i>
+                </div>
+                <div id="emailError" class="error-message"></div>
+                <div class="textfild">
+                    <input type="password" name="senha" placeholder="Senha" id="senha" autocomplete="current-password" required>
+                    <i class="fas fa-lock icons"></i>
+                    <i class="fas fa-eye password-eye-icon" id="togglePassword"></i>
+                </div>
+                <div id="senhaError" class="error-message"></div>
+                    <button type="submit" class="btn-login">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/login.js"></script>
+    
+</body>
+</html>

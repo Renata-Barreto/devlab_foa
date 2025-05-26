@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprenda a Programar</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <link rel="stylesheet" href="css/profile-dropdown-menu.css">
+  <link rel="stylesheet" href="css/hamburguer.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=leMFOrsd"></script>
+  <link rel="stylesheet" href="css/navbar.css">
+  <script src="js/chamar_html.js" defer></script>
+  <!-- firebase -->
+   
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="js/firebase_conf.js"></script>
+</head>
+
+<body>
+  <nav class="navbar" id="navbar"></nav>
+
+  <section class="intro">
+    <div class="intro-container">
+      <div class="intro-text">
+        <h1>Aprenda a programar gratuitamente</h1>
+        <p>Tem interesse em aprender programação? Conheça nossa nova plataforma de tutoriais interativos e gratuitos
+          para se tornar um programador de sucesso. Comece sua jornada de codificação hoje!</p>
+          <button class="cta-button" onclick="window.location.href='cadastro.html'">Aprenda Agora</button>
+      </div>
+      <img src="videos/Coding-amico.svg" alt="Aprenda a Programar" class="intro-image">
+    </div>
+  </section>
+
+  <section id="main_card">
+    <br><br><br><br>
+    <h2>Você irá aprender através de</h2>
+    <br>
+    <div class="learning-methods">
+      <div class="card">
+        <div class="card-content">
+          <img src="imagens/Projections-rafiki.svg" alt="Projetos Práticos">
+          <h3>Projetos Práticos</h3>
+          <p>Aplique suas habilidades de programação em projetos reais!</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-content">
+          <img src="imagens/Online test-bro.svg" alt="Avaliações">
+          <h3>Avaliações</h3>
+          <p>Teste seus progressos e conheça os conceitos com nossas avaliações desafiadoras!</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-content">
+          <img src="imagens/Content-bro.svg" alt="Conteúdo Interativo">
+          <h3>Conteúdo Interativo</h3>
+          <p>Explore conceitos de programação com nosso conteúdo interativo.</p>
+        </div>
+      </div>
+    </div>
+    <br><br><br><br><br>
+  </section>
+
+  <section class="study-anytime">
+    <div class="study-container">
+      <div class="study-text">
+        <h2>Estude quando quiser!</h2>
+        <p>A flexibilidade é uma das maiores vantagens do nosso método. Com o tempo em suas mãos, você pode aprender no
+          seu ritmo e conforme sua disponibilidade.</p>
+        <button class="cta-button">Saiba Mais</button>
+      </div>
+      <img src="videos/Time management-bro.svg" alt="Estude Quando Quiser" class="study-image">
+    </div>
+  </section>
+
+  <aside class="community">
+    <div class="community-container">
+      <div class="community-image">
+        <img src="videos/New team members-rafiki.svg" alt="Descrição da imagem">
+      </div>
+      <div class="community-text">
+        <h2>Aprenda em Comunidade</h2>
+        <p>Junte-se à nossa comunidade de desenvolvedores e tire suas dúvidas. Aqui, você não está sozinho na sua
+          jornada de aprendizado. Nossa comunidade é composta por pessoas apaixonadas por programação, todos dispostos a
+          ajudar uns aos outros. Participe de discussões interessantes, compartilhe suas conquistas, aprenda com os
+          desafios dos outros e cresça junto conosco. Acreditamos que a aprendizagem é mais eficaz (e mais divertida!)
+          quando feita em conjunto. Então, o que está esperando? Venha fazer parte da nossa comunidade e comece a
+          transformar suas ideias em código hoje mesmo.</p>
+        <button class="cta-button">Junte-se Aqui</button>
+      </div>
+    </div>
+  </aside>
+
+  <section class="learn-languages">
+    <div class="languages-container">
+      <h2>Aprenda Várias Linguagens</h2>
+      <p>Domine as principais linguagens de programação. Nossos tutoriais passo a passo ajudarão você a entender os
+        conceitos fundamentais e avançados.</p>
+      <div class="learning-methods">
+        <div class="card">
+            <img src="imagens/cube.png" alt="Lógica de Programação">
+            <h3>Lógica de Programação</h3>
+            <p>Aprenda a estruturar suas páginas web com HTML.</p>
+        </div>
+        <div class="card">
+            <img src="imagens/htmlcss.png" alt="HTML e CSS">
+            <h3>HTML e CSS</h3>
+            <p>Estilize suas páginas web com CSS e crie layouts incríveis.</p>
+        </div>
+        <div class="card">
+            <img src="imagens/javascript.png" alt="JavaScript">
+            <h3>JavaScript</h3>
+            <p>Adicione interatividade às suas páginas web com JavaScript.</p>
+        </div>
+        <div class="card">
+            <img src="imagens/java.png" alt="Java">
+            <h3>Java</h3>
+            <p>Construa interfaces de usuário modernas e dinâmicas com Java.</p>
+        </div>
+        <div class="card">
+            <img src="imagens/python.png" alt="Python">
+            <h3>Python</h3>
+            <p>Desenvolva aplicativos poderosos com Python.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+      <!--Inicio rodapé-->
+      <footer class="footer" id="footer"></footer>
+      <!--Fim do rodapé-->
+ 
+  <script src="js/script_speak.js"></script>
+  <script src="js/menu-drop.js" defer></script>
+  
+</body>
+
+</html>

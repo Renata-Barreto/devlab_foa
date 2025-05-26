@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprenda a Programar</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <link rel="stylesheet" href="css/profile-dropdown-menu.css">
+  <link rel="stylesheet" href="css/hamburguer.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/footer_sobre.css">
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=leMFOrsd"></script>
+  <link rel="stylesheet" href="css/navbar.css">
+  <script src="js/chamar_html.js"></script>
+  <!-- firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="js/firebase_conf.js"></script>
+    <title>Mensagens Recebidas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .mensagem {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .email {
+            font-weight: bold;
+        }
+        .assunto {
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+        .mensagem-texto {
+            margin-top: 10px;
+            white-space: pre-line; /* Preserva quebras de linha na mensagem */
+        }
+    </style>
+</head>
+<nav class="navbar" id="navbar"></nav>
+<body>
+    <h1>Mensagens Recebidas</h1>
+    <main>
+        <div id="mensagensContainer"></div>
+    </main>
+    <script>
+        // Função para carregar as mensagens do localStorage
+        function carregarMensagens() {
+            const mensagensContainer = document.getElementById('mensagensContainer');
+            const mensagens = JSON.parse(localStorage.getItem('contatos')) || []; // Recupera as mensagens ou um array vazio
+
+            if (mensagens.length === 0) {
+                mensagensContainer.innerHTML = "<p>Nenhuma mensagem recebida.</p>";
+            } else {
+                mensagens.forEach((mensagem, index) => {
+                    const mensagemDiv = document.createElement('div');
+                    mensagemDiv.classList.add('mensagem');
+                    
+                    const emailElement = document.createElement('p');
+                    emailElement.classList.add('email');
+                    emailElement.textContent = `Email: ${mensagem.email}`;
+                    mensagemDiv.appendChild(emailElement);
+                    
+                    const assuntoElement = document.createElement('p');
+                    assuntoElement.classList.add('assunto');
+                    assuntoElement.textContent = `Assunto: ${mensagem.assunto}`;
+                    mensagemDiv.appendChild(assuntoElement);
+                    
+                    const mensagemTextoElement = document.createElement('p');
+                    mensagemTextoElement.classList.add('mensagem-texto');
+                    mensagemTextoElement.textContent = `Mensagem: ${mensagem.mensagem}`;
+                    mensagemDiv.appendChild(mensagemTextoElement);
+
+                    mensagensContainer.appendChild(mensagemDiv);
+                });
+            }
+        }
+
+        // Carrega as mensagens ao carregar a página
+        window.onload = carregarMensagens;
+    </script>
+    <!--Inicio rodapé-->
+    <footer class="footer" id="footer"></footer>
+    <!--Fim do rodapé-->
+
+<script src="js/script_speak.js"></script>
+<script src="js/menu-drop.js" defer></script>
+</body>
+</html>

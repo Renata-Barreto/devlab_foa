@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórum - Curso Web Design</title>
+    <link rel="stylesheet" href="css/styles_forum_novo.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="css/profile-dropdown-menu.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/scriptlogin.js" defer></script>
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=leMFOrsd"></script>
+    <script src="js/script_speak.js"></script>
+    <script src="js/chamar_html.js"></script>
+    <!-- firebase -->
+     
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="js/firebase_conf.js"></script>
+</head>
+<body>
+    
+
+  <nav class="navbar" id="navbar"></nav>
+
+    <!--Inicio do corpo do fórum-->
+  <main>
+    
+    <div class="content">
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Pesquisar no fórum..." oninput="searchTopics()">
+        </div>
+
+        <div class="categories">
+            <button onclick="filterTopics('all')" class="active">Todas as categorias</button>
+            <button onclick="filterTopics('Geral')">Geral</button>
+            <button onclick="">Recentes</button>
+            <button class="new-topic-button" onclick="openNewTopicModal()">+ Novo Tópico</button>
+        </div>
+
+        <div id="topics-container">
+        
+
+        </div>
+
+    </div>
+</main>
+
+    <!--Inicio rodapé-->
+
+    <footer class="footer" id="footer"> </footer>
+    
+    <!--Fim do rodapé-->
+    
+
+    <!-- Modal para novo tópico -->
+    <div id="new-topic-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeNewTopicModal()">&times;</span>
+            <h2>Novo Tópico</h2>
+            <input type="text" id="new-topic-title" placeholder="Título do tópico">
+            <input type="text" id="new-topic-category" placeholder="Categoria">
+            <textarea id="new-topic-content" placeholder="Conteúdo do Post"></textarea>
+            <button onclick="addNewTopic()">Adicionar Tópico</button>
+        </div>
+    </div>
+    
+
+    <script src="js/script_forum_novo.js"></script>
+    <script src="js/script_speak.js"></script>
+    <script src="js/menu-drop.js" defer></script>
+    
+</body>
+</html>

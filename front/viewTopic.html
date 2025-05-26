@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/viewTopic.css">
+    <link rel="stylesheet" href="css/profile-dropdown-menu.css">
+    <link rel="stylesheet" href="css/hamburguer.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/menu-drop.js"></script>
+    <script src="js/chamar_html.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="js/firebase_conf.js"></script>
+    
+  </head>
+  <body>
+    <nav id="navbar" class="navbar"></nav>
+    <div id="main">
+    <div id="topic-details">
+      <h1 id="topic-title"></h1>
+      <p id="topic-category"></p>
+      <div id="author-info">
+        <img id="topic-author-photo" src="" alt="Foto do autor" />
+        <p id="topic-author">Nome do Autor</p>
+      </div>
+      <p id="topic-content"></p>
+      <p id="topic-views"></p>
+    </div>
+    
+      
+
+    <div id="main-content">
+      <div id="comments">
+        <h3>Comentários</h3>
+        <textarea id="new-comment" maxlength="500" placeholder="Escreva um comentário..."></textarea>
+        <button id="add-comment">Comentar</button>
+        <div id="comments-container"></div>
+      </div>
+
+      <aside id="popular-topics">
+        <h3>Tópicos Populares</h3>
+        <ul id="popular-topics-list"></ul>
+      </aside>
+    </div>
+    <div id="delete-modal" class="hidden">
+        <div class="modal-box">
+          <p>Tem certeza que deseja excluir este comentário?</p>
+          <div class="modal-actions">
+            <button id="confirm-delete">Sim</button>
+            <button id="cancel-delete">Não</button>
+          </div>
+        </div>
+      </div>
+    </div>
+      <footer class="footer" id="footer"></footer>
+      
+
+    <script src="js/viewTopic.js"></script>
+  </body>
+</html>

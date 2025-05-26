@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 1 - Algoritmo</title>
+  <link rel="stylesheet" href="css/styletutorial.css">
+  <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon">
+
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <link rel="stylesheet" href="css/profile-dropdown-menu.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <script src="js/chamar_html.js" defer></script>
+  <script src="js/menu-drop.js" defer></script>
+  <script src="js/haburguer.js"></script>
+  <script src="js/chamar_html.js"></script>
+  <link rel="stylesheet" href="css/footer.css">
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=leMFOrsd"></script>
+ <!-- firebase -->
+   
+ <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+ <script src="js/firebase_conf.js"></script>
+
+</head>
+
+<body>
+  <nav class="navbar" id="navbar"> </nav>
+
+  <aside class="breadcrumb">
+    <nav>
+      <ul>
+        <li><a href="tutorialteste.html">Lógica de Programação - Fundamentos</a></li>
+        <li><a href="#">Introdução</a></li>
+        <li><a href="#">Módulo 1</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <section class="intro">
+    <div class="intro-container">
+      <div class="intro-text">
+        <h1>Módulo 1: O Algoritmo</h1>
+        <p>
+          A lógica de programação é a capacidade que todo programador precisa ter para resolver os problemas que
+          aparecem no dia-a-dia. A capacidade de dividir o problema em partes menores é uma etapa essencial da lógica de
+          programação e precisa ser levada em consideração quando nos deparamos com qualquer exercício/desafio. É nesse
+          ponto que entra o conceito de algoritmo, descrito, geralmente, como uma sequência lógica de ações capaz de
+          resolver um problema.
+        </p>
+        <p>
+          É válido ressaltar, no entanto, que o conceito de algoritmo vai muito além da programação. Uma receita de
+          bolo, por exemplo, é um exemplo simples de algoritmo. Até mesmo algo como “mascar um chiclete” pode ser
+          descrito como um algoritmo, como mostrado na Código 1.
+        </p>
+        <div class="example-box">
+          <strong>Código 1. Algoritmo para mascar chiclete:</strong><br>
+          1 – pegar o chiclete<br>
+          2 – retirar o papel<br>
+          3 – mascar o chiclete<br>
+          4 – jogar o papel no lixo<br>
+          5 – jogar o chiclete no lixo<br>
+        </div>
+        <p>
+          A maioria dos algoritmos, obviamente, será mais complexa do que simplesmente “mascar um chiclete” ou “fazer um
+          bolo”. No caso da computação, uma soma de dois números é o exemplo mais clássico de um algoritmo simples. Algo
+          como o mostrado na Código 2 é bastante comum para observarmos que temos uma sequência lógica de ações que
+          envolvem os três elementos que comentamos anteriormente: entrada de dados, processamento e saída de dados.
+        </p>
+        <div class="example-box">
+          <strong>Código 2. Algoritmo para soma de dois números:</strong><br>
+          1 – Inserir o primeiro número<br>
+          2 – Inserir o segundo número<br>
+          3 – Somar os dois valores<br>
+          4 – Mostrar o resultado<br>
+          <br>
+          Ações 1 e 2: entrada de dados;<br>
+          Ação 3: processamento das informações inseridas;<br>
+          Ação 4: saída de dados.
+        </div>
+        <h2>Introdução ao pseudocódigo</h2>
+        <p>
+          A representação de algoritmos pode ser feita de várias formas; a que mostramos na Código 2 é uma delas.
+          Entretanto, essa opção não possui nenhum tipo de regra mais formal, o que faz com que esteja um pouco distante
+          da programação propriamente dita. Para aproximar um pouco mais os dois conceitos, o pseudocódigo foi criado
+          (um dos exemplos de pseudocódigo mais conhecidos no Brasil é o Portugol). Além dele, podemos encontrar várias
+          opções. O objetivo de todos, no entanto, é um só: criar um código que se aproxime do que será visto em
+          linguagens de programação como C, C# ou Java.
+        </p>
+        <p>
+          Utilizando o Portugol como exemplo, nosso algoritmo da soma de dois números seria algo como o mostrado na
+          Código 3. Nessa “linguagem de programação”, é importante observar que temos um outro conceito, conhecido como
+          regiões; nesse código, temos uma região de variáveis e outra de processamento. Esse conceito também é algo que
+          será levado para as linguagens de programação e sempre deve ser considerado durante o desenvolvimento de
+          software.
+        </p>
+        <div class="example-box">
+          <strong>Código 3. Soma de dois números em pseudocódigo (Portugol):</strong><br>
+          início<br>
+          inteiro a, b, resultado<br>
+          ler (a)<br>
+          ler (b)<br>
+          resultado <- a + b<br>
+            escrever (resultado)<br>
+            fim<br>
+        </div>
+        <p>
+          <strong>Linhas do código explicado:</strong><br>
+          Linha 01: Indicação do início do algoritmo em Portugol;<br>
+          Linha 02: Região de definição de variáveis. As variáveis inteiras “a” e “b” são utilizadas para guardar os
+          valores inseridos pelo usuário, enquanto o “resultado”, como o nome sugere, irá receber a soma deles;<br>
+          Linhas 04 e 05: Lê os valores inseridos pelo usuário e os guarda em “a” e “b”. Note que, no Portugol, as ações
+          são sempre definidas por verbos no infinitivo. Ler serve para indicar a leitura de informações do usuário
+          (entrada de dados), e Escrever, para mostrar o resultado final para o mesmo (saída de dados);<br>
+          Linha 06: Utilizamos o operador de atribuição <-. Esse operador atribui a soma de “a” e “b” à variável
+            “resultado”. Essa é a fase de processamento dos dados de entrada;<br>
+            Linha 07: Para finalizar o algoritmo, temos a amostragem dos dados para o usuário. Nesse caso, utilizamos o
+            verbo Escrever para mostrar essa ação;<br>
+            Linha 08: Indicação do fim do algoritmo em Portugol.
+        </p>
+        <p>
+          Com isso, podemos observar que o Portugol possui regras simples e bastante flexíveis. Ao começar a programar
+          com Java ou C#, por exemplo, você irá notar que a proposta de se aproximar de linguagens como elas é
+          obedecida. Se compararmos o código da Código 3 com um em C#, por exemplo, notaremos que não existe uma grande
+          diferença. É claro que as ações (ler e escrever) e os operadores (atribuição e operador aritmético “+”) serão
+          substituídos por seus respectivos na linguagem, mas a estrutura será semelhante à apresentada no exemplo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="video">
+    <p>
+      <li>Video de Apoio:</li>
+    </p>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/iEVLDKOLgQk?si=oQW517ZgAgA7L4bQ"
+      title="YouTube video player" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+  <!--Inicio rodapé-->
+
+  <footer class="footer" id="footer"></footer>
+<!--Fim do rodapé-->
+  <script src="js/menu-drop.js" defer></script>
+  <script src="js/script_speak.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const hamburgerMenu = document.querySelector('.hamburger-menu');
+      const navLinks = document.querySelector('.nav_links');
+
+      hamburgerMenu.addEventListener('click', function (event) {
+        event.stopPropagation();
+        navLinks.classList.toggle('open');
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!navLinks.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+          navLinks.classList.remove('open');
+        }
+      });
+    });
+    function entrar() {
+      document.getElementById('linkIndex').click();
+    }
+
+  </script>
+</body>
+
+</html>

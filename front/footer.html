@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        footer {
+            background-color:  #2f2841;
+            padding: 10px;
+            font-size: 14px;
+            bottom: 10px;
+        }
+
+        /* Container 1 logo e social, Container 2 navlinks, contato e copy */
+        .container1 {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-around;
+            width: 20% max-content;
+            
+        }
+        .container2 {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-around;
+            width: 80% max-content;
+        }
+
+        .box1 {
+            display: flex;
+            flex-flow: wrap column;
+            align-items: center;
+        }
+
+        .box2 {
+            box-sizing: border-box;
+            width: auto;
+            flex-basis: 500px;
+            flex-grow: 3;
+            flex-shrink: 1;
+            display: flex;
+            flex-flow: wrap column;
+            align-items: center;
+        }
+
+        .Footer_nav_logo img {
+            margin: 15px;
+            width: 190px;
+            height: auto;
+            margin-top: 25px;
+        }
+
+        /* Ícones sociais e navlinks */
+        .fab img{
+            width: 25px;
+            padding: 10px;
+            margin: 5px;
+        }
+
+        .fab img:hover{
+            width: 30px;
+        }
+
+        .Footer_nav_links {
+            list-style: none;
+            padding: 10px;
+            list-style-type: none;
+            margin: 10px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .Footer_nav_links li {
+            display: flex;
+            padding: 10px;
+            color: #fff;
+        }
+        .Footer_nav_links li a:hover {
+            color: #2EF2CB;
+            font-size: 18px;
+        }
+
+        .Footer_nav_links a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        /* Informações de contato */
+        .contact-info p {
+            margin: 10px;
+            color: #fff;
+            display: flex;
+            flex-direction: wrap column;
+            padding: 1px;
+        }
+        .Footer_nav_links a i {
+         margin-right: 8px; 
+             }
+
+        /* Rodapé inferior */
+        .footer-bottom p {
+            margin: 10px;
+            color: #fff;
+            display: flex;
+            flex-direction: wrap column;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <footer>
+        <div class="container1">
+            <div class="box1">
+                <div class="Footer_nav_logo">
+                    <img src="imagens/tema_escuro.png" alt="Logo" class="logo-img">
+                </div>
+                <div class="footer-info">
+                    <div class="social-links">
+                      <a href="https://www.facebook.com/" target="_blank"><i class="fab-fa-facebook"><img src="imagens/akar-icons--facebook-fill.png" alt="Imagem do link para facebook"></i></a>
+                
+                      <a href="https://www.instagram.com/" target="_blank" ><i class="fab-fa-instagram"><img src="imagens/simple-icons--instagram.png" alt="Imagem do link para Instagram"></i></a>
+                </div>
+            </div>
+        </div>
+            <div class="container2">
+                <div class="box2">
+                    <ul class="Footer_nav_links">
+                        <li><a href="index.html"><i class="fa-solid fa-house"></i>Início</a></li>
+                        <li><a href="tutorial.html"><i class="fa-solid fa-book"></i>Tutoriais</a></li>
+                        <li><a href="teste-ferramenta.html"><i class="fa-solid fa-flask"></i>Exercícios</a></li>
+                        <li><a href="forums.html"> <i class="fa-solid fa-comments"></i>Fórum</a></li>
+                        <li><a href="sobre.html"> <i class="fa-solid fa-info-circle"></i>Sobre Nós</a></li>
+                        <li><a href="contato.html"><i class="fa-solid fa-phone"></i>Contato</a></li>
+                    </ul>
+                    <div class="contact-info">
+                          <p>Telefone: (24) 99999-8888</p>
+                          <p>Email: contato@devlab.com</p>
+                          <p>Endereço: Rua A, 123 - Volta Redonda, RJ - Brasil</p>
+                    </div>
+                
+                    <div class="footer-bottom">
+                        <p>&copy; 2024 Devlab. Todos os direitos reservados.</p>
+                    </div>
+                </div>
+            </div>
+    </footer>
+</body>
+</html>
