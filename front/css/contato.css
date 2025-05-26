@@ -1,0 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+::-webkit-scrollbar{
+    width: 10px;
+}
+::-webkit-scrollbar-thumb{
+    background-color: #2f2841;
+    width: 10px;
+}
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+    background-color: #f7f7f7;
+    color: #333;
+}
+html, body {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+}
+body * {
+    box-sizing: border-box;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 15px 20px;
+    flex-wrap: wrap;
+    font-size: 1rem;
+
+}
+
+.nav_logo {
+    display: flex;
+    align-items: center;
+    color: #000000;
+    font-size: 24px;
+    font-weight: 600;
+    margin-left: 150px;
+}
+
+.nav_logo img {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.navbar ul {
+    list-style-type: none;
+    display: flex;
+    gap: 15px;
+}
+
+.nav_links {
+    margin-left: auto;
+    margin-right: auto;
+    color: #000000;
+}
+
+
+.nav_links li a {
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+    padding: 14px 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+
+.nav_links li a:hover {
+    background-color: #77ffc0;
+    color: #201b2c;
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.main-login {
+    width: 100vw;
+    height: 100vh;
+    background: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-login {
+    width: 50vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.left-login > h1 {
+    font-size: 3vw;
+    color: #2b134b;
+}
+
+.left-login-image {
+    width: 35vw;
+}
+
+.right-login {
+    width: 50vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-login {
+    width: 55%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px 35px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-login > h1 {
+    color: #2b134b;
+    font-weight: 800;
+    margin: 0;
+}
+
+.textfild {
+    width: 100%;
+    margin: 10px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+}
+
+.textfild > input {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    background: #f0f0f0;
+    color: #333;
+    font-size: 12pt;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
+    outline: none;
+    box-sizing: border-box;
+}
+
+.textfild > textarea {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    background: #f0f0f0;
+    color: #333;
+    font-size: 12pt;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
+    outline: none;
+    box-sizing: border-box;
+}
+
+.textfild > label {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.textfild > input::placeholder {
+    color: #aaa;
+}
+
+.textfild > textarea::placeholder {
+    color: #aaa;
+}
+
+/* Estilos para a área de mensagem */
+textarea {
+    width: 100%; /* Largura da área de texto */
+    height: 100px; /* Altura fixa para a área de texto */
+    resize: none; /* Impede o redimensionamento */
+    padding: 10px; /* Adiciona um pequeno espaçamento interno */
+    border: 1px solid #ccc; /* Borda suave */
+    border-radius: 4px; /* Bordas arredondadas */
+    box-sizing: border-box; /* Faz com que o padding seja considerado no tamanho total */
+}
+
+#togglePassword{
+    position: absolute;
+    padding: 10px;
+    right:1px; /* Ajusta a posição do ícone à direita do campo */
+    top: calc(50% - 1px);
+    cursor: pointer;
+    color: #030303; /* Cor inicial do ícone */
+}
+
+.btn-login {
+    width: 100%;
+    padding: 16px 0px;
+    margin: 25px;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #ffffff;
+    background-color: #2b134b;
+    cursor: pointer;
+    box-shadow: 0px 10px 40px -12px rgba(0, 0, 0, 0.1);
+}
+#incorreto{
+    color: red;
+}
+
+@media only screen and (min-width: 1650px) {
+
+}
+
+@media only screen and (max-width: 950px) {
+    .card-login {
+        width: 85%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    
+        .navbar {
+            flex-direction: column;
+            gap: 10px;
+        }
+    
+        .nav_logo {
+            margin: 0px 0;
+        }
+    
+        .nav_logo img {
+            width: 30px;
+        }
+        .left-login-image{
+            display: none;
+        }
+}
+
+@media only screen and (max-width: 319px) {
+    .main-login {
+        flex-direction: column;
+    }
+
+    .left-login > h1 {
+        display: none;
+    }
+
+    .left-login {
+        width: 100%;
+        height: auto;
+    }
+
+    .right-login {
+        width: 100%;
+        height: auto;
+    }
+
+    .left-login-image {
+        width: 50vw;
+    }
+
+    .card-login {
+        width: 90%;
+    }
+
+    .navbar li {
+        float: none;
+        width: 100%;
+    }
+    .left-login-image{
+        display: none;
+    }
+}

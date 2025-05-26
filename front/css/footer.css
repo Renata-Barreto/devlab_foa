@@ -1,0 +1,108 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+footer {
+    background-color:  #2f2841; /*#2f2841*/
+    padding: 10px;
+    font-size: 14px;
+    bottom: 10px;
+}
+
+/* Container 1 logo e social, Container 2 navlinks, contato e copy */
+.container1 {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    width: 20% max-content;
+    
+}
+.container2 {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    width: 80% max-content;
+}
+
+.box1 {
+    display: flex;
+    flex-flow: wrap column;
+    align-items: center;
+}
+
+.box2 {
+    box-sizing: border-box;
+    width: auto;
+    flex-basis: 500px;
+    flex-grow: 3;
+    flex-shrink: 1;
+    display: flex;
+    flex-flow: wrap column;
+    align-items: center;
+}
+
+.Footer_nav_logo img {
+    margin: 15px;
+    width: 190px;
+    height: auto;
+    margin-top: 25px;
+}
+
+/* Ícones sociais e navlinks APAGAR DEPOIS */
+.fab img{
+    width: 50px;
+    padding: 10px;
+    margin: 5px;
+}
+/*APAGAR DEPOIS*/
+
+.fab-fa-facebook img, .fab-fa-instagram img {
+    width: 50px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.fab-fa-facebook img:hover, .fab-fa-instagram img:hover{
+    width: 60px;
+}
+
+.Footer_nav_links {
+    list-style: none;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.Footer_nav_links li {
+    display: flex;
+    padding: 10px;
+    color: #fff;
+}
+.Footer_nav_links li a:hover {
+    color: #8DF7E2;
+    font-size: 18px;
+}
+
+.Footer_nav_links a {
+    text-decoration: none;
+    color: #fff;
+}
+
+/* Informações de contato */
+.contact-info p {
+    margin: 10px;
+    color: #fff;
+    display: flex;
+    flex-direction: wrap column;
+}
+
+/* Rodapé inferior */
+.footer-bottom p {
+    margin: 10px;
+    color: #fff;
+    display: flex;
+    flex-direction: wrap column;
+    font-size: 12px;
+}

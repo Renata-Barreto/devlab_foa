@@ -1,0 +1,240 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  .container {
+    margin-top: 100px;
+    display: flex;
+    width: 900px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .sidebar {
+    background-color: #f2f2f2;
+    padding: 20px;
+    width: 30%;
+    text-align: center;
+  }
+  
+  
+  .edit-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 10px 0;
+  }
+  
+  .edit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .description {
+    font-size: 14px;
+    color: #555;
+    margin: 20px 0;
+  }
+  
+  .social-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+  }
+  
+  .social-links p {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      font-size: 14px;
+      color: #007bff;
+  }
+  
+  .social-links i {
+      margin-right: 8px;
+      font-size: 16px;
+      color: #007bff;
+  }
+  
+  .social-links a {
+      text-decoration: none;
+      color: #007bff;
+  }
+  
+  .social-links a:hover {
+      text-decoration: underline;
+  }
+  
+  .main-content {
+    width: 70%;
+    padding: 20px;
+  }
+  
+  .tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
+  .tab {
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #555;
+    text-transform: capitalize;
+  }
+  
+  .tab.active {
+    color: #309b69;
+    border-bottom: 2px solid #309b69;
+  }
+  
+  .info h1, p#usuario {
+    font-size: 30px;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .info h2 {
+    font-size: 20px;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  
+  .info p {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .interests {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+  }
+  
+  .interests i {
+      font-size: 50px;
+  }
+  
+  .interests i:nth-child(2) {
+      color: #f7df1e;
+  }
+  .python-icon::before {
+  content: "\f3e2";
+  font-family: "Font Awesome 5 Brands"; 
+  font-size: 50px;
+  background: linear-gradient(150deg, #3572A5 50%, #FFD43B 50%);
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  }
+  
+
+/*excluir conta */
+  .hidden {
+    display: none;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #f8f9fa;
+    padding: 40px 30px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+}
+
+.delete-button, .cancel-button {
+    background-color: #2b134b;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 14px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.delete-button:hover {
+    background-color: #6a4c9c;
+}
+
+.cancel-button {
+    background-color: #f1f1f1;
+    color: black;
+}
+
+.cancel-button:hover {
+    background-color: #e0e0e0;
+}
+
+#alertBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    padding: 40px 30px;
+    background-color: #f8f9fa;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    z-index: 1000;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+}
+
+.alertContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#alertMessage {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+}
+
+#alertOkButton {
+    background-color: #2b134b;
+    color: #fff;
+    border: none;
+    padding: 15px 50px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bolder;
+
+}
+
+#alertOkButton:hover {
+    background-color: #6a4c9c;
+}

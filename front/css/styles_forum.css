@@ -1,0 +1,110 @@
+html, body {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: linear-gradient(120deg, #eb048f, #eda8e5);
+    margin: 20px;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+input, textarea, button {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#buscar {
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto;
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#lista-topicos {
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.topico {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px 0;
+    position: relative;
+}
+
+.topico h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.topico p {
+    margin: 5px 0;
+}
+
+button.deletar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+button.deletar:hover {
+    background-color: darkred;
+}
+
+#popular-topics {
+    width: 300px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  #popular-topics h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  #popular-topics ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #popular-topics ul li {
+    margin-bottom: 10px;
+  }
+
+  #popular-topics ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.1em;
+  }
+
+  #popular-topics ul li a:hover {
+    color: #007bff;
+    font-weight: bold;
+  }
