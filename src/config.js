@@ -8,7 +8,6 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const config = {
   port: process.env.PORT || 3000,
-  host: process.env.HOST || '127.0.0.1',
 };
 
 console.log('Configuração do servidor:', config);
