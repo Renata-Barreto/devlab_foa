@@ -174,32 +174,5 @@
     
   </body>
   <script src="js/personalizacao.js"></script>
-  <script>
-    async function fetchUserData(user) {
-  const nome = user.nome_usr || user.email_usr.split("@")[0];
-  const inicial = nome.charAt(0).toUpperCase();
-  document.getElementById("canvas").setAttribute("data-inicial", inicial);
-
-  if (user.Perfil?.prf_pfl) {
-    const img = new Image();
-    img.src = user.Perfil.prf_pfl.startsWith('data:image')
-      ? user.Perfil.prf_pfl
-      : `http://127.0.0.1:3000${user.Perfil.prf_pfl}`;
-    img.onload = () => {
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, 120, 120);
-    };
-  } else {
-    generateAvatar(inicial);
-  }
-
-  if (user.Perfil?.des_pfl) {
-    document.getElementById("bio").value = user.Perfil.des_pfl;
-  }
-
-  createService();
-}
-  </script>
+  
 </html>

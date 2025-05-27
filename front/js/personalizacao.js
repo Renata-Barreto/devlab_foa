@@ -30,11 +30,44 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+// async function fetchUserData(user) {
+//   const nome = user.nome_usr || user.email_usr.split("@")[0];
+//   const inicial = nome.charAt(0).toUpperCase();
+//   document.getElementById("canvas").setAttribute("data-inicial", inicial);
+//   generateAvatar(inicial);
+//   createColorPicker();
+// }
+
 async function fetchUserData(user) {
   const nome = user.nome_usr || user.email_usr.split("@")[0];
   const inicial = nome.charAt(0).toUpperCase();
-  document.getElementById("canvas").setAttribute("data-inicial", inicial);
-  generateAvatar(inicial);
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.setAttribute("data-inicial", inicial);
+
+  if (user.prf_pfl) {
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // para evitar problemas de CORS
+    img.src = user.prf_pfl.startsWith("data:image")
+      ? user.prf_pfl
+      : `http://127.0.0.1:3000${user.prf_pfl}`;
+    
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      ctx.arc(60, 60, 60, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(img, 0, 0, 120, 120);
+      ctx.restore();
+    };
+  } else {
+    generateAvatar(inicial);
+  }
+
+  if (user.des_pfl) {
+    document.getElementById("bio").value = user.des_pfl;
+  }
+
   createColorPicker();
 }
 
@@ -127,5 +160,5 @@ document.getElementById("personalizacaoForm").addEventListener("submit", async (
     console.error("Erro ao atualizar perfil:", error);
     alert("Erro ao atualizar perfil. Tente novamente.");
   }
-});
+}); //
 

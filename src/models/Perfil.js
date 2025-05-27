@@ -23,7 +23,7 @@ const Perfil = {
     const query = `
       SELECT p.*, u.*
       FROM dev_lab_perfil p
-      JOIN dev_lab_user u ON p.id_usr = u.id_usr
+      JOIN dev_lab_usuarios u ON p.id_usr = u.id_usr
       WHERE p.id_pfl = $1;
     `;
     const { rows } = await pool.query(query, [id_pfl]);
@@ -35,7 +35,7 @@ const Perfil = {
     const query = `
       SELECT p.*, u.*
       FROM dev_lab_perfil p
-      JOIN dev_lab_user u ON p.id_usr = u.id_usr
+      JOIN dev_lab_usuarios u ON p.id_usr = u.id_usr
       WHERE p.id_usr = $1;
     `;
     const { rows } = await pool.query(query, [id_usr]);

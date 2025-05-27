@@ -53,8 +53,31 @@ const findByIdService = async (id) => {
   return rows[0];
 };
 
+// const updateService = async (id, avatar, bio, fotoPath) => {
+//   const user = await User.findById(id);
+//   if (!user) return null;
+
+//   const updates = [];
+//   const values = [];
+//   let index = 1;
+
+//   if (fotoPath) {
+//     updates.push(`img_usr = $${index++}`);
+//     values.push(fotoPath);
+//   } else if (avatar) {
+//     updates.push(`img_usr = $${index++}`);
+//     values.push(avatar);
+//   }
+
+//   if (updates.length > 0) {
+//     const query = `UPDATE dev_lab_usuarios SET ${updates.join(', ')} WHERE id_usr = $${index} RETURNING *`;
+//     values.push(id);
+//     const { rows } = await pool.query(query, values);
+//     user = rows[0];
+//   }
+
 const updateService = async (id, avatar, bio, fotoPath) => {
-  const user = await User.findById(id);
+  let user = await User.findById(id); // Corrigido para `let`
   if (!user) return null;
 
   const updates = [];
@@ -73,9 +96,8 @@ const updateService = async (id, avatar, bio, fotoPath) => {
     const query = `UPDATE dev_lab_usuarios SET ${updates.join(', ')} WHERE id_usr = $${index} RETURNING *`;
     values.push(id);
     const { rows } = await pool.query(query, values);
-    user = rows[0];
+    user = rows[0]; // Agora válido
   }
-
   let perfil = await Perfil.findByUserId(id);
   if (!perfil && (bio || fotoPath || avatar)) {
     perfil = await Perfil.create({
