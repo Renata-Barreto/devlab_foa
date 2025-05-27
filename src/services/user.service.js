@@ -3,12 +3,17 @@ import Perfil from '../models/Perfil.js';
 import bcrypt from 'bcrypt';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Pool } from 'pg';
+import dbConfig from '../database/config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Criar o pool de conexão
+const pool = new Pool(dbConfig);
+
 const createService = async (body) => {
-  const hashedPassword = bcrypt.hashSync(body.password, 10);
+  const hashedPassword = await bcrypt.hash(body.password, 10);
 
   const newUser = await User.create({
     nome_usr: body.name,
@@ -28,68 +33,97 @@ const createService = async (body) => {
 };
 
 const findByEmailService = async (email) => {
-  return await User.findOne({ where: { email_usr: email } });
+  return await User.findByEmail(email);
 };
 
 const findAllService = async () => {
-  return await User.findAll();
+  const query = `SELECT * FROM dev_lab_usuarios WHERE ativo = true`;
+  const { rows } = await pool.query(query);
+  return rows;
 };
 
 const findByIdService = async (id) => {
-  return await User.findByPk(id, {
-    include: [{ model: Perfil, attributes: ['des_pfl', 'prf_pfl'] }],
-  });
+  const query = `
+    SELECT u.*, p.des_pfl, p.prf_pfl
+    FROM dev_lab_usuarios u
+    LEFT JOIN dev_lab_perfil p ON u.id_usr = p.id_usr
+    WHERE u.id_usr = $1
+  `;
+  const { rows } = await pool.query(query, [id]);
+  return rows[0];
 };
 
 const updateService = async (id, avatar, bio, fotoPath) => {
-  const user = await User.findByPk(id);
+  const user = await User.findById(id);
   if (!user) return null;
 
-  let perfil = await Perfil.findOne({ where: { id_usr: id } });
-  if (!perfil) {
+  const updates = [];
+  const values = [];
+  let index = 1;
+
+  if (fotoPath) {
+    updates.push(`img_usr = $${index++}`);
+    values.push(fotoPath);
+  } else if (avatar) {
+    updates.push(`img_usr = $${index++}`);
+    values.push(avatar);
+  }
+
+  if (updates.length > 0) {
+    const query = `UPDATE dev_lab_usuarios SET ${updates.join(', ')} WHERE id_usr = $${index} RETURNING *`;
+    values.push(id);
+    const { rows } = await pool.query(query, values);
+    user = rows[0];
+  }
+
+  let perfil = await Perfil.findByUserId(id);
+  if (!perfil && (bio || fotoPath || avatar)) {
     perfil = await Perfil.create({
       id_usr: id,
       des_pfl: bio || null,
       prf_pfl: fotoPath || avatar || null,
     });
-  } else {
-    if (bio !== undefined) perfil.des_pfl = bio;
-    if (fotoPath) perfil.prf_pfl = fotoPath;
-    else if (avatar) perfil.prf_pfl = avatar;
-    await perfil.save();
-  }
+  } else if (perfil && (bio !== undefined || fotoPath || avatar)) {
+    const perfilUpdates = [];
+    const perfilValues = [];
+    let perfilIndex = 1;
 
-  if (fotoPath) {
-    user.img_usr = fotoPath;
-  } else if (avatar) {
-    user.img_usr = avatar;
+    if (bio !== undefined) {
+      perfilUpdates.push(`des_pfl = $${perfilIndex++}`);
+      perfilValues.push(bio);
+    }
+    if (fotoPath || avatar) {
+      perfilUpdates.push(`prf_pfl = $${perfilIndex++}`);
+      perfilValues.push(fotoPath || avatar);
+    }
+
+    if (perfilUpdates.length > 0) {
+      perfilValues.push(perfil.id_pfl);
+      const perfilQuery = `UPDATE dev_lab_perfil SET ${perfilUpdates.join(', ')} WHERE id_pfl = $${perfilIndex} RETURNING *`;
+      const { rows } = await pool.query(perfilQuery, perfilValues);
+      perfil = rows[0];
+    }
   }
-  await user.save();
 
   return user;
 };
 
 const deleteService = async (id) => {
-  const user = await User.findByPk(id);
+  const user = await User.findById(id);
+  if (!user) return null;
 
-  if (user) {
-    user.ativo = false;
-    await user.save();
-    return user;
-  }
-
-  return null;
+  const query = `UPDATE dev_lab_usuarios SET ativo = false WHERE id_usr = $1 RETURNING *`;
+  const { rows } = await pool.query(query, [id]);
+  return rows[0];
 };
 
 const deleteService1 = async (id) => {
-  const user = await User.findByPk(id);
+  const user = await User.findById(id);
+  if (!user) return null;
 
-  if (user) {
-    await user.destroy();
-    return user;
-  }
-
-  return null;
+  await Perfil.delete(id);
+  await User.delete(id);
+  return user;
 };
 
 const userService = {
@@ -103,190 +137,3 @@ const userService = {
 };
 
 export default userService;
-
-// import User from '../models/User.js';
-// import Perfil from '../models/Perfil.js';
-// import bcrypt from 'bcrypt';
-
-// const createService = async (body) => {
-//   const hashedPassword = bcrypt.hashSync(body.password, 10);
-
-//   const newUser = await User.create({
-//     nome_usr: body.name,
-//     email_usr: body.email,
-//     pwd_usr: hashedPassword,
-//     end_usr: body.end_usr || null,
-//     cid_usr: body.cid_usr || null,
-//     est_usr: body.est_usr || null,
-//     cat_usr: body.email.endsWith('@admin.com') ? 1 : 0,
-//     niv_usr: 1,
-//     dtn_usr: body.dtn_usr || null,
-//     img_usr: body.avatar || null,
-//     ativo: true,
-//   });
-
-//   return newUser;
-// };
-
-// const findByEmailService = async (email) => {
-//   return await User.findOne({ where: { email_usr: email } });
-// };
-
-// const findAllService = async () => {
-//   return await User.findAll();
-// };
-
-// const findByIdService = async (id) => {
-//   return await User.findByPk(id, {
-//     include: [{ model: Perfil, attributes: ['des_pfl', 'prf_pfl'] }],
-//   });
-// };
-
-// const updateService = async (id, avatar, bio) => {
-//   const user = await User.findByPk(id);
-//   if (!user) return null;
-
-//   // Atualizar o perfil na tabela dev_lab_perfil
-//   let perfil = await Perfil.findOne({ where: { id_usr: id } });
-//   if (!perfil) {
-//     // Se o perfil não existe, criar um novo
-//     perfil = await Perfil.create({
-//       id_usr: id,
-//       des_pfl: bio || null,
-//       prf_pfl: avatar || null,
-//     });
-//   } else {
-//     // Atualizar o perfil existente
-//     if (bio !== undefined) perfil.des_pfl = bio;
-//     if (avatar) perfil.prf_pfl = avatar;
-//     await perfil.save();
-//   }
-
-//   // Atualizar img_usr na tabela dev_lab_usuarios, se necessário
-//   if (avatar) {
-//     user.img_usr = avatar;
-//     await user.save();
-//   }
-
-//   return user;
-// };
-
-// const deleteService = async (id) => {
-//   const user = await User.findByPk(id);
-
-//   if (user) {
-//     user.ativo = false;
-//     await user.save();
-//     return user;
-//   }
-
-//   return null;
-// };
-
-// const deleteService1 = async (id) => {
-//   const user = await User.findByPk(id);
-
-//   if (user) {
-//     await user.destroy();
-//     return user;
-//   }
-
-//   return null;
-// };
-
-// const userService = {
-//   createService,
-//   findAllService,
-//   findByIdService,
-//   updateService,
-//   findByEmailService,
-//   deleteService,
-//   deleteService1,
-// };
-
-// export default userService;
-
-// import User from '../models/User.js';
-// import bcrypt from 'bcrypt';
-
-// const createService = async (body) => {
-//   const hashedPassword = bcrypt.hashSync(body.password, 10);
-
-//   const newUser = await User.create({
-//     nome_usr: body.name,
-//     email_usr: body.email,
-//     pwd_usr: hashedPassword,
-//     end_usr: body.end_usr || null,
-//     cid_usr: body.cid_usr || null,
-//     est_usr: body.est_usr || null,
-//     cat_usr: body.email.endsWith('@admin.com') ? 1 : 0, // Define como admin ou aluno
-//     niv_usr: 1,
-//     dtn_usr: body.dtn_usr || null,
-//     img_usr: body.avatar || null,
-//     ativo: true,
-//   });
-
-//   return newUser;
-// };
-
-// const findByEmailService = async (email) => {
-//   return await User.findOne({ where: { email_usr: email } });
-// };
-
-// const findAllService = async () => {
-//   return await User.findAll();
-// };
-
-// const findByIdService = async (id) => {
-//   return await User.findByPk(id);
-// };
-
-// const updateService = async (id, avatar, background, bio) => {
-//   const user = await User.findByPk(id);
-
-//   if (user) {
-//     if (avatar) user.img_usr = avatar;
-//     if (background) user.background = background; // Adicione a coluna background se necessário
-//     if (bio) user.des_pfl = bio; // Usa des_pfl da tabela dev_lab_perfil (pode precisar de ajustes)
-
-//     await user.save();
-//     return user;
-//   }
-
-//   return null;
-// };
-
-// const deleteService = async (id) => {
-//   const user = await User.findByPk(id);
-
-//   if (user) {
-//     user.ativo = false;
-//     await user.save();
-//     return user;
-//   }
-
-//   return null;
-// };
-
-// const deleteService1 = async (id) => {
-//   const user = await User.findByPk(id);
-
-//   if (user) {
-//     await user.destroy();
-//     return user;
-//   }
-
-//   return null;
-// };
-
-// const userService = {
-//   createService,
-//   findAllService,
-//   findByIdService,
-//   updateService,
-//   findByEmailService,
-//   deleteService,
-//   deleteService1,
-// };
-
-// export default userService;

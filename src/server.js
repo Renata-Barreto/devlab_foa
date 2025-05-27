@@ -1,4 +1,4 @@
-// mudar tudo para mysql com pg
+// Migrado de Sequelize (PostgreSQL) para o módulo pg (PostgreSQL)
 import express from 'express';
 import userRoutes from './routes/user.routes.js';
 import authRoutes from './routes/auth.routes.js';

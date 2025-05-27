@@ -1,3 +1,4 @@
+// não precisa mudar
 import bcrypt from 'bcrypt';
 import { loginService, generateToken } from '../services/auth.service.js';
 

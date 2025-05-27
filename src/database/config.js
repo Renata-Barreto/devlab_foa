@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+import { Pool } from 'pg';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -18,25 +18,28 @@ console.log('Variáveis de ambiente:', {
   DB_SSL: process.env.DB_SSL,
 });
 
-const sequelize = new Sequelize(process.env.DATABASE_URL || {
+// Configuração do pool de conexão com pg
+const dbConfig = {
   database: process.env.DB_NAME,
-  username: process.env.DB_USER,
+  user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  dialect: 'postgres',
-  dialectOptions: process.env.DB_SSL === 'true' ? {
-    ssl: { require: true, rejectUnauthorized: false }
-  } : {},
-}, {
-  logging: false,
-  dialectOptions: process.env.DATABASE_URL ? {
-    ssl: { require: true, rejectUnauthorized: false }
-  } : {}
-});
+  port: process.env.DB_PORT || 5432,
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+};
 
-sequelize.authenticate()
+// Se DATABASE_URL estiver definida, usá-la diretamente
+if (process.env.DATABASE_URL) {
+  dbConfig.connectionString = process.env.DATABASE_URL;
+  dbConfig.ssl = { rejectUnauthorized: false };
+}
+
+const pool = new Pool(dbConfig);
+
+// Testar a conexão
+pool.connect()
   .then(() => console.log('Conexão com o banco de dados estabelecida com sucesso.'))
   .catch((error) => console.error('Erro ao conectar ao banco de dados:', error));
 
-export default sequelize;
+// Exportar o pool diretamente
+export default dbConfig;
