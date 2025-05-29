@@ -72,56 +72,121 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // login
   document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    hideError();
+  e.preventDefault();
+  hideError();
 
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
 
-    if (!email || !senha) {
-      showError("Por favor, preencha todos os campos corretamente!");
-      return;
-    }
+  if (!email || !senha) {
+    showError("Por favor, preencha todos os campos corretamente!");
+    return;
+  }
 
-    try {
-      const response = await fetch("http://127.0.0.1:3000/auth/", {
+  try {
+    // Usar caminho relativo para funcionar tanto localmente quanto no Render
+    const apiUrl = "/auth/"; // Como o frontend é servido pelo mesmo servidor, isso resolve para http://127.0.0.1:3000/auth/ localmente e https://sua-app.onrender.com/auth/ no Render
+    console.log(`Enviando requisição para: ${apiUrl}`);
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password: senha }),
+        signal: AbortSignal.timeout(10000), // Timeout de 10 segundos
       });
+    // const response = await fetch(apiUrl, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ email, password: senha }),
+    // });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao autenticar");
-      }
-
-      const { token, userTipo } = await response.json();
-
-      console.log(token);
-
-      if (token) {
-        localStorage.setItem("auth", JSON.stringify({ token }));
-      } else {
-        throw new Error("Token não recebido da API.");
-      }
-
-      if (userTipo === "adm") {
-        window.location.href = "pagina_adm.html";
-      } else {
-        window.location.href = "pagina_aluno.html";
-      }
-    } catch (error) {
-      if (error.message === "Usuário não encontrado") {
-        showError("Este email não está cadastrado. Verifique ou cadastre-se.");
-      } else if (error.message === "Senha incorreta") {
-        showError("Senha incorreta. Tente novamente.");
-      } else {
-        showError("Ocorreu um erro ao autenticar. Tente novamente.");
-      }
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log(`Erro na resposta da API: ${JSON.stringify(errorData)}`);
+      throw new Error(errorData.message || "Erro ao autenticar");
     }
-  });
+
+    const { token, userTipo } = await response.json();
+    console.log(`Resposta recebida: token=${token}, userTipo=${userTipo}`);
+
+    if (token) {
+      localStorage.setItem("auth", JSON.stringify({ token }));
+    } else {
+      throw new Error("Token não recebido da API.");
+    }
+
+    if (userTipo === "adm") {
+      window.location.href = "pagina_adm.html";
+    } else {
+      window.location.href = "pagina_aluno.html";
+    }
+  } catch (error) {
+    console.error(`Erro no login: ${error.message}`);
+    if (error.message === "Usuário não encontrado") {
+      showError("Este email não está cadastrado. Verifique ou cadastre-se.");
+    } else if (error.message === "Senha incorreta") {
+      showError("Senha incorreta. Tente novamente.");
+    } else {
+      showError(`Ocorreu um erro ao autenticar: ${error.message}`);
+    }
+  }
+});
+
+  // login
+//   document.getElementById("loginForm").addEventListener("submit", async (e) => {
+//     e.preventDefault();
+//     hideError();
+
+//     const email = document.getElementById("email").value;
+//     const senha = document.getElementById("senha").value;
+
+//     if (!email || !senha) {
+//       showError("Por favor, preencha todos os campos corretamente!");
+//       return;
+//     }
+
+//     try {
+//       const response = await fetch("http://127.0.0.1:3000/auth/", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ email, password: senha }),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         throw new Error(errorData.message || "Erro ao autenticar");
+//       }
+
+//       const { token, userTipo } = await response.json();
+
+//       console.log(token);
+
+//       if (token) {
+//         localStorage.setItem("auth", JSON.stringify({ token }));
+//       } else {
+//         throw new Error("Token não recebido da API.");
+//       }
+
+//       if (userTipo === "adm") {
+//         window.location.href = "pagina_adm.html";
+//       } else {
+//         window.location.href = "pagina_aluno.html";
+//       }
+//     } catch (error) {
+//       if (error.message === "Usuário não encontrado") {
+//         showError("Este email não está cadastrado. Verifique ou cadastre-se.");
+//       } else if (error.message === "Senha incorreta") {
+//         showError("Senha incorreta. Tente novamente.");
+//       } else {
+//         showError("Ocorreu um erro ao autenticar. Tente novamente.");
+//       }
+//     }
+//   });
 });
 
 // validar email
