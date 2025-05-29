@@ -10,7 +10,7 @@ const syncDatabase = async () => {
   }
 };
 
-export default syncDatabase;
+export default syncDatabase; //
 
 // import { Pool } from 'pg';
 // import dbConfig from './config.js';

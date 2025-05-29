@@ -98,7 +98,7 @@ const userService = {
   deleteService1,
 };
 
-export default userService;
+export default userService; //
 
 // import User from '../models/User.js';
 // import Perfil from '../models/Perfil.js';

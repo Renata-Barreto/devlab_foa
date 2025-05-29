@@ -39,7 +39,7 @@ syncDatabase()
   .catch((error) => {
     console.error('Erro ao iniciar o servidor devido a falha na conexão com o banco:', error);
     process.exit(1); // Encerra o processo se a conexão falhar
-  });
+  }); //
 
 // // Migrado de Sequelize (PostgreSQL) para o módulo pg (PostgreSQL)
 // import express from 'express';

@@ -82,7 +82,7 @@ const User = {
   }
 };
 
-export default User;
+export default User; //
 
 // import { Pool } from 'pg';
 // import dbConfig from '../database/config.js';

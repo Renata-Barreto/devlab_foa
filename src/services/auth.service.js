@@ -32,7 +32,7 @@ const generateToken = (id) => {
   }
 };
 
-export { loginService, generateToken };
+export { loginService, generateToken }; //
 
 // import User from '../models/User.js';
 // import jwt from 'jsonwebtoken';

@@ -206,7 +206,7 @@ const userController = {
   },
 };
 
-export default userController;
+export default userController; //
 
 // import userService from '../services/user.service.js';
 // import { generateToken } from '../services/auth.service.js';

@@ -34,7 +34,7 @@ pool.connect()
   .catch((error) => console.error('Erro ao conectar ao banco de dados:', error));
 
 // Exportar o pool diretamente
-export default pool;
+export default pool; //
 
 // import { Pool } from 'pg';
 // import dotenv from 'dotenv';

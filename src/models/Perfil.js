@@ -63,7 +63,7 @@ const Perfil = {
   }
 };
 
-export default Perfil;
+export default Perfil; //
 
 // import { Pool } from 'pg';
 // import dbConfig from '../database/config.js';
