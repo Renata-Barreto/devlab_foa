@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="css/adm.css">
  
-    <title>Página do ADM</title>
+    <title>Painel Administrativo - Professor</title>
   
     </head>
     <body>
@@ -19,102 +19,66 @@
       <nav class="navbar" id="navbar"></nav>
 
     
-        <div class="container">
-            <aside class="sidebar">
-                <img class="profile-img2" src="imagens/entrar.png" alt="foto usuario">
-                <h2 id="usuario"></h2>
-                <p class="id">Professor</p>
-                <button class="edit-button">Editar perfil</button>
-                <p class="description">
-                  Sou Professora de TI, Tenho uma graduação em Ciência da Computação, com especialização em Engenharia de Software. Durante minha carreira acadêmica,Se precisar de alguma ajuda específica em TI, posso simular essa função e orientá-lo com prazer!
-                </p>
-                <div class="social-links">
-                  <p>
-                      <i class="fab fa-instagram"></i>
-                      <a href="#" target="_blank" id="usuario"></a>
-                  </p>
-                  <p>
-                      <i class="fab fa-linkedin"></i>
-                      <a href="#" target="_blank" id="usuario"></a>
-                  </p>
-                  <p>
-                      <i class="fas fa-envelope"></i>
-                      <a href="#" id="email_usuario"></a>
-                  </p>
-              </div>   
-              <button class="delete-button" onclick="excluirConta()">Excluir Conta</button>       
-            </aside>
-    
-            <main class="main-content">
-                <nav class="tabs">
-                    <span class="tab active">visão geral</span>
-                    <span class="tab">Exercícios</span>
-                    <span class="tab">Notas/Faltas</span>
-                </nav>
-                <section class="info">
-                    <h1>Olá! Eu sou <p id="usuario"></p></h1>
-                    <h2>Sobre Mim:</h2>
-                      <p>possuo diversas certificações técnicas, incluindo certificações em redes de computadores,</p>
-                      <p>desenvolvimento de software e infraestrutura de TI também fiz uma pós-graduação em Inteligência Artificial e um curso de extensão em Segurança da Informação.💡</p>
-                      
-                    <h2>Linguagens Utilizadas:</h2>
-                <div class="interests">
-                    <i class="fa-brands fa-python python-icon"></i>
-                    <i class="fab fa-js-square" title="JavaScript"></i>
-                </div>
-                    <h2> Tecnologias Favoritas:</h2>
-                    <p>Jupyter Notebooks: Perfeito para testes e aprendizado interativo de código.</p>
-                    <p>VS Code: Uma IDE leve, personalizável e poderosa.</p>
-                    <p>PyCharm: Ideal para grandes projetos com funcionalidades avançadas para Python.</p>
-                    <p>React.js: Uma das bibliotecas mais populares para criar interfaces de usuário dinâmicas. Ótima para SPAs (Single Page Applications).</p>
-                    <p>jQuery: Embora esteja menos popular atualmente, ainda é útil para manipulações simples de DOM em projetos legados.</p>
-                </section>
-            </main>
-        </div>
+      <div class="sidebar"> 
+    <h2>Painel do Professor</h2>
+    <ul>
+      <li>Disciplinas</li>
+      <li>Alunos</li>
+      <li>Avaliações</li>
+      <li>Configurações</li>
+    </ul>
+  </div>
 
-        <!-- confirmação de exclusão -->
-    <div id="confirmModal" class="modal" style="display: none;">
-      <div class="modal-content">
-        <p>Tem certeza que deseja excluir sua conta? Essa ação é irreversível.</p>
-        <button onclick="confirmarExclusao()" class="delete-button">Sim, excluir</button>
-        <button onclick="fecharModal()" class="cancel-button">Cancelar</button>
-      </div>
-     </div>
 
-        <!-- mensagens após exclusão -->
-    <div id="alertBox" class="hidden">
-       <div class="alertContent">
-        <p id="alertMessage"></p>
-        <button id="alertOkButton">OK</button>
-       </div>
+    <div class="dados">
+        <img class="photo" src="imagens/julio.png" alt="Foto do Usuário">
+        <p>Nome: Júlio Rios</p>
+        <p>Cargo: Administrador</p>
+        <p>Especialidade: TI</p>
+        <p>Data de Entrada: 01/01/2024</p>
+        <p>Email: exemplo@exemplo.com</p>
+        <p>Celular: (24) 9999-9999</p>
+        <p>LinkedIn: linkedin.com/exemplo</p>
+        <p>Facebook: https://www.facebook.com</p>
+        <p>Instagram: https://www.instagram.com</p>
     </div>
-    
-        
-        <script>
 
+  <div class="main">
+    <div class="welcome">Bem-vindo, Professor!</div>
+
+    <div class="stats">
+      <div class="card">
+        <h3>Horas Totais</h3>
+        <p>120 horas</p>
+        
+      </div>
+      <div class="card">
+        <h3>Novas Mensagens</h3>
+        <p>5 novas</p>
+         <button class="btn" onclick="link_mensagens()">Visualizar mensagens</button>
+      </div>
+      <div class="card">
+        <h3>Total de Alunos</h3>
+        <p>4 alunos</p>
+        <button class="btn" onclick="listarUsuarios()">Listar Alunos</button>
+        <div class="progress-container">
+          <div class="progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ban-section">
+      <h3>Banir usuário</h3>
+      <input type="text" id="banInput" placeholder="Nome ou ID do aluno">
+      <button onclick="banirAluno()">Banir</button>
+    </div>
+  </div>
       
-       // menu
-       document.addEventListener('DOMContentLoaded', function () {
-        const hamburgerMenu = document.querySelector('.hamburger-menu');
-        const navLinks = document.querySelector('.nav_links');
+    
+
   
-        hamburgerMenu.addEventListener('click', function (event) {
-          event.stopPropagation();
-          navLinks.classList.toggle('open');
-        });
-  
-        document.addEventListener('click', function (event) {
-          if (!navLinks.contains(event.target) && !hamburgerMenu.contains(event.target)) {
-            navLinks.classList.remove('open');
-          }
-        });
-      });
-      function entrar() {
-        document.getElementById('linkIndex').click();
-      }
-      </script>
+    
     </body>
-    <script src="js/aluno.js" defer></script>
-    <script src="js/chamar_html.js" defer></script>
+    <script src="js/admNew.js"></script>
     <script src="js/menu-drop.js"></script>
     </html>
