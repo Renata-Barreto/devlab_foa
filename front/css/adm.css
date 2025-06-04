@@ -8,7 +8,115 @@ body {
     align-items: center;
     min-height: 100vh;
   }
-  
+    /*ADM novo*/
+    .sidebar {
+      width: 250px;
+      background-color: #2c3e50;
+      color: white;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      margin-top: 50px;
+      
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      
+    }
+    .sidebar ul li {
+      margin: 30px 0;
+      cursor: pointer;
+      font-size: 20px;
+      
+    }
+    .main {
+      flex: 1;
+      padding: 30px;
+      margin-bottom: 600px;
+    }
+    .welcome {
+      font-size: 24px;
+      margin-bottom: 20px;
+      
+    }
+    .dados{
+        font-size: 17px;
+        margin-bottom: 600px;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+    .photo{
+      width: 200px;         
+      height: 200px;         
+      object-fit: cover;     
+      border-radius: 50%;    
+      margin-bottom: 10px;
+    }
+    .stats {
+      display: flex;
+      gap: 20px;
+      
+    }
+    .card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      flex: 1;
+    }
+    .btn {
+    background-color: #2980b9;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    }
+
+    .btn:hover {
+    background-color: #3498db;
+    }
+    .progress-container {
+      background: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 20px;
+      margin-top: 10px;
+    }
+    .progress {
+      height: 100%;
+      background: #3498db;
+      width: 70%; /* Exemplo de progresso */
+    }
+    .ban-section {
+      margin-top: 40px;
+      
+    }
+    .ban-section input {
+      padding: 10px;
+      width: 300px;
+      margin-right: 10px;
+    }
+    .ban-section button {
+      padding: 10px 20px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /*Fim do ADM novo*/
+
+
   .container {
     margin-top: 100px;
     display: flex;
@@ -17,13 +125,6 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
-  }
-  
-  .sidebar {
-    background-color: #f2f2f2;
-    padding: 20px;
-    width: 30%;
-    text-align: center;
   }
   
   
@@ -41,11 +142,6 @@ body {
     background-color: #0056b3;
   }
   
-  .description {
-    font-size: 14px;
-    color: #555;
-    margin: 20px 0;
-  }
   
   .social-links {
       display: flex;
