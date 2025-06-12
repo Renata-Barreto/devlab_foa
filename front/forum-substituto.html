@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forum Clone</title>
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/profile-dropdown-menu.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background: #f9f9f9;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 240px;
+        background: #fff;
+        border-right: 1px solid #e0e0e0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .sidebar nav a {
+        display: block;
+        padding: 10px;
+        color: #333;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-bottom: 10px;
+      }
+
+      .sidebar nav a.active {
+        background: #ff9c00;
+        color: white;
+      }
+
+      .main {
+        flex: 1;
+        padding: 130px 40px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .topbar h1 {
+        font-size: 20px;
+      }
+
+      .filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .filters button {
+        padding: 6px 14px;
+        border-radius: 16px;
+        border: none;
+        background: #f0f0f0;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .filters button:hover {
+        background: #e0e0e0;
+      }
+
+      .filters button.active {
+        background-color: #333;
+        color: white;
+      }
+
+      .post-card {
+        background: white;
+        border-radius: 8px;
+        border: #cfcfcf solid 1px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      .post-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .post-header img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .post-title {
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .post-content {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 10px;
+      }
+
+      .tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        background: #e0e0e0;
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 12px;
+      }
+
+      .post-footer {
+        font-size: 12px;
+        color: #777;
+        display: flex;
+        gap: 16px;
+      }
+      .post-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .sidebar-footer {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .sidebar-footer i {
+        font-size: 20px;
+        color: #555;
+        cursor: pointer;
+      }
+
+      .right-panel {
+        width: 250px;
+        padding: 20px;
+        background: #fff;
+        border-left: 1px solid #e0e0e0;
+        padding-top: 130px;
+      }
+
+      .right-panel h3 {
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      .right-panel ul {
+        list-style: none;
+      }
+
+      .right-panel ul li a {
+        color: #007bff;
+        text-decoration: none;
+        display: block;
+        padding: 4px 0;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar" id="navbar"></nav>
+
+    <div class="sidebar"></div>
+
+    <div class="main">
+      <div class="topbar">
+        <h1>HOME</h1>
+        <div class="auth-buttons"></div>
+      </div>
+      <input
+        type="text"
+        placeholder="Procure por tópicos"
+        style="
+          width: 27%;
+          padding: 8px;
+          margin-bottom: 20px;
+          border-radius: 10px;
+        "
+      />
+      <div class="filters">
+        <button class="tab-button active">
+          <i class="fa fa-arrow-up"></i> Top
+        </button>
+        <button class="tab-button">
+          <i class="fa-regular fa-clock"></i> Novo
+        </button>
+        <button class="tab-button">
+          <i class="fa-solid fa-fire"></i> Popular
+        </button>
+        <button class="tab-button">
+          <i class="fa-solid fa-circle-check"></i> Fechado
+        </button>
+      </div>
+
+      <div id="post-container"></div>
+    </div>
+
+    <div class="right-panel">
+      <div>
+        <h3>Posts importantes</h3>
+        <ul>
+          <li><a href="#">Por favor, leia as regras...</a></li>
+          <li><a href="#">Visão e Estratégia...</a></li>
+        </ul>
+      </div>
+      <div style="margin-top: 20px">
+        <h3>Links em destaque</h3>
+        <ul>
+          <li><a href="#">Código no GitHub</a></li>
+          <li><a href="#">Boas práticas em Golang</a></li>
+          <li><a href="#">Painel</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="js/menu-drop.js" defer></script>
+    <script src="js/menu.js"></script>
+    <script>
+      const buttons = document.querySelectorAll(".tab-button");
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          buttons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+        });
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        const postContainer = document.getElementById("post-container");
+
+        async function carregarPosts() {
+          try {
+            const resposta = await fetch("/api/posts");
+            const posts = await resposta.json();
+
+            postContainer.innerHTML = "";
+
+            posts.forEach((post) => {
+              const card = document.createElement("div");
+              card.className = "post-card";
+              card.innerHTML = `
+          <div class="post-header">
+            <img src="${post.user.avatar}" alt="User" />
+            <div>
+              <strong>${post.user.nome}</strong>
+              <div style="font-size: 12px; color: #888">${post.time}</div>
+            </div>
+          </div>
+          <div class="post-title">${post.titulo}</div>
+          <div class="post-content">${post.content}</div>
+          <div class="post-meta">
+            <div class="tags">
+              ${post.tags
+                .map((tag) => `<div class="tag">${tag}</div>`)
+                .join("")}
+            </div>
+            <div class="post-footer">
+              <i class="fa-regular fa-eye"></i> ${post.views}
+              &nbsp;&nbsp;<i class="fa-regular fa-comment"></i> ${post.comments}
+              &nbsp;&nbsp;<i class="fa fa-arrow-up"></i> ${post.likes}
+            </div>
+          </div>
+        `;
+              postContainer.appendChild(card);
+            });
+          } catch (erro) {
+            console.error("Erro ao carregar posts:", erro);
+            postContainer.innerHTML = "<p>Erro ao carregar posts.</p>";
+          }
+        }
+
+        carregarPosts();
+      });
+    </script>
+  </body>
+</html>

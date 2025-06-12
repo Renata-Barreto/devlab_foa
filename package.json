@@ -16,9 +16,18 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
+    "json-server": "^1.0.0-beta.3",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.0",
     "nodemon": "^3.1.9",
     "pg": "^8.16.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dicolab7/devlab.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dicolab7/devlab/issues"
+  },
+  "homepage": "https://github.com/dicolab7/devlab#readme"
 }

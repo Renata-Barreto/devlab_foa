@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Question</title>
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/profile-dropdown-menu.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #f9f9f9;
+        margin: 0;
+        color: #333;
+      }
+
+      main {
+        display: flex;
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .sidebar {
+        width: 220px;
+        padding: 20px;
+        background: white;
+        border-right: 1px solid #eee;
+      }
+
+      .sidebar nav input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin: 8px 0;
+      }
+
+      .sidebar li.active {
+        color: #ff6d3d;
+        font-weight: bold;
+      }
+
+      .question-area {
+        flex: 1;
+        padding: 0 10px;
+      }
+
+      .question-card,
+      .answer-card,
+      .suggestions {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        box-shadow: 0 0 4px #ddd;
+      }
+
+      .question-header,
+      .answer-card header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .avatar-sm {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+
+      .tags span {
+        background: #eee;
+        padding: 4px 8px;
+        border-radius: 4px;
+        margin-right: 5px;
+        font-size: 12px;
+      }
+
+      .vote-btn {
+        background: #007bff;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        margin-top: 10px;
+        cursor: pointer;
+      }
+
+      .suggestions input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 10px;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+        gap: 10px;
+      }
+
+      .cancel {
+        background: #ddd;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+
+      .submit {
+        background: #2b2a2a;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 14px;
+      }
+
+      .reply {
+        padding: 10px;
+        margin-left: 30px;
+        background: #f0f0f0;
+        border-left: 3px solid #ccc;
+        margin-bottom: 10px;
+      }
+
+      .profile-card {
+        width: 220px;
+        background: white;
+        padding: 20px;
+        border-radius: 6px;
+        text-align: center;
+        box-shadow: 0 0 4px #ddd;
+      }
+
+      .social span {
+        margin: 5px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 900px) {
+        main {
+          flex-direction: column;
+        }
+
+        .sidebar,
+        .profile-card {
+          width: 100%;
+          margin-bottom: 20px;
+        }
+
+        .question-area {
+          padding: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+  <nav class="navbar" id="navbar"></nav>
+  <main>
+    <aside class="sidebar">
+    </aside>
+
+    <section class="question-area">
+      <article class="question-card">
+        <header class="question-header">
+          <img src="https://i.pravatar.cc/40" alt="usuário" class="avatar-sm" />
+          <div>
+            <strong>@Golanginya</strong><br />
+            <small>12 de novembro de 2020 13:35</small>
+          </div>
+        </header>
+        <h2>Como corrigir o KDE no FreeBSD?</h2>
+        <p>Mi magna sed nec nisl mattis...</p>
+        <pre>
+1. package main
+2. import "fmt"
+3. func main() {
+4.   fmt.Println("Olá, mundo!")
+5. }
+</pre>
+        <p>Posuere arcu non consectetur turpis rhoncus tellus...</p>
+        <div class="tags">
+          <span>java</span><span>javascript</span><span>wifi</span>
+        </div>
+        <button class="vote-btn">👍 Votar</button>
+      </article>
+      <h3>Sugestões</h3>
+
+      <section class="suggestions">
+        <form>
+          <input type="text" placeholder="Digite sua sugestão aqui" />
+          <div class="actions">
+            <button type="button" class="cancel">Cancelar</button>
+            <button type="submit" class="submit">Sugerir</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="answers">
+        <article class="answer-card">
+          <header>
+            <strong>@unkind</strong>
+            <small>12 de novembro de 2020 19:55</small>
+          </header>
+          <p>Lorem ipsum dolor sit amet...</p>
+          <pre>package main</pre>
+          <p>Lorem ipsum dolor sit amet...</p>
+          <div class="footer">
+            <span>👍 12</span><span>💬 3</span>
+            <a href="#">Ocultar todas as respostas (2)</a>
+            <a href="#">Responder</a>
+          </div>
+        </article>
+
+        <div class="reply">@unkind, Lorem ipsum...</div>
+        <div class="reply">@lazyReplyer, Obrigado!</div>
+
+        <article class="answer-card">
+          <header>
+            <strong>@morgenshtern</strong>
+            <small>12 de novembro de 2020 19:55</small>
+          </header>
+          <p>Lorem ipsum dolor sit amet...</p>
+          <div class="footer">
+            <span>👍 256</span><span>💬 43</span>
+            <a href="#">Mostrar todas as respostas (21)</a>
+            <a href="#">Responder</a>
+          </div>
+        </article>
+
+        <article class="answer-card">
+          <header>
+            <strong>@kizaru</strong>
+            <small>12 de novembro de 2020 19:55</small>
+          </header>
+          <p>Mi ac id faucibus laoreet...</p>
+          <div class="footer">
+            <span>👍 1</span><span>💬 0</span>
+            <a href="#">Responder</a>
+          </div>
+        </article>
+      </section>
+    </section>
+
+    <aside class="profile-card">
+    
+    </aside>
+  </main>
+  <script src="js/menu-drop.js" defer></script>
+  <script src="js/menu.js"></script>
+</body>
+</html>
