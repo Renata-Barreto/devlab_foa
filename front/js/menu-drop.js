@@ -1,70 +1,114 @@
+// front/js/menu-drop.js
 async function carregarNavbar() {
   const auth = JSON.parse(localStorage.getItem("auth"));
   const token = auth?.token || auth;
+  console.log("Autenticação encontrada:", auth);
 
-  fetch("navbar.html")
-    .then((response) => response.text())
-    .then(async (data) => {
-      document.getElementById("navbar").innerHTML = data;
+  try {
+    const response = await fetch("navbar.html");
+    if (!response.ok) {
+      throw new Error(`Erro ao carregar navbar: ${response.status}`);
+    }
+    const data = await response.text();
+    const navbar = document.getElementById("navbar");
+    if (navbar) {
+      navbar.innerHTML = data;
+    } else {
+      console.warn("Elemento #navbar não encontrado.");
+      return;
+    }
+
+    // Selecionar elementos após carregar o HTML
+    const profileDropdownList = document.querySelector(".profile-dropdown-list");
+    const btn = document.querySelector(".profile-dropdown-btn");
+    const nomeEntrar = document.getElementById("nome_entrar");
+    const profileImg = btn?.querySelector(".profile-img");
+
+    if (!btn || !profileDropdownList) {
+      console.warn("Elementos .profile-dropdown-btn ou .profile-dropdown-list não encontrados.");
       inicializarMenuHamburger();
+      return;
+    }
 
-      const profileDropdownList = document.querySelector(".profile-dropdown-list");
-      const btn = document.querySelector(".profile-dropdown-btn");
-      const nomeEntrar = document.getElementById("nome_entrar");
-
-      if (!token) {
-      
-        nomeEntrar.innerHTML = `Entrar`;
-        btn.addEventListener("click", () => {
+    if (!token) {
+      if (nomeEntrar) {
+        nomeEntrar.innerHTML = `Entrar <i class="fa-solid fa-angle-down"></i>`;
+      }
+      if (btn && profileImg) {
+        profileImg.style.backgroundImage = `url('imagens/entrar.png')`;
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          console.log("Botão de login clicado");
           window.location.href = "login.html";
         });
-        btn.querySelector(".profile-img").style.backgroundImage = `url('https://gabrielaccorsi.github.io/Projeto-SI/imagens/entrar.png')`;
-        return;
       }
+      inicializarMenuHamburger();
+      return;
+    }
 
-     
-      const response = await fetch("http://localhost:3000/user", {
+    try {
+      const userResponse = await fetch("http://localhost:3000/api/users/", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (!response.ok) {
-        localStorage.removeItem("auth");
-        window.location.reload();
+      if (!userResponse.ok) {
+        console.warn(`Erro ao carregar usuário: ${userResponse.status}`);
+        if (nomeEntrar) {
+          nomeEntrar.innerHTML = `Usuário <i class="fa-solid fa-angle-down"></i>`;
+        }
+        if (profileImg) {
+          profileImg.style.backgroundImage = `url('imagens/entrar.png')`;
+        }
+        inicializarMenuHamburger();
         return;
       }
 
-      const {user} = await response.json();
+      const responseData = await userResponse.json();
+      const user = responseData.user || responseData; // Ajuste para estrutura { user: {...} } ou direta
+      console.log("Usuário carregado:", user);
 
-      console.log(user);
-
-      let nome = user.name || user.username || user.email.split("@")[0];
+      let nome = user.nome_usr || user.name || user.username || user.email?.split("@")[0] || "Usuário";
       nome = nome.split(" ")[0];
       nome = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
       if (nome.length > 8) nome = nome.slice(0, 8) + "...";
-      nomeEntrar.innerHTML = `${nome} <i class="fa-solid fa-angle-down"></i>`;
+      if (nomeEntrar) {
+        nomeEntrar.innerHTML = `${nome} <i class="fa-solid fa-angle-down"></i>`;
+      }
 
-      const foto = user.avatar || "https://gabrielaccorsi.github.io/Projeto-SI/imagens/entrar.png";
-      document.querySelector(".profile-img").style.backgroundImage = `url('${foto}')`;
+      const foto = user.img_usr ? `http://localhost:3000${user.img_usr}` : "imagens/entrar.png";
+      if (profileImg) {
+        profileImg.style.backgroundImage = `url('${foto}')`;
+        const img = new Image();
+        img.onerror = () => {
+          console.warn(`Falha ao carregar imagem: ${foto}`);
+          profileImg.style.backgroundImage = `url('imagens/entrar.png')`;
+        };
+        img.src = foto;
+      }
 
-  
+      if (btn && profileDropdownList) {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          console.log("Dropdown clicado, estado atual:", profileDropdownList.classList.contains("active"));
+          profileDropdownList.classList.toggle("active");
+        });
+        window.addEventListener("click", (e) => {
+          if (!btn.contains(e.target) && !profileDropdownList.contains(e.target)) {
+            console.log("Fechando dropdown por clique fora");
+            profileDropdownList.classList.remove("active");
+          }
+        });
+      }
 
-
-      btn.addEventListener("click", () => {
-        profileDropdownList.classList.toggle("active");
-      });
-      window.addEventListener("click", (e) => {
-        if (!btn.contains(e.target) && !profileDropdownList.contains(e.target)) {
-          profileDropdownList.classList.remove("active");
-        }
-      });
-
-      // Tipo de usuário
-      const tipo = user.tipo || "aluno";
+      const tipo = user.tipo || auth?.userTipo || "aluno";
       if (tipo === "adm") {
-        document.querySelector("#link-contato")?.setAttribute("href", "mensagens.html");
+        const linkContato = document.querySelector("#link-contato");
+        if (linkContato) {
+          linkContato.setAttribute("href", "mensagens.html");
+        }
       }
 
       const perfilBtn = document.querySelector("#Perfil");
@@ -75,40 +119,224 @@ async function carregarNavbar() {
         });
       }
 
-      // Logout
       const exitItem = document.getElementById("Deslogar");
       if (exitItem) {
-        exitItem.addEventListener("click", () => {
+        exitItem.addEventListener("click", (e) => {
+          e.preventDefault();
           localStorage.removeItem("auth");
           window.location.reload();
         });
       }
-    })
-    .catch((error) => console.error("Erro ao carregar a navbar:", error));
+
+      inicializarMenuHamburger();
+    } catch (error) {
+      console.error("Erro ao carregar dados do usuário:", error);
+      if (nomeEntrar) {
+        nomeEntrar.innerHTML = `Usuário <i class="fa-solid fa-angle-down"></i>`;
+      }
+      if (profileImg) {
+        profileImg.style.backgroundImage = `url('imagens/entrar.png')`;
+      }
+      inicializarMenuHamburger();
+    }
+  } catch (error) {
+    console.error("Erro ao carregar a navbar:", error);
+    inicializarMenuHamburger();
+  }
 }
 
-
-// menu hambúrguer
 function inicializarMenuHamburger() {
   const hamburgerMenu = document.querySelector(".hamburger-menu");
   const navLinks = document.querySelector(".nav_links");
 
   if (hamburgerMenu && navLinks) {
-    hamburgerMenu.addEventListener("click", function (event) {
+    const newHamburgerMenu = hamburgerMenu.cloneNode(true);
+    hamburgerMenu.parentNode.replaceChild(newHamburgerMenu, hamburgerMenu);
+    newHamburgerMenu.addEventListener("click", (event) => {
       event.stopPropagation();
       navLinks.classList.toggle("open");
+      console.log("Hamburger menu clicado, estado:", navLinks.classList.contains("open"));
     });
 
-    document.addEventListener("click", function (event) {
-      if (
-        !navLinks.contains(event.target) &&
-        !hamburgerMenu.contains(event.target)
-      ) {
+    document.addEventListener("click", (event) => {
+      if (!navLinks.contains(event.target) && !newHamburgerMenu.contains(event.target)) {
         navLinks.classList.remove("open");
       }
     });
+  } else {
+    console.warn("Elementos .hamburger-menu ou .nav_links não encontrados.");
   }
 }
 
-// Inicializa a navbar ao carregar a página
-document.addEventListener("DOMContentLoaded", carregarNavbar, inicializarMenuHamburger) ;
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM carregado, iniciando carregarNavbar");
+  carregarNavbar();
+});
+
+// // front/js/menu-drop.js
+// async function carregarNavbar() {
+//   const auth = JSON.parse(localStorage.getItem("auth"));
+//   const token = auth?.token || auth;
+//   console.log("Autenticação encontrada:", auth);
+
+//   try {
+//     const response = await fetch("navbar.html");
+//     if (!response.ok) {
+//       throw new Error(`Erro ao carregar navbar: ${response.status}`);
+//     }
+//     const data = await response.text();
+//     const navbar = document.getElementById("navbar");
+//     if (navbar) {
+//       navbar.innerHTML = data;
+//     } else {
+//       console.warn("Elemento #navbar não encontrado.");
+//       return;
+//     }
+
+//     // Selecionar elementos após carregar o HTML
+//     const profileDropdownList = document.querySelector(".profile-dropdown-list");
+//     const btn = document.querySelector(".profile-dropdown-btn");
+//     const nomeEntrar = document.getElementById("nome_entrar");
+//     const profileImg = btn?.querySelector(".profile-img");
+
+//     if (!btn || !profileDropdownList) {
+//       console.warn("Elementos .profile-dropdown-btn ou .profile-dropdown-list não encontrados.");
+//     }
+
+//     if (!token) {
+//       if (nomeEntrar) {
+//         nomeEntrar.innerHTML = `Entrar <i class="fa-solid fa-angle-down"></i>`;
+//       }
+//       if (btn && profileImg) {
+//         profileImg.style.backgroundImage = `url('imagens/entrar.png')`; // Fallback local
+//         btn.addEventListener("click", (e) => {
+//           e.stopPropagation();
+//           window.location.href = "login.html";
+//         });
+//       }
+//       inicializarMenuHamburger();
+//       return;
+//     }
+
+//     try {
+//       const userResponse = await fetch("http://localhost:3000/api/users/", {
+//         method: "GET",
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       if (!userResponse.ok) {
+//         console.warn(`Erro ao carregar usuário: ${userResponse.status}`);
+//         if (nomeEntrar) {
+//           nomeEntrar.innerHTML = `Usuário <i class="fa-solid fa-angle-down"></i>`;
+//         }
+//         if (profileImg) {
+//           profileImg.style.backgroundImage = `url('imagens/entrar.png')`;
+//         }
+//         inicializarMenuHamburger();
+//         return;
+//       }
+
+//       const user = await userResponse.json(); // Ajustado para estrutura direta
+//       console.log("Usuário carregado:", user);
+
+//       let nome = user.nome_usr || user.name || user.username || user.email?.split("@")[0] || "Usuário";
+//       nome = nome.split(" ")[0];
+//       nome = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+//       if (nome.length > 8) nome = nome.slice(0, 8) + "...";
+//       if (nomeEntrar) {
+//         nomeEntrar.innerHTML = `${nome} <i class="fa-solid fa-angle-down"></i>`;
+//       }
+
+//       const foto = user.img_usr ? `http://localhost:3000${user.img_usr}` : "imagens/entrar.png";
+//       if (profileImg) {
+//         profileImg.style.backgroundImage = `url('${foto}')`;
+//         const img = new Image();
+//         img.onerror = () => {
+//           console.warn(`Falha ao carregar imagem: ${foto}`);
+//           profileImg.style.backgroundImage = `url('imagens/entrar.png')`;
+//         };
+//         img.src = foto;
+//       }
+
+//       if (btn && profileDropdownList) {
+//         btn.addEventListener("click", (e) => {
+//           e.stopPropagation();
+//           console.log("Dropdown clicado");
+//           profileDropdownList.classList.toggle("active");
+//         });
+//         window.addEventListener("click", (e) => {
+//           if (!btn.contains(e.target) && !profileDropdownList.contains(e.target)) {
+//             profileDropdownList.classList.remove("active");
+//           }
+//         });
+//       }
+
+//       const tipo = user.tipo || auth?.userTipo || "aluno";
+//       if (tipo === "adm") {
+//         const linkContato = document.querySelector("#link-contato");
+//         if (linkContato) {
+//           linkContato.setAttribute("href", "mensagens.html");
+//         }
+//       }
+
+//       const perfilBtn = document.querySelector("#Perfil");
+//       if (perfilBtn) {
+//         perfilBtn.addEventListener("click", (e) => {
+//           e.preventDefault();
+//           window.location.href = tipo === "adm" ? "pagina_adm.html" : "pagina_aluno.html";
+//         });
+//       }
+
+//       const exitItem = document.getElementById("Deslogar");
+//       if (exitItem) {
+//         exitItem.addEventListener("click", (e) => {
+//           e.preventDefault();
+//           localStorage.removeItem("auth");
+//           window.location.reload();
+//         });
+//       }
+
+//       inicializarMenuHamburger();
+//     } catch (error) {
+//       console.error("Erro ao carregar dados do usuário:", error);
+//       if (nomeEntrar) {
+//         nomeEntrar.innerHTML = `Usuário <i class="fa-solid fa-angle-down"></i>`;
+//       }
+//       if (profileImg) {
+//         profileImg.style.backgroundImage = `url('imagens/entrar.png')`;
+//       }
+//       inicializarMenuHamburger();
+//     }
+//   } catch (error) {
+//     console.error("Erro ao carregar a navbar:", error);
+//     inicializarMenuHamburger();
+//   }
+// }
+
+// function inicializarMenuHamburger() {
+//   const hamburgerMenu = document.querySelector(".hamburger-menu");
+//   const navLinks = document.querySelector(".nav_links");
+
+//   if (hamburgerMenu && navLinks) {
+//     const newHamburgerMenu = hamburgerMenu.cloneNode(true);
+//     hamburgerMenu.parentNode.replaceChild(newHamburgerMenu, hamburgerMenu);
+//     newHamburgerMenu.addEventListener("click", (event) => {
+//       event.stopPropagation();
+//       navLinks.classList.toggle("open");
+//     });
+
+//     document.addEventListener("click", (event) => {
+//       if (!navLinks.contains(event.target) && !newHamburgerMenu.contains(event.target)) {
+//         navLinks.classList.remove("open");
+//       }
+//     });
+//   } else {
+//     console.warn("Elementos .hamburger-menu ou .nav_links não encontrados.");
+//   }
+// }
+
+// document.addEventListener("DOMContentLoaded", () => {
+//   carregarNavbar();
+// });

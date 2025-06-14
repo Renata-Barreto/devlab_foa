@@ -3,40 +3,38 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = auth?.token || auth;
 
   if (!token) {
+    console.log("Usuário não autenticado. Redirecionando para o login.");
     alert("Usuário não autenticado. Redirecionando para o login.");
     window.location.href = "/login.html";
     return;
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:3000/user", {
+    console.log("Enviando requisição para GET /api/users com token:", token);
+    const response = await fetch("http://127.0.0.1:3000/api/users", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
+    console.log("Status da resposta:", response.status, response.statusText);
     if (!response.ok) {
-      throw new Error("Token inválido ou usuário não encontrado");
+      const errorData = await response.json();
+      console.log("Detalhes do erro:", errorData);
+      throw new Error(`Erro na requisição: ${response.status} ${response.statusText} - ${errorData.message || 'Sem mensagem'}`);
     }
 
     const { user } = await response.json();
+    console.log("Dados do usuário recebidos:", user);
     fetchUserData(user);
     const form = document.getElementById("personalizacaoForm");
     form.setAttribute("data-token", token);
   } catch (err) {
-    console.error(err);
+    console.error("Erro ao buscar dados do usuário:", err);
     localStorage.removeItem("auth");
     window.location.href = "/login.html";
   }
 });
-
-// async function fetchUserData(user) {
-//   const nome = user.nome_usr || user.email_usr.split("@")[0];
-//   const inicial = nome.charAt(0).toUpperCase();
-//   document.getElementById("canvas").setAttribute("data-inicial", inicial);
-//   generateAvatar(inicial);
-//   createColorPicker();
-// }
 
 async function fetchUserData(user) {
   const nome = user.nome_usr || user.email_usr.split("@")[0];
@@ -47,7 +45,7 @@ async function fetchUserData(user) {
 
   if (user.prf_pfl) {
     const img = new Image();
-    img.crossOrigin = "anonymous"; // para evitar problemas de CORS
+    img.crossOrigin = "anonymous";
     img.src = user.prf_pfl.startsWith("data:image")
       ? user.prf_pfl
       : `http://127.0.0.1:3000${user.prf_pfl}`;
@@ -137,7 +135,8 @@ document.getElementById("personalizacaoForm").addEventListener("submit", async (
   }
 
   try {
-    const response = await fetch(`http://127.0.0.1:3000/user/`, {
+    console.log("Enviando requisição para PATCH /api/users");
+    const response = await fetch("http://127.0.0.1:3000/api/users", {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -145,20 +144,23 @@ document.getElementById("personalizacaoForm").addEventListener("submit", async (
       body: formData,
     });
 
+    console.log("Status da resposta:", response.status, response.statusText);
     const data = await response.json();
+    console.log("Dados recebidos:", data);
 
     if (response.ok && data.user) {
+      console.log("Atualização bem-sucedida, redirecionando...");
       if (data.user.tipo === "adm") {
         window.location.href = "/pagina_adm.html";
       } else {
         window.location.href = "/pagina_aluno.html";
       }
     } else {
+      console.log("Erro na atualização:", data.message);
       alert(data.message || "Erro ao atualizar perfil. Tente novamente.");
     }
   } catch (error) {
     console.error("Erro ao atualizar perfil:", error);
     alert("Erro ao atualizar perfil. Tente novamente.");
   }
-}); //
-
+});

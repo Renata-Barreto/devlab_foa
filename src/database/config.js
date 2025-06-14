@@ -30,7 +30,7 @@ const pool = new Pool(dbConfig);
 
 // Testar a conexão
 pool.connect()
-  .then(() => console.log('Conexão com o banco de dados estabelecida com sucesso.'))
+  .then(() => console.log('Conexão com o banco de dados estabelecida com sucesso. Mensagem do config do database'))
   .catch((error) => console.error('Erro ao conectar ao banco de dados:', error));
 
 // Exportar o pool diretamente

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciar Meus Tópicos</title>
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/profile-dropdown-menu.css" />
+    <link rel="stylesheet" href="css/post.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tagify/core@4.17.9/dist/tagify.css"
+    />
+  </head>
+  <body>
+    <nav class="navbar" id="navbar"></nav>
+    <main>
+      <aside class="sidebar">
+        <nav>
+          <input type="text" placeholder="Procurar tópicos" />
+          <ul>
+            <li><a href="forum-substituto.html">Início</a></li>
+            <li><a href="#">Tópicos</a></li>
+            <li class="active"><a href="gerenciar-topicos.html">Minhas Postagens</a></li>
+            <li><a href="#">Perfil</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <section class="question-area">
+        <h2>Meus Tópicos</h2>
+        <div id="topics-container"></div>
+      </section>
+
+      <aside class="profile-card">
+        <div id="profile-info"></div>
+        <div class="social">
+          <span><i class="fa-brands fa-github"></i></span>
+          <span><i class="fa-brands fa-linkedin"></i></span>
+          <span><i class="fa-brands fa-twitter"></i></span>
+        </div>
+      </aside>
+
+      <div id="topic-modal" class="modal">
+        <div class="modal-content">
+          <h2 id="modal-title"></h2>
+          <div id="modal-body"></div>
+          <div class="actions">
+            <button class="action-btn cancel" onclick="closeModal()">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tagify/core@4.17.9/dist/tagify.min.js"></script>
+    <script src="js/menu-drop.js" defer></script>
+    <script src="js/menu.js" defer></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        if (!auth || !auth.token) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        let userId;
+        try {
+          const decoded = jwt_decode(auth.token);
+          console.log("Token decodificado:", decoded);
+          userId = decoded.id;
+          const profileCard = document.getElementById("profile-info");
+          let nome = (decoded.nome_usr || decoded.name || "Usuário").split(" ")[0];
+          nome = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+          if (nome.length > 8) nome = nome.slice(0, 8) + "...";
+          profileCard.innerHTML = `
+            <img src="${decoded.img_usr || decoded.avatar || "https://i.pravatar.cc/40"}" alt="Usuário" class="avatar-sm" />
+            <h3>${nome}</h3>
+            <p>${decoded.email_usr || decoded.email || "Sem email"}</p>
+          `;
+        } catch (err) {
+          console.error("Erro ao decodificar token:", err);
+          localStorage.removeItem("auth");
+          window.location.href = "login.html";
+          return;
+        }
+
+        async function carregarTopicos() {
+          try {
+            console.log("Carregando tópicos para user_id:", userId);
+            const response = await fetch("http://127.0.0.1:3000/api/meus-topicos", {
+              headers: {
+                Authorization: `Bearer ${auth.token}`,
+              },
+            });
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+            }
+            const topicos = await response.json();
+            console.log("Tópicos recebidos:", topicos);
+
+            const topicsContainer = document.getElementById("topics-container");
+            topicsContainer.innerHTML = topicos.length
+              ? topicos
+                  .map(
+                    (topico) => `
+                    <article class="topic-card">
+                      <header class="topic-header">
+                        <img src="${topico.user.avatar || "https://i.pravatar.cc/40"}" alt="Usuário" class="avatar-sm" />
+                        <div>
+                          <strong>${topico.user.nome}</strong><br />
+                          <small>${new Date(topico.time).toLocaleString()}</small>
+                        </div>
+                      </header>
+                      <h3>${topico.titulo}</h3>
+                      <div>${topico.descricao}</div>
+                      <div class="tags">
+                        ${topico.tags.map((tag) => `<span>${tag}</span>`).join("")}
+                      </div>
+                      <div>Status: ${topico.status}</div>
+                      <div>Ativo: ${topico.ativo ? "Sim" : "Não"}</div>
+                      <div class="actions">
+                        <button class="action-btn view-btn" onclick="visualizarTopico(${topico.id})">Visualizar</button>
+                        <button class="action-btn edit-btn" onclick="editarTopico(${topico.id})">Editar</button>
+                        <button class="action-btn disable-btn" onclick="desativarTopico(${topico.id})">${
+                          topico.ativo ? "Desativar" : "Ativar"
+                        }</button>
+                        <button class="action-btn close-btn" onclick="fecharTopico(${topico.id})">${
+                          topico.status === "aberto" ? "Fechar" : "Reabrir"
+                        }</button>
+                        <button class="action-btn delete-btn" onclick="excluirTopico(${topico.id})">Excluir</button>
+                      </div>
+                    </article>
+                  `
+                  )
+                  .join("")
+              : "<p>Você ainda não criou nenhum tópico.</p>";
+          } catch (error) {
+            console.error("Erro ao carregar tópicos:", error);
+            document.getElementById("topics-container").innerHTML = `<p>Erro ao carregar tópicos: ${error.message}</p>`;
+          }
+        }
+
+        function visualizarTopico(topicoId) {
+          console.log("Visualizando tópico ID:", topicoId);
+          sessionStorage.setItem("currentTopicoId", topicoId);
+          window.location.href = "post.html";
+        }
+
+        async function editarTopico(topicoId) {
+          try {
+            const response = await fetch(`http://127.0.0.1:3000/api/topicos/${topicoId}`, {
+              headers: {
+                Authorization: `Bearer ${auth.token}`,
+              },
+            });
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+            }
+            const topico = await response.json();
+
+            const modal = document.getElementById("topic-modal");
+            const modalTitle = document.getElementById("modal-title");
+            const modalBody = document.getElementById("modal-body");
+
+            modalTitle.textContent = "Editar Tópico";
+            modalBody.innerHTML = `
+              <form id="edit-form">
+                <label>Título:</label>
+                <input type="text" id="edit-titulo" value="${topico.titulo}" required />
+                <label>Descrição:</label>
+                <textarea id="edit-descricao" required>${topico.descricao}</textarea>
+                <label>Categoria:</label>
+                <select id="edit-categoria" required></select>
+                <label>Tags (opcional):</label>
+                <input type="text" id="edit-tags" />
+                <div class="actions">
+                  <button type="button" class="action-btn cancel" onclick="closeModal()">Cancelar</button>
+                  <button type="submit" class="action-btn submit">Salvar</button>
+                </div>
+              </form>
+            `;
+
+            // Carregar categorias
+            const categoriasResponse = await fetch("http://127.0.0.1:3000/api/categorias");
+            if (!categoriasResponse.ok) throw new Error(`Erro ao carregar categorias: ${categoriasResponse.status}`);
+            const categorias = await categoriasResponse.json();
+            console.log("Categorias carregadas:", categorias);
+            const categoriaSelect = document.getElementById("edit-categoria");
+            categoriaSelect.innerHTML = categorias
+              .map((cat) => `<option value="${cat.id}" ${cat.id === topico.categoria_id ? "selected" : ""}>${cat.nome}</option>`)
+              .join("");
+
+            // Carregar tags
+            const tagsResponse = await fetch("http://127.0.0.1:3000/api/tags");
+            if (!tagsResponse.ok) throw new Error(`Erro ao carregar tags: ${tagsResponse.status}`);
+            const tags = await tagsResponse.json();
+            console.log("Tags carregadas:", tags);
+            const tagify = new Tagify(document.getElementById("edit-tags"), {
+              whitelist: tags.map((tag) => ({ value: tag.nome, id: tag.id })),
+              enforceWhitelist: false,
+              dropdown: {
+                enabled: 1,
+                classname: "tags-look",
+                maxItems: 10,
+                position: "text",
+                closeOnSelect: false,
+              },
+            });
+            tagify.addTags(topico.tags.map((tag) => ({ value: tag })));
+
+            // Enviar edição
+            document.getElementById("edit-form").addEventListener("submit", async (e) => {
+              e.preventDefault();
+              try {
+                const titulo = document.getElementById("edit-titulo").value;
+                const descricao = document.getElementById("edit-descricao").value;
+                const categoria_id = document.getElementById("edit-categoria").value;
+                const tags = tagify.value.map((t) => t.id ? parseInt(t.id) : t.value);
+
+                console.log("Enviando edição para tópico ID:", topicoId, { titulo, descricao, categoria_id, tags });
+
+                const response = await fetch(`http://127.0.0.1:3000/api/topicos/${topicoId}`, {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${auth.token}`,
+                  },
+                  body: JSON.stringify({ titulo, descricao, categoria_id, tags }),
+                });
+                if (!response.ok) {
+                  const errorData = await response.json();
+                  throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+                }
+                closeModal();
+                carregarTopicos();
+              } catch (error) {
+                console.error("Erro ao editar tópico:", error);
+                alert("Erro ao editar tópico: " + error.message);
+              }
+            });
+
+            modal.style.display = "flex";
+          } catch (error) {
+            console.error("Erro ao carregar tópico para edição:", error);
+            alert("Erro ao carregar tópico: " + error.message);
+          }
+        }
+
+        async function desativarTopico(topicoId) {
+          if (!confirm("Deseja desativar este tópico?")) return;
+          try {
+            console.log("Desativando tópico ID:", topicoId);
+            const response = await fetch(`http://127.0.0.1:3000/api/topicos/${topicoId}/desativar`, {
+              method: "PATCH",
+              headers: { Authorization: `Bearer ${auth.token}` },
+            });
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+            }
+            carregarTopicos();
+          } catch (error) {
+            console.error("Erro ao desativar tópico:", error);
+            alert("Erro ao desativar tópico: " + error.message);
+          }
+        }
+
+        async function fecharTopico(topicoId) {
+          if (!confirm("Deseja fechar este tópico?")) return;
+          try {
+            console.log("Fechando tópico ID:", topicoId);
+            const response = await fetch(`http://127.0.0.1:3000/api/topicos/${topicoId}/fechar`, {
+              method: "PATCH",
+              headers: { Authorization: `Bearer ${auth.token}` },
+            });
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+            }
+            carregarTopicos();
+          } catch (error) {
+            console.error("Erro ao fechar tópico:", error);
+            alert("Erro ao fechar tópico: " + error.message);
+          }
+        }
+
+        async function excluirTopico(topicoId) {
+          if (!confirm("Deseja excluir este tópico?")) return;
+          try {
+            console.log("Excluindo tópico ID:", topicoId);
+            const response = await fetch(`http://127.0.0.1:3000/api/topicos/${topicoId}`, {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${auth.token}` },
+            });
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+            }
+            carregarTopicos();
+          } catch (error) {
+            console.error("Erro ao excluir tópico:", error);
+            alert("Erro ao excluir tópico: " + error.message);
+          }
+        }
+
+        function closeModal() {
+          const modal = document.getElementById("topic-modal");
+          modal.style.display = "none";
+        }
+
+        carregarTopicos();
+      });
+    </script>
+  </body>
+</html>

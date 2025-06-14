@@ -11,6 +11,6 @@ const config = {
   port: process.env.PORT || 3000,
 };
 
-console.log('Configuração do servidor:', config);
+console.log('Configuração do servidor:', config, ' - Mensagem do config da raiz');
 
 export default config;

@@ -321,6 +321,143 @@
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 
     <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    if (!auth || !auth.token) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    let userId;
+    try {
+      const decoded = jwt_decode(auth.token);
+      userId = decoded.id;
+      console.log('Usuário autenticado:', decoded);
+    } catch (err) {
+      console.error("Token inválido:", err);
+      localStorage.removeItem("auth");
+      window.location.href = "login.html";
+      return;
+    }
+
+    let tagify;
+
+    async function carregarTags() {
+      try {
+        const res = await fetch("http://127.0.0.1:3000/api/tags");
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+        const tags = await res.json();
+        console.log('Tags carregadas:', tags);
+        const input = document.getElementById("tags");
+        tagify = new Tagify(input, {
+          whitelist: tags.map((tag) => ({
+            value: tag.nome,
+            id: tag.id,
+          })),
+          enforceWhitelist: false,
+          dropdown: {
+            enabled: 1,
+            classname: "tags-look",
+            maxItems: 10,
+            position: "text",
+            closeOnSelect: false,
+          },
+        });
+      } catch (err) {
+        console.error("Erro ao carregar tags:", err);
+      }
+    }
+
+    async function carregarCategorias() {
+      const categoriaSelect = document.getElementById("categoria");
+      try {
+        const res = await fetch("http://127.0.0.1:3000/api/categorias");
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+        const categorias = await res.json();
+        console.log('Categorias carregadas:', categorias);
+        categoriaSelect.innerHTML =
+          '<option value="" disabled selected>Escolha uma categoria</option>';
+
+        categorias.forEach((cat) => {
+          const option = document.createElement("option");
+          option.value = cat.id;
+          option.textContent = cat.nome;
+          categoriaSelect.appendChild(option);
+        });
+      } catch (err) {
+        console.error("Erro ao carregar categorias:", err);
+      }
+    }
+
+    carregarTags();
+    carregarCategorias();
+
+    const quill = new Quill("#editor", {
+      theme: "snow",
+      placeholder: "Digite sua descrição aqui...",
+    });
+
+    const btn = document.getElementById("criarTopico");
+    const overlay = document.getElementById("loadingOverlay");
+
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+
+      try {
+        const titulo = document.getElementById("titulo").value.trim();
+        const descricao = quill.root.innerHTML.trim();
+        const categoria = document.getElementById("categoria").value;
+        const tags = tagify.value.map((t) => parseInt(t.id));
+
+        if (!titulo || !descricao || !categoria) {
+          alert("Preencha todos os campos obrigatórios.");
+          return;
+        }
+
+        overlay.style.display = "flex";
+
+        console.log('Enviando dados para /api/topicos:', { titulo, descricao, categoria_id: parseInt(categoria), tags, user_id: userId });
+
+        const response = await fetch("http://127.0.0.1:3000/api/topicos", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+          },
+          body: JSON.stringify({
+            titulo,
+            descricao,
+            categoria_id: parseInt(categoria),
+            tags,
+            user_id: userId,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+        }
+
+        const resultado = await response.json();
+        console.log('Tópico criado:', resultado);
+
+        overlay.innerHTML = `
+          <div style="font-size: 3rem; color: #00ff88;"><i class="fa-solid fa-check"></i></div>
+          <div style="margin-top: 1rem;">Postado!</div>
+        `;
+
+        setTimeout(() => {
+          window.location.href = `post.html?id=${resultado.id}`;
+        }, 1500);
+      } catch (error) {
+        console.error("Erro ao criar tópico:", error);
+        overlay.innerHTML = `<div>Erro ao criar tópico: ${error.message}</div>`;
+        setTimeout(() => (overlay.style.display = "none"), 2000);
+      }
+    });
+  });
+</script>
+    <!-- <script>
       document.addEventListener("DOMContentLoaded", () => {
         // Verifica se o usuário está autenticado
         const auth = JSON.parse(localStorage.getItem("auth"));
@@ -346,49 +483,49 @@
         // Carrega as tags e categorias do servidor
         // lembra de fazer o backend retornar as tags e categorias
         async function carregarTags() {
-          try {
-            const res = await fetch("http://127.0.0.1:3001/tags");
-            const tags = await res.json();
+  try {
+    const res = await fetch("http://127.0.0.1:3000/api/tags"); // Alterado para /api/tags
+    const tags = await res.json();
 
-            const input = document.getElementById("tags");
-            tagify = new Tagify(input, {
-              whitelist: tags.map((tag) => ({
-                value: tag.nome,
-                id: tag.id,
-              })),
-              enforceWhitelist: false,
-              dropdown: {
-                enabled: 1,
-                classname: "tags-look",
-                maxItems: 10,
-                position: "text",
-                closeOnSelect: false,
-              },
-            });
-          } catch (err) {
-            console.error("Erro ao carregar tags:", err);
-          }
-        }
+    const input = document.getElementById("tags");
+    tagify = new Tagify(input, {
+      whitelist: tags.map((tag) => ({
+        value: tag.nome,
+        id: tag.id,
+      })),
+      enforceWhitelist: false,
+      dropdown: {
+        enabled: 1,
+        classname: "tags-look",
+        maxItems: 10,
+        position: "text",
+        closeOnSelect: false,
+      },
+    });
+  } catch (err) {
+    console.error("Erro ao carregar tags:", err);
+  }
+}
 
-        async function carregarCategorias() {
-          const categoriaSelect = document.getElementById("categoria");
-          try {
-            const res = await fetch("http://127.0.0.1:3001/categorias");
-            const categorias = await res.json();
+async function carregarCategorias() {
+  const categoriaSelect = document.getElementById("categoria");
+  try {
+    const res = await fetch("http://127.0.0.1:3000/api/categorias"); // Alterado para /api/categorias
+    const categorias = await res.json();
 
-            categoriaSelect.innerHTML =
-              '<option value="" disabled selected>Escolha uma categoria</option>';
+    categoriaSelect.innerHTML =
+      '<option value="" disabled selected>Escolha uma categoria</option>';
 
-            categorias.forEach((cat) => {
-              const option = document.createElement("option");
-              option.value = cat.id;
-              option.textContent = cat.nome;
-              categoriaSelect.appendChild(option);
-            });
-          } catch (err) {
-            console.error("Erro ao carregar categorias:", err);
-          }
-        }
+    categorias.forEach((cat) => {
+      const option = document.createElement("option");
+      option.value = cat.id;
+      option.textContent = cat.nome;
+      categoriaSelect.appendChild(option);
+    });
+  } catch (err) {
+    console.error("Erro ao carregar categorias:", err);
+  }
+}
 
         carregarTags();
         carregarCategorias();
@@ -421,7 +558,7 @@
 
             // tudo que ta mandando pro servidor
             // se der erro me avisa
-            const response = await fetch("http://127.0.0.1:3001/topicos", {
+            const response = await fetch("http://127.0.0.1:3000/topicos", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -446,15 +583,15 @@
         `;
 
             setTimeout(() => {
-              window.location.href = `post.html?id=${resultado.id}`;
+              window.location.href = `post.html?id=${resultado.id}`; //post em conflito
             }, 1500);
           } catch (error) {
             console.error("Erro ao criar tópico:", error);
             overlay.innerHTML = `<div>Erro ao criar tópico</div>`;
-            setTimeout(() => (overlay.style.display = "none"), 2000);
+            setTimeout(() => (overlay.style.display = "none"), 2000); //
           }
         });
       });
-    </script>
+    </script> -->
   </body>
 </html>

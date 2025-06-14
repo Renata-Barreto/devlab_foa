@@ -15,31 +15,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/forum-substituto.css" />
-    <link rel="stylesheet" href="css/sidebar.css" /> <!-- Novo CSS para o menu lateral -->
   </head>
   <body>
     <nav class="navbar" id="navbar"></nav>
-    <aside class="sidebar">
-      <nav class="sidebar-nav">
-        <ul>
-          <li>
-            <a href="#" onclick="openCreateTopicModal(); return false;">
-              <i class="fa-solid fa-plus"></i> Criar Tópico
-            </a>
-          </li>
-          <li>
-            <a href="gerenciar_topico.html">
-              <i class="fa-solid fa-list"></i> Gerenciar Tópicos
-            </a>
-          </li>
-          <li>
-            <a href="pagina_aluno.html">
-              <i class="fa-solid fa-user"></i> Meu Perfil
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </aside>
+    <div class="sidebar"></div>
     <div class="main">
       <div class="topbar">
         <h1>HOME</h1>
@@ -47,8 +26,7 @@
       </div>
       <input
         type="text"
-        id="search-input"
-        placeholder="Procure por título, descrição ou tags..."
+        placeholder="Procure por tópicos"
         style="
           width: 27%;
           padding: 8px;
@@ -57,16 +35,16 @@
         "
       />
       <div class="filters">
-        <button class="tab-button active" data-filtro="top">
+        <button class="tab-button active">
           <i class="fa fa-arrow-up"></i> Top
         </button>
-        <button class="tab-button" data-filtro="novo">
+        <button class="tab-button">
           <i class="fa-regular fa-clock"></i> Novo
         </button>
-        <button class="tab-button" data-filtro="popular">
+        <button class="tab-button">
           <i class="fa-solid fa-fire"></i> Popular
         </button>
-        <button class="tab-button" data-filtro="fechado">
+        <button class="tab-button">
           <i class="fa-solid fa-circle-check"></i> Fechado
         </button>
       </div>
@@ -89,26 +67,6 @@
         </ul>
       </div>
     </div>
-
-    <!-- Modal para criar tópico -->
-    <div id="create-topic-modal" class="modal" style="display: none;">
-      <div class="modal-content">
-        <h2>Criar Novo Tópico</h2>
-        <form id="create-topic-form">
-          <label for="topic-title">Título:</label>
-          <input type="text" id="topic-title" required />
-          <label for="topic-description">Descrição:</label>
-          <textarea id="topic-description" required></textarea>
-          <label for="topic-tags">Tags (separadas por vírgula):</label>
-          <input type="text" id="topic-tags" placeholder="ex: javascript, node, api" />
-          <div class="actions">
-            <button type="button" class="cancel" onclick="closeCreateTopicModal()">Cancelar</button>
-            <button type="submit" class="submit">Criar Tópico</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
     <script>
       // Placeholder para evitar erro speakText
       function speakText(text) {

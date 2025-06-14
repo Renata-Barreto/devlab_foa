@@ -1,3 +1,4 @@
+// src/models/Perfil.js
 import pool from '../database/config.js';
 
 // Modelo Perfil
