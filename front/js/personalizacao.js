@@ -124,14 +124,16 @@ document.getElementById("personalizacaoForm").addEventListener("submit", async (
   const form = event.target;
   const token = form.getAttribute("data-token");
   const bio = document.getElementById("bio").value.trim();
-  const canvasAvatar = document.getElementById("canvas").toDataURL();
   const fotoInput = document.getElementById("foto");
 
   const formData = new FormData();
   formData.append("bio", bio);
-  formData.append("avatar", canvasAvatar);
   if (fotoInput.files.length > 0) {
     formData.append("foto", fotoInput.files[0]);
+  } else {
+    // Opcional: Se não houver arquivo, você pode enviar o canvas como fallback
+    const canvasAvatar = document.getElementById("canvas").toDataURL();
+    formData.append("avatar", canvasAvatar); // Isso será tratado no servidor
   }
 
   try {
@@ -164,3 +166,50 @@ document.getElementById("personalizacaoForm").addEventListener("submit", async (
     alert("Erro ao atualizar perfil. Tente novamente.");
   }
 });
+
+// document.getElementById("personalizacaoForm").addEventListener("submit", async (event) => {
+//   event.preventDefault();
+
+//   const form = event.target;
+//   const token = form.getAttribute("data-token");
+//   const bio = document.getElementById("bio").value.trim();
+//   const canvasAvatar = document.getElementById("canvas").toDataURL();
+//   const fotoInput = document.getElementById("foto");
+
+//   const formData = new FormData();
+//   formData.append("bio", bio);
+//   formData.append("avatar", canvasAvatar);
+//   if (fotoInput.files.length > 0) {
+//     formData.append("foto", fotoInput.files[0]);
+//   }
+
+//   try {
+//     console.log("Enviando requisição para PATCH /api/users");
+//     const response = await fetch("http://127.0.0.1:3000/api/users", {
+//       method: 'PATCH',
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//       body: formData,
+//     });
+
+//     console.log("Status da resposta:", response.status, response.statusText);
+//     const data = await response.json();
+//     console.log("Dados recebidos:", data);
+
+//     if (response.ok && data.user) {
+//       console.log("Atualização bem-sucedida, redirecionando...");
+//       if (data.user.tipo === "adm") {
+//         window.location.href = "/pagina_adm.html";
+//       } else {
+//         window.location.href = "/pagina_aluno.html";
+//       }
+//     } else {
+//       console.log("Erro na atualização:", data.message);
+//       alert(data.message || "Erro ao atualizar perfil. Tente novamente.");
+//     }
+//   } catch (error) {
+//     console.error("Erro ao atualizar perfil:", error);
+//     alert("Erro ao atualizar perfil. Tente novamente.");
+//   }
+// });

@@ -164,46 +164,89 @@ document.addEventListener("DOMContentLoaded", () => {
     senhaInput.addEventListener('blur', () => passwordRules.style.display = 'none');
   
     // Enviar formulário
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-  
-      const nome = nomeInput.value.trim();
-      const email = emailInput.value.trim();
-      const senha = senhaInput.value.trim();
-      const senhaConfirm = senhaConfirmInput.value.trim();
-  
-      // Executar as validações novamente
-      validateNome();
-      validateEmail();
-      validateSenha();
-      validateSenhaConfirm();
-  
-      const hasErrors = nomeError.textContent || emailError.textContent || senhaError.textContent || senhaConfirmError.textContent;
-  
-      if (hasErrors) {
-        mostrarAlerta('Corrija os erros nos campos antes de continuar.');
-        return;
-      }
-  
-      try {
-        const response = await fetch('http://127.0.0.1:3000/user/create', {
-          method: 'POST',
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name:nome, email,password:senha})
-        });
-  
-        const data = await response.json();
-  
-        if (response.ok) {
-          localStorage.setItem('auth', JSON.stringify(data.token));
-          window.location.href = 'personalizacao.html';
-        } else {
-          mostrarAlerta(data.mensagem || 'Erro ao cadastrar. Tente novamente.');
-        }
-      } catch (err) {
-        console.error(err);
-        mostrarAlerta('Erro na comunicação com o servidor.');
-      }
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const nome = nomeInput.value.trim();
+  const email = emailInput.value.trim();
+  const senha = senhaInput.value.trim();
+  const senhaConfirm = senhaConfirmInput.value.trim();
+
+  // Executar as validações novamente
+  validateNome();
+  validateEmail();
+  validateSenha();
+  validateSenhaConfirm();
+
+  const hasErrors = nomeError.textContent || emailError.textContent || senhaError.textContent || senhaConfirmError.textContent;
+
+  if (hasErrors) {
+    mostrarAlerta('Corrija os erros nos campos antes de continuar.');
+    return;
+  }
+
+  try {
+    const response = await fetch('http://127.0.0.1:3000/api/users', { // Alterado para /api/users
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: nome, email, password: senha })
     });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem('auth', JSON.stringify(data.token));
+      window.location.href = 'personalizacao.html';
+    } else {
+      mostrarAlerta(data.mensagem || 'Erro ao cadastrar. Tente novamente.');
+    }
+  } catch (err) {
+    console.error(err);
+    mostrarAlerta('Erro na comunicação com o servidor.');
+  }
+});
+    
+    // // Enviar formulário
+    // form.addEventListener('submit', async (e) => {
+    //   e.preventDefault();
+  
+    //   const nome = nomeInput.value.trim();
+    //   const email = emailInput.value.trim();
+    //   const senha = senhaInput.value.trim();
+    //   const senhaConfirm = senhaConfirmInput.value.trim();
+  
+    //   // Executar as validações novamente
+    //   validateNome();
+    //   validateEmail();
+    //   validateSenha();
+    //   validateSenhaConfirm();
+  
+    //   const hasErrors = nomeError.textContent || emailError.textContent || senhaError.textContent || senhaConfirmError.textContent;
+  
+    //   if (hasErrors) {
+    //     mostrarAlerta('Corrija os erros nos campos antes de continuar.');
+    //     return;
+    //   }
+  
+    //   try {
+    //     const response = await fetch('http://127.0.0.1:3000/user/create', {
+    //       method: 'POST',
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({ name:nome, email,password:senha})
+    //     });
+  
+    //     const data = await response.json();
+  
+    //     if (response.ok) {
+    //       localStorage.setItem('auth', JSON.stringify(data.token));
+    //       window.location.href = 'personalizacao.html';
+    //     } else {
+    //       mostrarAlerta(data.mensagem || 'Erro ao cadastrar. Tente novamente.');
+    //     }
+    //   } catch (err) {
+    //     console.error(err);
+    //     mostrarAlerta('Erro na comunicação com o servidor.');
+    //   }
+    // });
   });
   
