@@ -1,4 +1,4 @@
-// js/aluno.js
+// front/js/aluno.js
 document.addEventListener("DOMContentLoaded", async () => {
   const auth = JSON.parse(localStorage.getItem("auth"));
   const token = auth?.token;

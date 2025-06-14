@@ -117,66 +117,180 @@ const userController = {
     }
   },
 
+
   update: async (req, res) => {
-    try {
-      upload(req, res, async (err) => {
-        if (err) {
-          console.log('Erro no upload:', err.message);
-          return res.status(400).json({ message: err.message });
-        }
+  try {
+    upload(req, res, async (err) => {
+      if (err) {
+        console.log('Erro no upload:', err.message);
+        return res.status(400).json({ message: err.message });
+      }
 
-        const { bio, avatar } = req.body;
-        const foto = req.file;
+      const { bio, avatar_path } = req.body;
+      const foto = req.file;
 
-        if (!bio && !avatar && !foto) {
-          console.log('Erro: Nenhum campo fornecido para atualização');
-          return res.status(400).json({ message: 'Forneça pelo menos um campo para atualizar' });
-        }
+      if (!bio && !foto && !avatar_path) {
+        console.log('Erro: Nenhum campo fornecido para atualização');
+        return res.status(400).json({ message: 'Forneça pelo menos um campo para atualizar' });
+      }
 
-        if (bio && bio.length > 1000) {
-          console.log('Erro: Bio excede 1000 caracteres');
-          return res.status(400).json({ message: 'Bio não pode exceder 1000 caracteres' });
-        }
-        if (avatar && avatar.length > 500000) {
-          console.log('Erro: Imagem de avatar muito grande');
-          return res.status(400).json({ message: 'Imagem de avatar muito grande (máx 500KB)' });
-        }
+      if (bio && bio.length > 1000) {
+        console.log('Erro: Bio excede 1000 caracteres');
+        return res.status(400).json({ message: 'Bio não pode exceder 1000 caracteres' });
+      }
 
-        const userId = req.user?.id_usr;
-        if (!userId) {
-          console.log('Erro: ID do usuário não encontrado em req.user');
-          return res.status(401).json({ message: 'Não autorizado' });
-        }
+      const userId = req.user?.id_usr;
+      if (!userId) {
+        console.log('Erro: ID do usuário não encontrado em req.user');
+        return res.status(401).json({ message: 'Não autorizado' });
+      }
 
-        const fotoPath = foto ? `/Uploads/${foto.filename}` : null;
-        console.log(`Atualizando usuário ID ${userId}, fotoPath: ${fotoPath}, bio: ${bio}, avatar: ${avatar}`);
+      const fotoPath = foto ? `/Uploads/${foto.filename}` : avatar_path || null;
+      console.log(`Atualizando usuário ID ${userId}, fotoPath: ${fotoPath}, bio: ${bio}`);
 
-        await userService.updateService(userId, avatar, bio, fotoPath);
-        const user = await userService.findByIdService(userId);
+      await userService.updateService(userId, bio, fotoPath);
+      const user = await userService.findByIdService(userId);
 
-        if (!user) {
-          console.log(`Erro: Usuário ID ${userId} não encontrado após atualização`);
-          return res.status(404).json({ message: 'Usuário não encontrado' });
-        }
+      if (!user) {
+        console.log(`Erro: Usuário ID ${userId} não encontrado após atualização`);
+        return res.status(404).json({ message: 'Usuário não encontrado' });
+      }
 
-        res.json({
-          message: 'Usuário atualizado com sucesso',
-          user: {
-            id_usr: user.id_usr,
-            nome_usr: user.nome_usr,
-            email_usr: user.email_usr,
-            img_usr: user.img_usr,
-            des_pfl: user.des_pfl,
-            cat_usr: user.cat_usr,
-            tipo: user.cat_usr === 1 ? 'adm' : 'aluno',
-          },
-        });
+      res.json({
+        message: 'Usuário atualizado com sucesso',
+        user: {
+          id_usr: user.id_usr,
+          nome_usr: user.nome_usr,
+          email_usr: user.email_usr,
+          img_usr: user.img_usr,
+          des_pfl: user.des_pfl,
+          cat_usr: user.cat_usr,
+          tipo: user.cat_usr === 1 ? 'adm' : 'aluno',
+        },
       });
-    } catch (err) {
-      console.error('Erro no update do userController:', err.message);
-      res.status(500).json({ message: err.message || 'Erro interno do servidor' });
-    }
-  },
+    });
+  } catch (err) {
+    console.error('Erro no update do userController:', err.message);
+    res.status(500).json({ message: err.message || 'Erro interno do servidor' });
+  }
+},
+//   update: async (req, res) => {
+//   try {
+//     upload(req, res, async (err) => {
+//       if (err) {
+//         console.log('Erro no upload:', err.message);
+//         return res.status(400).json({ message: err.message });
+//       }
+
+//       const { bio } = req.body; // Removido 'avatar'
+//       const foto = req.file;
+
+//       if (!bio && !foto) {
+//         console.log('Erro: Nenhum campo fornecido para atualização');
+//         return res.status(400).json({ message: 'Forneça pelo menos um campo para atualizar' });
+//       }
+
+//       if (bio && bio.length > 1000) {
+//         console.log('Erro: Bio excede 1000 caracteres');
+//         return res.status(400).json({ message: 'Bio não pode exceder 1000 caracteres' });
+//       }
+
+//       const userId = req.user?.id_usr;
+//       if (!userId) {
+//         console.log('Erro: ID do usuário não encontrado em req.user');
+//         return res.status(401).json({ message: 'Não autorizado' });
+//       }
+
+//       const fotoPath = foto ? `/Uploads/${foto.filename}` : null;
+//       console.log(`Atualizando usuário ID ${userId}, fotoPath: ${fotoPath}, bio: ${bio}`);
+
+//       await userService.updateService(userId, null, bio, fotoPath); // Passa 'null' para avatar
+//       const user = await userService.findByIdService(userId);
+
+//       if (!user) {
+//         console.log(`Erro: Usuário ID ${userId} não encontrado após atualização`);
+//         return res.status(404).json({ message: 'Usuário não encontrado' });
+//       }
+
+//       res.json({
+//         message: 'Usuário atualizado com sucesso',
+//         user: {
+//           id_usr: user.id_usr,
+//           nome_usr: user.nome_usr,
+//           email_usr: user.email_usr,
+//           img_usr: user.img_usr,
+//           des_pfl: user.des_pfl,
+//           cat_usr: user.cat_usr,
+//           tipo: user.cat_usr === 1 ? 'adm' : 'aluno',
+//         },
+//       });
+//     });
+//   } catch (err) {
+//     console.error('Erro no update do userController:', err.message);
+//     res.status(500).json({ message: err.message || 'Erro interno do servidor' });
+//   }
+// },
+
+  // update: async (req, res) => {
+  //   try {
+  //     upload(req, res, async (err) => {
+  //       if (err) {
+  //         console.log('Erro no upload:', err.message);
+  //         return res.status(400).json({ message: err.message });
+  //       }
+
+  //       const { bio, avatar } = req.body;
+  //       const foto = req.file;
+
+  //       if (!bio && !avatar && !foto) {
+  //         console.log('Erro: Nenhum campo fornecido para atualização');
+  //         return res.status(400).json({ message: 'Forneça pelo menos um campo para atualizar' });
+  //       }
+
+  //       if (bio && bio.length > 1000) {
+  //         console.log('Erro: Bio excede 1000 caracteres');
+  //         return res.status(400).json({ message: 'Bio não pode exceder 1000 caracteres' });
+  //       }
+  //       if (avatar && avatar.length > 500000) {
+  //         console.log('Erro: Imagem de avatar muito grande');
+  //         return res.status(400).json({ message: 'Imagem de avatar muito grande (máx 500KB)' });
+  //       }
+
+  //       const userId = req.user?.id_usr;
+  //       if (!userId) {
+  //         console.log('Erro: ID do usuário não encontrado em req.user');
+  //         return res.status(401).json({ message: 'Não autorizado' });
+  //       }
+
+  //       const fotoPath = foto ? `/Uploads/${foto.filename}` : null;
+  //       console.log(`Atualizando usuário ID ${userId}, fotoPath: ${fotoPath}, bio: ${bio}, avatar: ${avatar}`);
+
+  //       await userService.updateService(userId, avatar, bio, fotoPath);
+  //       const user = await userService.findByIdService(userId);
+
+  //       if (!user) {
+  //         console.log(`Erro: Usuário ID ${userId} não encontrado após atualização`);
+  //         return res.status(404).json({ message: 'Usuário não encontrado' });
+  //       }
+
+  //       res.json({
+  //         message: 'Usuário atualizado com sucesso',
+  //         user: {
+  //           id_usr: user.id_usr,
+  //           nome_usr: user.nome_usr,
+  //           email_usr: user.email_usr,
+  //           img_usr: user.img_usr,
+  //           des_pfl: user.des_pfl,
+  //           cat_usr: user.cat_usr,
+  //           tipo: user.cat_usr === 1 ? 'adm' : 'aluno',
+  //         },
+  //       });
+  //     });
+  //   } catch (err) {
+  //     console.error('Erro no update do userController:', err.message);
+  //     res.status(500).json({ message: err.message || 'Erro interno do servidor' });
+  //   }
+  // },
 
   delete: async (req, res) => {
     try {

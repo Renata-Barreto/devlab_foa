@@ -70,82 +70,231 @@ const userService = {
     }
   },
 
-  updateService: async (id, avatar, bio, fotoPath) => {
-    try {
-      const updates = [];
-      const values = [];
-      let index = 1;
 
+  updateService: async (id, bio, fotoPath) => {
+  try {
+    const updates = [];
+    const values = [];
+    let index = 1;
+
+    if (fotoPath) {
+      updates.push(`img_usr = $${index++}`);
+      values.push(fotoPath);
+    }
+
+    let user = null;
+    if (updates.length > 0) {
+      const query = `
+        UPDATE dev_lab_usuarios
+        SET ${updates.join(', ')}
+        WHERE id_usr = $${index}
+        RETURNING id_usr, nome_usr, email_usr, img_usr, cat_usr;
+      `;
+      values.push(id);
+      const { rows } = await pool.query(query, values);
+      user = rows[0];
+    } else {
+      user = await userService.findByIdService(id);
+    }
+
+    if (!user) return null;
+
+    const perfilQuery = await pool.query('SELECT * FROM dev_lab_perfil WHERE id_usr = $1', [id]);
+    let perfil = perfilQuery.rows[0];
+
+    if (!perfil && (bio || fotoPath)) {
+      const insertQuery = `
+        INSERT INTO dev_lab_perfil (id_usr, des_pfl, prf_pfl)
+        VALUES ($1, $2, $3)
+        RETURNING id_pfl, id_usr, des_pfl, prf_pfl;
+      `;
+      const perfilValues = [id, bio || null, fotoPath || null];
+      const { rows } = await pool.query(insertQuery, perfilValues);
+      perfil = rows[0];
+    } else if (perfil && (bio !== undefined || fotoPath)) {
+      const perfilUpdates = [];
+      const perfilValues = [];
+      let perfilIndex = 1;
+
+      if (bio !== undefined) {
+        perfilUpdates.push(`des_pfl = $${perfilIndex++}`);
+        perfilValues.push(bio);
+      }
       if (fotoPath) {
-        updates.push(`img_usr = $${index++}`);
-        values.push(fotoPath);
-      } else if (avatar) {
-        updates.push(`img_usr = $${index++}`);
-        values.push(avatar);
+        perfilUpdates.push(`prf_pfl = $${perfilIndex++}`);
+        perfilValues.push(fotoPath);
       }
 
-      let user = null;
-      if (updates.length > 0) {
-        const query = `
-          UPDATE dev_lab_usuarios
-          SET ${updates.join(', ')}
-          WHERE id_usr = $${index}
-          RETURNING id_usr, nome_usr, email_usr, img_usr, cat_usr;
-        `;
-        values.push(id);
-        const { rows } = await pool.query(query, values);
-        user = rows[0];
-      } else {
-        user = await userService.findByIdService(id);
-      }
-
-      if (!user) return null;
-
-      const perfilQuery = await pool.query('SELECT * FROM dev_lab_perfil WHERE id_usr = $1', [id]);
-      let perfil = perfilQuery.rows[0];
-
-      if (!perfil && (bio || fotoPath || avatar)) {
-        const insertQuery = `
-          INSERT INTO dev_lab_perfil (id_usr, des_pfl, prf_pfl)
-          VALUES ($1, $2, $3)
+      if (perfilUpdates.length > 0) {
+        perfilValues.push(perfil.id_pfl);
+        const perfilQuery = `
+          UPDATE dev_lab_perfil
+          SET ${perfilUpdates.join(', ')}
+          WHERE id_pfl = $${perfilIndex}
           RETURNING id_pfl, id_usr, des_pfl, prf_pfl;
         `;
-        const perfilValues = [id, bio || null, fotoPath ? fotoPath : avatar];
-        const { rows } = await pool.query(insertQuery, perfilValues);
+        const { rows } = await pool.query(perfilQuery, perfilValues);
         perfil = rows[0];
-      } else if (perfil && (bio !== undefined || fotoPath || avatar)) {
-        const perfilUpdates = [];
-        const perfilValues = [];
-        let perfilIndex = 1;
-
-        if (bio !== undefined) {
-          perfilUpdates.push(`des_pfl = $${perfilIndex++}`);
-          perfilValues.push(bio);
-        }
-        if (fotoPath || avatar) {
-          perfilUpdates.push(`prf_pfl = $${perfilIndex++}`);
-          perfilValues.push(fotoPath || avatar);
-        }
-
-        if (perfilUpdates.length > 0) {
-          perfilValues.push(perfil.id_pfl);
-          const perfilQuery = `
-            UPDATE dev_lab_perfil
-            SET ${perfilUpdates.join(', ')}
-            WHERE id_pfl = $${perfilIndex}
-            RETURNING id_pfl, id_usr, des_pfl, prf_pfl;
-          `;
-          const { rows } = await pool.query(perfilQuery, perfilValues);
-          perfil = rows[0];
-        }
       }
-
-      return { ...user, ...(perfil ? { des_pfl: perfil.des_pfl, prf_pfl: perfil.prf_pfl } : {}) };
-    } catch (err) {
-      console.error('Erro ao atualizar usuário:', err.message);
-      throw err;
     }
-  },
+
+    return { ...user, ...(perfil ? { des_pfl: perfil.des_pfl, prf_pfl: perfil.prf_pfl } : {}) };
+  } catch (err) {
+    console.error('Erro ao atualizar usuário:', err.message);
+    throw err;
+  }
+},
+//   updateService: async (id, avatar, bio, fotoPath) => {
+//   try {
+//     const updates = [];
+//     const values = [];
+//     let index = 1;
+
+//     if (fotoPath) {
+//       updates.push(`img_usr = $${index++}`);
+//       values.push(fotoPath);
+//     }
+//     // Removido o suporte para 'avatar'
+
+//     let user = null;
+//     if (updates.length > 0) {
+//       const query = `
+//         UPDATE dev_lab_usuarios
+//         SET ${updates.join(', ')}
+//         WHERE id_usr = $${index}
+//         RETURNING id_usr, nome_usr, email_usr, img_usr, cat_usr;
+//       `;
+//       values.push(id);
+//       const { rows } = await pool.query(query, values);
+//       user = rows[0];
+//     } else {
+//       user = await userService.findByIdService(id);
+//     }
+
+//     if (!user) return null;
+
+//     const perfilQuery = await pool.query('SELECT * FROM dev_lab_perfil WHERE id_usr = $1', [id]);
+//     let perfil = perfilQuery.rows[0];
+
+//     if (!perfil && (bio || fotoPath)) {
+//       const insertQuery = `
+//         INSERT INTO dev_lab_perfil (id_usr, des_pfl, prf_pfl)
+//         VALUES ($1, $2, $3)
+//         RETURNING id_pfl, id_usr, des_pfl, prf_pfl;
+//       `;
+//       const perfilValues = [id, bio || null, fotoPath || null];
+//       const { rows } = await pool.query(insertQuery, perfilValues);
+//       perfil = rows[0];
+//     } else if (perfil && (bio !== undefined || fotoPath)) {
+//       const perfilUpdates = [];
+//       const perfilValues = [];
+//       let perfilIndex = 1;
+
+//       if (bio !== undefined) {
+//         perfilUpdates.push(`des_pfl = $${perfilIndex++}`);
+//         perfilValues.push(bio);
+//       }
+//       if (fotoPath) {
+//         perfilUpdates.push(`prf_pfl = $${perfilIndex++}`);
+//         perfilValues.push(fotoPath);
+//       }
+
+//       if (perfilUpdates.length > 0) {
+//         perfilValues.push(perfil.id_pfl);
+//         const perfilQuery = `
+//           UPDATE dev_lab_perfil
+//           SET ${perfilUpdates.join(', ')}
+//           WHERE id_pfl = $${perfilIndex}
+//           RETURNING id_pfl, id_usr, des_pfl, prf_pfl;
+//         `;
+//         const { rows } = await pool.query(perfilQuery, perfilValues);
+//         perfil = rows[0];
+//       }
+//     }
+
+//     return { ...user, ...(perfil ? { des_pfl: perfil.des_pfl, prf_pfl: perfil.prf_pfl } : {}) };
+//   } catch (err) {
+//     console.error('Erro ao atualizar usuário:', err.message);
+//     throw err;
+//   }
+// },
+
+  // updateService: async (id, avatar, bio, fotoPath) => {
+  //   try {
+  //     const updates = [];
+  //     const values = [];
+  //     let index = 1;
+
+  //     if (fotoPath) {
+  //       updates.push(`img_usr = $${index++}`);
+  //       values.push(fotoPath);
+  //     } else if (avatar) {
+  //       updates.push(`img_usr = $${index++}`);
+  //       values.push(avatar);
+  //     }
+
+  //     let user = null;
+  //     if (updates.length > 0) {
+  //       const query = `
+  //         UPDATE dev_lab_usuarios
+  //         SET ${updates.join(', ')}
+  //         WHERE id_usr = $${index}
+  //         RETURNING id_usr, nome_usr, email_usr, img_usr, cat_usr;
+  //       `;
+  //       values.push(id);
+  //       const { rows } = await pool.query(query, values);
+  //       user = rows[0];
+  //     } else {
+  //       user = await userService.findByIdService(id);
+  //     }
+
+  //     if (!user) return null;
+
+  //     const perfilQuery = await pool.query('SELECT * FROM dev_lab_perfil WHERE id_usr = $1', [id]);
+  //     let perfil = perfilQuery.rows[0];
+
+  //     if (!perfil && (bio || fotoPath || avatar)) {
+  //       const insertQuery = `
+  //         INSERT INTO dev_lab_perfil (id_usr, des_pfl, prf_pfl)
+  //         VALUES ($1, $2, $3)
+  //         RETURNING id_pfl, id_usr, des_pfl, prf_pfl;
+  //       `;
+  //       const perfilValues = [id, bio || null, fotoPath ? fotoPath : avatar];
+  //       const { rows } = await pool.query(insertQuery, perfilValues);
+  //       perfil = rows[0];
+  //     } else if (perfil && (bio !== undefined || fotoPath || avatar)) {
+  //       const perfilUpdates = [];
+  //       const perfilValues = [];
+  //       let perfilIndex = 1;
+
+  //       if (bio !== undefined) {
+  //         perfilUpdates.push(`des_pfl = $${perfilIndex++}`);
+  //         perfilValues.push(bio);
+  //       }
+  //       if (fotoPath || avatar) {
+  //         perfilUpdates.push(`prf_pfl = $${perfilIndex++}`);
+  //         perfilValues.push(fotoPath || avatar);
+  //       }
+
+  //       if (perfilUpdates.length > 0) {
+  //         perfilValues.push(perfil.id_pfl);
+  //         const perfilQuery = `
+  //           UPDATE dev_lab_perfil
+  //           SET ${perfilUpdates.join(', ')}
+  //           WHERE id_pfl = $${perfilIndex}
+  //           RETURNING id_pfl, id_usr, des_pfl, prf_pfl;
+  //         `;
+  //         const { rows } = await pool.query(perfilQuery, perfilValues);
+  //         perfil = rows[0];
+  //       }
+  //     }
+
+  //     return { ...user, ...(perfil ? { des_pfl: perfil.des_pfl, prf_pfl: perfil.prf_pfl } : {}) };
+  //   } catch (err) {
+  //     console.error('Erro ao atualizar usuário:', err.message);
+  //     throw err;
+  //   }
+  // },
 
   deleteService: async (id) => {
     try {

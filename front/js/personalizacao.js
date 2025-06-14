@@ -34,87 +34,70 @@ document.addEventListener("DOMContentLoaded", async () => {
     localStorage.removeItem("auth");
     window.location.href = "/login.html";
   }
+
+  // Adicionar listener para pré-visualização da imagem selecionada
+  document.getElementById("foto").addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById("avatarPreview").src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 });
 
 async function fetchUserData(user) {
   const nome = user.nome_usr || user.email_usr.split("@")[0];
   const inicial = nome.charAt(0).toUpperCase();
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-  canvas.setAttribute("data-inicial", inicial);
+  const avatarPreview = document.getElementById("avatarPreview");
 
   if (user.prf_pfl) {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = user.prf_pfl.startsWith("data:image")
+    avatarPreview.src = user.prf_pfl.startsWith("data:image")
       ? user.prf_pfl
       : `http://127.0.0.1:3000${user.prf_pfl}`;
-    
-    img.onload = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-      ctx.arc(60, 60, 60, 0, Math.PI * 2);
-      ctx.clip();
-      ctx.drawImage(img, 0, 0, 120, 120);
-      ctx.restore();
-    };
   } else {
-    generateAvatar(inicial);
+    avatarPreview.src = "/Uploads/avatar-padrao.png";
   }
 
   if (user.des_pfl) {
     document.getElementById("bio").value = user.des_pfl;
   }
 
-  createColorPicker();
+  createAvatarPicker(inicial);
 }
 
-function generateAvatar(inicial) {
-  const cores = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#A833FF", "#FFD733", "#33FFF5", "#FF9133", "#9133FF", "#FF3333"];
-  const corAleatoria = cores[Math.floor(Math.random() * cores.length)];
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
+function createAvatarPicker(inicial) {
+  const avatarOptions = [
+    { color: "vermelho", path: "/Uploads/avatar-vermelho.png" },
+    { color: "verde", path: "/Uploads/avatar-verde.png" },
+    { color: "azul", path: "/Uploads/avatar-azul.png" },
+    { color: "amarelo", path: "/Uploads/avatar-amarelo.png" },
+    { color: "roxo", path: "/Uploads/avatar-roxo.png" },
+  ];
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.beginPath();
-  ctx.arc(60, 60, 60, 0, Math.PI * 2);
-  ctx.fillStyle = corAleatoria;
-  ctx.fill();
+  const avatarPicker = document.getElementById("avatarPicker");
+  avatarPicker.innerHTML = "";
 
-  ctx.font = "40px Arial";
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(inicial, 60, 60);
-}
+  avatarOptions.forEach(option => {
+    const avatarBlock = document.createElement("img");
+    avatarBlock.classList.add("avatar-option");
+    avatarBlock.src = `http://127.0.0.1:3000${option.path}`;
+    avatarBlock.alt = option.color;
+    avatarBlock.title = option.color;
 
-function createColorPicker() {
-  const cores = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#A833FF", "#FFD733", "#33FFF5", "#FF9133", "#9133FF", "#FF3333"];
-  const colorPicker = document.getElementById("colorPicker");
-
-  cores.forEach(cor => {
-    const colorBlock = document.createElement("div");
-    colorBlock.classList.add("color-block");
-    colorBlock.style.backgroundColor = cor;
-
-    colorBlock.addEventListener("click", () => {
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-      ctx.arc(60, 60, 60, 0, Math.PI * 2);
-      ctx.fillStyle = cor;
-      ctx.fill();
-
-      ctx.font = "40px Arial";
-      ctx.fillStyle = "white";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(canvas.getAttribute("data-inicial"), 60, 60);
+    avatarBlock.addEventListener("click", () => {
+      document.querySelectorAll(".avatar-option").forEach(block => {
+        block.classList.remove("selected");
+      });
+      avatarBlock.classList.add("selected");
+      const avatarPreview = document.getElementById("avatarPreview");
+      avatarPreview.src = avatarBlock.src;
+      avatarPicker.setAttribute("data-selected-avatar", option.path);
     });
 
-    colorPicker.appendChild(colorBlock);
+    avatarPicker.appendChild(avatarBlock);
   });
 }
 
@@ -125,15 +108,18 @@ document.getElementById("personalizacaoForm").addEventListener("submit", async (
   const token = form.getAttribute("data-token");
   const bio = document.getElementById("bio").value.trim();
   const fotoInput = document.getElementById("foto");
+  const selectedAvatar = document.getElementById("avatarPicker").getAttribute("data-selected-avatar");
+
+  const saveButton = document.querySelector("button.save");
+  saveButton.disabled = true;
+  saveButton.textContent = "Salvando...";
 
   const formData = new FormData();
   formData.append("bio", bio);
   if (fotoInput.files.length > 0) {
     formData.append("foto", fotoInput.files[0]);
-  } else {
-    // Opcional: Se não houver arquivo, você pode enviar o canvas como fallback
-    const canvasAvatar = document.getElementById("canvas").toDataURL();
-    formData.append("avatar", canvasAvatar); // Isso será tratado no servidor
+  } else if (selectedAvatar) {
+    formData.append("avatar_path", selectedAvatar);
   }
 
   try {
@@ -164,52 +150,8 @@ document.getElementById("personalizacaoForm").addEventListener("submit", async (
   } catch (error) {
     console.error("Erro ao atualizar perfil:", error);
     alert("Erro ao atualizar perfil. Tente novamente.");
+  } finally {
+    saveButton.disabled = false;
+    saveButton.textContent = "Salvar";
   }
 });
-
-// document.getElementById("personalizacaoForm").addEventListener("submit", async (event) => {
-//   event.preventDefault();
-
-//   const form = event.target;
-//   const token = form.getAttribute("data-token");
-//   const bio = document.getElementById("bio").value.trim();
-//   const canvasAvatar = document.getElementById("canvas").toDataURL();
-//   const fotoInput = document.getElementById("foto");
-
-//   const formData = new FormData();
-//   formData.append("bio", bio);
-//   formData.append("avatar", canvasAvatar);
-//   if (fotoInput.files.length > 0) {
-//     formData.append("foto", fotoInput.files[0]);
-//   }
-
-//   try {
-//     console.log("Enviando requisição para PATCH /api/users");
-//     const response = await fetch("http://127.0.0.1:3000/api/users", {
-//       method: 'PATCH',
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//       body: formData,
-//     });
-
-//     console.log("Status da resposta:", response.status, response.statusText);
-//     const data = await response.json();
-//     console.log("Dados recebidos:", data);
-
-//     if (response.ok && data.user) {
-//       console.log("Atualização bem-sucedida, redirecionando...");
-//       if (data.user.tipo === "adm") {
-//         window.location.href = "/pagina_adm.html";
-//       } else {
-//         window.location.href = "/pagina_aluno.html";
-//       }
-//     } else {
-//       console.log("Erro na atualização:", data.message);
-//       alert(data.message || "Erro ao atualizar perfil. Tente novamente.");
-//     }
-//   } catch (error) {
-//     console.error("Erro ao atualizar perfil:", error);
-//     alert("Erro ao atualizar perfil. Tente novamente.");
-//   }
-// });
