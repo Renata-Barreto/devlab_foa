@@ -234,28 +234,61 @@ class Topico {
   }
 
   static async create({ user_id, categoria_id, titulo, descricao, tags }) {
-    try {
-      const result = await pool.query(
-        'INSERT INTO topicos (user_id, categoria_id, titulo, descricao, ativo, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
-        [user_id, categoria_id, titulo, descricao, true, 'aberto']
-      );
-      const topicoId = result.rows[0].id;
+  try {
+    const result = await pool.query(
+      'INSERT INTO topicos (user_id, categoria_id, titulo, descricao, ativo, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+      [user_id, categoria_id, titulo, descricao, true, 'aberto']
+    );
+    const topicoId = result.rows[0].id;
 
-      if (tags && tags.length > 0) {
-        for (const tagId of tags) {
-          await pool.query(
-            'INSERT INTO topico_tags (topico_id, tag_id) VALUES ($1, $2)',
-            [topicoId, tagId]
-          );
+    if (tags && tags.length > 0) {
+      for (const tagName of tags) {
+        // Buscar ou criar a tag
+        let tagResult = await pool.query('SELECT id FROM tags WHERE nome = $1', [tagName]);
+        let tagId;
+        if (tagResult.rows.length === 0) {
+          tagResult = await pool.query('INSERT INTO tags (nome) VALUES ($1) RETURNING id', [tagName]);
+          tagId = tagResult.rows[0].id;
+        } else {
+          tagId = tagResult.rows[0].id;
         }
+        // Associar a tag ao tópico
+        await pool.query(
+          'INSERT INTO topico_tags (topico_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+          [topicoId, tagId]
+        );
       }
-
-      return { id: topicoId };
-    } catch (error) {
-      console.error('Erro em Topico.create:', error);
-      throw error;
     }
+
+    return { id: topicoId };
+  } catch (error) {
+    console.error('Erro em Topico.create:', error.message);
+    throw error;
   }
+}
+  // static async create({ user_id, categoria_id, titulo, descricao, tags }) {
+  //   try {
+  //     const result = await pool.query(
+  //       'INSERT INTO topicos (user_id, categoria_id, titulo, descricao, ativo, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+  //       [user_id, categoria_id, titulo, descricao, true, 'aberto']
+  //     );
+  //     const topicoId = result.rows[0].id;
+
+  //     if (tags && tags.length > 0) {
+  //       for (const tagId of tags) {
+  //         await pool.query(
+  //           'INSERT INTO topico_tags (topico_id, tag_id) VALUES ($1, $2)',
+  //           [topicoId, tagId]
+  //         );
+  //       }
+  //     }
+
+  //     return { id: topicoId };
+  //   } catch (error) {
+  //     console.error('Erro em Topico.create:', error);
+  //     throw error;
+  //   }
+  // }
 
   static async update(id, { titulo, descricao, categoria_id, tags, ativo, status }) {
     try {
@@ -318,218 +351,3 @@ class Topico {
 }
 
 export default Topico;
-
-// // src/models/Topico.js
-// import pool from '../database/config.js';
-
-// class Topico {
-//   static async findAll(filtro = 'top') {
-//     let orderBy;
-//     switch (filtro) {
-//       case 'novo':
-//         orderBy = 'created_at DESC';
-//         break;
-//       case 'popular':
-//         orderBy = 'views DESC';
-//         break;
-//       case 'fechado':
-//         orderBy = 'created_at DESC'; // Ajuste se houver campo status
-//         break;
-//       default:
-//         orderBy = 'likes DESC';
-//     }
-
-//     try {
-//       const { rows } = await pool.query(`
-//         SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
-//         FROM topicos t
-//         JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
-//         JOIN categorias c ON t.categoria_id = c.id
-//         ORDER BY ${orderBy}
-//       `);
-//       const posts = await Promise.all(
-//         rows.map(async (row) => {
-//           const tagsQuery = await pool.query(
-//             'SELECT t.nome FROM tags t JOIN topico_tags tt ON t.id = tt.tag_id WHERE tt.topico_id = $1',
-//             [row.id]
-//           );
-//           return {
-//             id: row.id,
-//             user: { nome: row.user_nome, avatar: row.user_avatar },
-//             categoria: row.categoria_nome,
-//             titulo: row.titulo,
-//             descricao: row.descricao,
-//             views: row.views || 0,
-//             likes: row.likes || 0,
-//             comments: row.comments || 0,
-//             time: row.created_at,
-//             tags: tagsQuery.rows.map((tag) => tag.nome),
-//           };
-//         })
-//       );
-//       return posts;
-//     } catch (error) {
-//       console.error('Erro em Topico.findAll:', error);
-//       throw error;
-//     }
-//   }
-
-//   static async create({ user_id, categoria_id, titulo, descricao, tags }) {
-//     try {
-//       const result = await pool.query(
-//         'INSERT INTO topicos (user_id, categoria_id, titulo, descricao) VALUES ($1, $2, $3, $4) RETURNING id',
-//         [user_id, categoria_id, titulo, descricao]
-//       );
-//       const topicoId = result.rows[0].id;
-
-//       if (tags && tags.length > 0) {
-//         for (const tagId of tags) {
-//           await pool.query(
-//             'INSERT INTO topico_tags (topico_id, tag_id) VALUES ($1, $2)',
-//             [topicoId, tagId]
-//           );
-//         }
-//       }
-
-//       return { id: topicoId };
-//     } catch (error) {
-//       console.error('Erro em Topico.create:', error);
-//       throw error;
-//     }
-//   }
-// }
-
-// export default Topico;
-
-// // import pool from '../database/config.js';
-
-// // class Topico {
-// //   static async findAll(filtro = 'top') {
-// //     let orderBy;
-// //     switch (filtro) {
-// //       case 'novo':
-// //         orderBy = 'created_at DESC';
-// //         break;
-// //       case 'popular':
-// //         orderBy = 'views DESC';
-// //         break;
-// //       case 'fechado':
-// //         orderBy = 'created_at DESC'; // Ajuste se houver campo status
-// //         break;
-// //       default:
-// //         orderBy = 'likes DESC';
-// //     }
-
-// //     try {
-// //       const { rows } = await pool.query(`
-// //         SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
-// //         FROM topicos t
-// //         JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
-// //         JOIN categorias c ON t.categoria_id = c.id
-// //         ORDER BY ${orderBy}
-// //       `);
-// //       // Mapear tags para cada tópico
-// //       const posts = await Promise.all(
-// //         rows.map(async (row) => {
-// //           const tagsQuery = await pool.query(
-// //             'SELECT t.nome FROM tags t JOIN topico_tags tt ON t.id = tt.tag_id WHERE tt.topico_id = $1',
-// //             [row.id]
-// //           );
-// //           return {
-// //             id: row.id,
-// //             user: { nome: row.user_nome, avatar: row.user_avatar },
-// //             categoria: row.categoria_nome,
-// //             titulo: row.titulo,
-// //             descricao: row.descricao,
-// //             views: row.views,
-// //             likes: row.likes,
-// //             comments: row.comments,
-// //             time: row.created_at,
-// //             tags: tagsQuery.rows.map((tag) => tag.nome),
-// //           };
-// //         })
-// //       );
-// //       return posts;
-// //     } catch (error) {
-// //       console.error('Erro em Topico.findAll:', error);
-// //       throw error;
-// //     }
-// //   }
-// // }
-
-// // export default Topico;
-
-// // // import pool from '../database/config.js';
-
-// // // class Topico {
-// // //   static async findAll() {
-// // //     const { rows } = await pool.query(`
-// // //       SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
-// // //       FROM topicos t
-// // //       JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
-// // //       JOIN categorias c ON t.categoria_id = c.id
-// // //     `);
-// // //     return rows;
-// // //   }
-
-// // //   static async findById(id) {
-// // //     const { rows } = await pool.query(`
-// // //       SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
-// // //       FROM topicos t
-// // //       JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
-// // //       JOIN categorias c ON t.categoria_id = c.id
-// // //       WHERE t.id = $1
-// // //     `, [id]);
-// // //     return rows[0];
-// // //   }
-
-// // //   static async create({ user_id, categoria_id, titulo, descricao, tags }) {
-// // //     const client = await pool.connect();
-// // //     try {
-// // //       await client.query('BEGIN');
-      
-// // //       const { rows } = await client.query(
-// // //         'INSERT INTO topicos (user_id, categoria_id, titulo, descricao) VALUES ($1, $2, $3, $4) RETURNING *',
-// // //         [user_id, categoria_id, titulo, descricao]
-// // //       );
-// // //       const topico = rows[0];
-
-// // //       if (tags && tags.length > 0) {
-// // //         for (const tagId of tags) {
-// // //           await client.query(
-// // //             'INSERT INTO topico_tags (topico_id, tag_id) VALUES ($1, $2)',
-// // //             [topico.id, tagId]
-// // //           );
-// // //         }
-// // //       }
-
-// // //       await client.query('COMMIT');
-// // //       return topico;
-// // //     } catch (error) {
-// // //       await client.query('ROLLBACK');
-// // //       throw error;
-// // //     } finally {
-// // //       client.release();
-// // //     }
-// // //   }
-
-// // //   static async getTagsByTopicoId(topicoId) {
-// // //     const { rows } = await pool.query(`
-// // //       SELECT t.nome
-// // //       FROM tags t
-// // //       JOIN topico_tags tt ON t.id = tt.tag_id
-// // //       WHERE tt.topico_id = $1
-// // //     `, [topicoId]);
-// // //     return rows.map(row => row.nome);
-// // //   }
-
-// // //   static async incrementViews(id) {
-// // //     await pool.query('UPDATE topicos SET views = views + 1 WHERE id = $1', [id]);
-// // //   }
-
-// // //   static async incrementLikes(id) {
-// // //     await pool.query('UPDATE topicos SET likes = likes + 1 WHERE id = $1', [id]);
-// // //   }
-// // // }
-
-// // // export default Topico;

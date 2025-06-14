@@ -67,19 +67,50 @@ static async getTopicoById(req, res) {
   }
 
   static async createTopico(req, res) {
-    const { titulo, descricao, categoria_id, tags, user_id } = req.body;
-    console.log('Requisição recebida em /api/topicos:', { titulo, descricao, categoria_id, tags, user_id });
-    try {
-      if (!titulo || !descricao || !categoria_id || !user_id) {
-        return res.status(400).json({ error: 'Campos obrigatórios faltando' });
-      }
-      const topico = await Topico.create({ user_id, categoria_id, titulo, descricao, tags });
-      res.status(201).json({ id: topico.id });
-    } catch (error) {
-      console.error('Erro ao criar tópico:', error);
-      res.status(500).json({ error: 'Erro ao criar tópico', details: error.message });
+  const { titulo, descricao, categoria_id, tags } = req.body;
+  const user_id = req.user.id_usr; // Alinhado com authMiddleware.js
+  console.log('Requisição recebida em /api/topicos:', { titulo, descricao, categoria_id, tags, user_id });
+  try {
+    if (!titulo || !descricao || !categoria_id || !user_id) {
+      return res.status(400).json({ error: 'Campos obrigatórios faltando' });
     }
+    const topico = await Topico.create({ user_id, categoria_id, titulo, descricao, tags });
+    res.status(201).json({ id: topico.id });
+  } catch (error) {
+    console.error('Erro ao criar tópico:', error.message);
+    res.status(500).json({ error: 'Erro ao criar tópico', details: error.message });
   }
+}
+//   static async createTopico(req, res) {
+//   const { titulo, descricao, categoria_id, tags } = req.body;
+//   const user_id = req.user.id;
+//   console.log('Requisição recebida em /api/topicos:', { titulo, descricao, categoria_id, tags, user_id });
+//   try {
+//     if (!titulo || !descricao || !categoria_id) {
+//       return res.status(400).json({ error: 'Campos obrigatórios faltando' });
+//     }
+//     const topico = await Topico.create({ user_id, categoria_id, titulo, descricao, tags });
+//     res.status(201).json({ id: topico.id });
+//   } catch (error) {
+//     console.error('Erro ao criar tópico:', error.message);
+//     res.status(500).json({ error: 'Erro ao criar tópico', details: error.message });
+//   }
+// }
+
+  // static async createTopico(req, res) {
+  //   const { titulo, descricao, categoria_id, tags, user_id } = req.body;
+  //   console.log('Requisição recebida em /api/topicos:', { titulo, descricao, categoria_id, tags, user_id });
+  //   try {
+  //     if (!titulo || !descricao || !categoria_id || !user_id) {
+  //       return res.status(400).json({ error: 'Campos obrigatórios faltando' });
+  //     }
+  //     const topico = await Topico.create({ user_id, categoria_id, titulo, descricao, tags });
+  //     res.status(201).json({ id: topico.id });
+  //   } catch (error) {
+  //     console.error('Erro ao criar tópico:', error);
+  //     res.status(500).json({ error: 'Erro ao criar tópico', details: error.message });
+  //   }
+  // }
 
   static async getMeusTopicos(req, res) {
     try {

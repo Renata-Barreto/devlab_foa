@@ -91,23 +91,28 @@
     </div>
 
     <!-- Modal para criar tópico -->
-    <div id="create-topic-modal" class="modal" style="display: none;">
-      <div class="modal-content">
-        <h2>Criar Novo Tópico</h2>
-        <form id="create-topic-form">
-          <label for="topic-title">Título:</label>
-          <input type="text" id="topic-title" required />
-          <label for="topic-description">Descrição:</label>
-          <textarea id="topic-description" required></textarea>
-          <label for="topic-tags">Tags (separadas por vírgula):</label>
-          <input type="text" id="topic-tags" placeholder="ex: javascript, node, api" />
-          <div class="actions">
-            <button type="button" class="cancel" onclick="closeCreateTopicModal()">Cancelar</button>
-            <button type="submit" class="submit">Criar Tópico</button>
-          </div>
-        </form>
+<div id="create-topic-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h2>Criar Novo Tópico</h2>
+    <form id="create-topic-form">
+      <label for="topic-title">Título:</label>
+      <input type="text" id="topic-title" required />
+      <label for="topic-category">Categoria:</label>
+      <select id="topic-category" required>
+        <option value="">Selecione uma categoria</option>
+        <!-- Opções serão preenchidas dinamicamente -->
+      </select>
+      <label for="topic-description">Descrição:</label>
+      <textarea id="topic-description" required></textarea>
+      <label for="topic-tags">Tags (separadas por vírgula):</label>
+      <input type="text" id="topic-tags" placeholder="ex: javascript, node, api" />
+      <div class="actions">
+        <button type="button" class="cancel" onclick="closeCreateTopicModal()">Cancelar</button>
+        <button type="submit" class="submit">Criar Tópico</button>
       </div>
-    </div>
+    </form>
+  </div>
+</div>
 
     <script>
       // Placeholder para evitar erro speakText
