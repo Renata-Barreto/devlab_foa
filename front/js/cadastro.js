@@ -165,7 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
     senhaInput.addEventListener('blur', () => passwordRules.style.display = 'none');
   
     // Enviar formulário
-form.addEventListener('submit', async (e) => {
+    // Enviar formulário
+form.addEventListener('submit', async (e) => { //voltar ao anterior se der ruim
   e.preventDefault();
 
   const nome = nomeInput.value.trim();
@@ -187,25 +188,70 @@ form.addEventListener('submit', async (e) => {
   }
 
   try {
-    const response = await fetch('http://127.0.0.1:3000/api/users', { // Alterado para /api/users
+    console.log('Enviando requisição POST /api/users:', { name: nome, email, password: senha });
+    const response = await fetch('http://127.0.0.1:3000/api/users', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: nome, email, password: senha })
     });
 
     const data = await response.json();
+    console.log('Resposta recebida:', { status: response.status, data });
 
     if (response.ok) {
-      localStorage.setItem('auth', JSON.stringify(data.token));
+      localStorage.setItem('auth', JSON.stringify({ token: data.token }));
+      console.log('Token salvo no localStorage:', localStorage.getItem('auth'));
       window.location.href = 'personalizacao.html';
     } else {
-      mostrarAlerta(data.mensagem || 'Erro ao cadastrar. Tente novamente.');
+      console.error('Erro no cadastro:', data.message);
+      mostrarAlerta(data.message || 'Erro ao cadastrar. Tente novamente.');
     }
   } catch (err) {
-    console.error(err);
+    console.error('Erro na comunicação com o servidor:', err.message);
     mostrarAlerta('Erro na comunicação com o servidor.');
   }
 });
+// form.addEventListener('submit', async (e) => {
+//   e.preventDefault();
+
+//   const nome = nomeInput.value.trim();
+//   const email = emailInput.value.trim();
+//   const senha = senhaInput.value.trim();
+//   const senhaConfirm = senhaConfirmInput.value.trim();
+
+//   // Executar as validações novamente
+//   validateNome();
+//   validateEmail();
+//   validateSenha();
+//   validateSenhaConfirm();
+
+//   const hasErrors = nomeError.textContent || emailError.textContent || senhaError.textContent || senhaConfirmError.textContent;
+
+//   if (hasErrors) {
+//     mostrarAlerta('Corrija os erros nos campos antes de continuar.');
+//     return;
+//   }
+
+//   try {
+//     const response = await fetch('http://127.0.0.1:3000/api/users', { // Alterado para /api/users
+//       method: 'POST',
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ name: nome, email, password: senha })
+//     });
+
+//     const data = await response.json();
+
+//     if (response.ok) {
+//       localStorage.setItem('auth', JSON.stringify(data.token));
+//       window.location.href = 'personalizacao.html';
+//     } else {
+//       mostrarAlerta(data.mensagem || 'Erro ao cadastrar. Tente novamente.');
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     mostrarAlerta('Erro na comunicação com o servidor.');
+//   }
+// });
     
   });
   

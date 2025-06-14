@@ -1,4 +1,4 @@
-// src/services/auth.service.js <-
+// src/services/auth.service.js
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -21,16 +21,18 @@ const loginService = async (email) => {
 
 const generateToken = (id, nome_usr, email_usr, img_usr) => {
   try {
-    if (!process.env.SECRET_JWT) {
-      console.error('Erro: SECRET_JWT não está definido');
+    const secret = process.env.JWT_SECRET || 'seu_segredo_aqui';
+    if (!secret) {
+      console.error('Erro: JWT_SECRET não está definido');
       throw new Error('Chave secreta para JWT não configurada');
     }
     console.log(`Gerando token para ID ${id}, nome: ${nome_usr}, email: ${email_usr}`);
     const token = jwt.sign(
       { id, nome_usr, email_usr, img_usr },
-      process.env.SECRET_JWT,
-      { expiresIn: 86400 }
+      secret,
+      { expiresIn: '7d' } // Alterado para '7d' para consistência com exemplos anteriores
     );
+    console.log('Token gerado:', token);
     return token;
   } catch (error) {
     console.error('Erro ao gerar token JWT:', error.message);
@@ -39,3 +41,45 @@ const generateToken = (id, nome_usr, email_usr, img_usr) => {
 };
 
 export { loginService, generateToken };
+
+// // src/services/auth.service.js <- ATENÇÃO!!! FUNCIONANDO! SE DER RUIM NO ACIMA RETORNAR COM ESSE
+// import User from '../models/User.js';
+// import jwt from 'jsonwebtoken';
+// import dotenv from 'dotenv';
+
+// dotenv.config();
+
+// const loginService = async (email) => {
+//   try {
+//     const user = await User.findByEmail(email);
+//     if (!user) {
+//       console.log(`Usuário com e-mail ${email} não encontrado`);
+//       return null;
+//     }
+//     return user;
+//   } catch (error) {
+//     console.error('Erro ao buscar usuário no loginService:', error.message);
+//     throw error;
+//   }
+// };
+
+// const generateToken = (id, nome_usr, email_usr, img_usr) => {
+//   try {
+//     if (!process.env.SECRET_JWT) {
+//       console.error('Erro: SECRET_JWT não está definido');
+//       throw new Error('Chave secreta para JWT não configurada');
+//     }
+//     console.log(`Gerando token para ID ${id}, nome: ${nome_usr}, email: ${email_usr}`);
+//     const token = jwt.sign(
+//       { id, nome_usr, email_usr, img_usr },
+//       process.env.SECRET_JWT,
+//       { expiresIn: 86400 }
+//     );
+//     return token;
+//   } catch (error) {
+//     console.error('Erro ao gerar token JWT:', error.message);
+//     throw error;
+//   }
+// };
+
+// export { loginService, generateToken };

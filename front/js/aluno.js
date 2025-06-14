@@ -1,4 +1,4 @@
-// front/js/aluno.js
+// js/aluno.js
 document.addEventListener("DOMContentLoaded", async () => {
   const auth = JSON.parse(localStorage.getItem("auth"));
   const token = auth?.token;
@@ -6,13 +6,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log('Autenticação encontrada:', auth);
 
   if (!token) {
-    console.warn("Usuário não autenticado. Redirecionando para o login.");
+    console.warn("Usuário não autenticado. Token não encontrado no localStorage.");
     window.location.href = "/login.html";
     return;
   }
 
+  // Adicionar atraso para mitigar latência no banco
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   try {
-    console.log('Enviando requisição para /api/users/');
+    console.log('Enviando requisição para /api/users/ com token:', token);
     const response = await fetch("http://127.0.0.1:3000/api/users/", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -23,8 +26,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error('Erro na resposta:', errorData);
-      throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
+      console.error('Erro na resposta:', { status: response.status, message: errorData.message });
+      showAlert(errorData.message || `Erro ao carregar dados: ${response.statusText}`, () => {
+        // localStorage.removeItem("auth");
+        window.location.href = "/login.html";
+      });
+      return;
     }
 
     const { user } = await response.json();
@@ -32,10 +39,57 @@ document.addEventListener("DOMContentLoaded", async () => {
     displayUserData(user);
   } catch (err) {
     console.error("Erro ao carregar dados do usuário:", err.message);
-    localStorage.removeItem("auth");
-    window.location.href = "/login.html";
+    showAlert("Erro ao carregar dados do usuário. Tente novamente.", () => {
+      // localStorage.removeItem("auth");
+      window.location.href = "/login.html";
+    });
   }
 });
+
+// document.addEventListener("DOMContentLoaded", async () => {
+//   const auth = JSON.parse(localStorage.getItem("auth"));
+//   const token = auth?.token;
+
+//   console.log('Autenticação encontrada:', auth);
+
+//   if (!token) {
+//     console.warn("Usuário não autenticado. Token não encontrado no localStorage.");
+//     window.location.href = "/login.html";
+//     return;
+//   }
+
+//   try {
+//     console.log('Enviando requisição para /api/users/ com token:', token);
+//     const response = await fetch("http://127.0.0.1:3000/api/users/", {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+
+//     console.log('Resposta recebida:', response.status, response.statusText);
+
+//     if (!response.ok) {
+//       const errorData = await response.json().catch(() => ({}));
+//       console.error('Erro na resposta:', { status: response.status, message: errorData.message });
+//       // Não remover o token imediatamente para depuração
+//       showAlert(errorData.message || `Erro ao carregar dados: ${response.statusText}`, () => {
+//         // localStorage.removeItem("auth");
+//         window.location.href = "/login.html";
+//       });
+//       return;
+//     }
+
+//     const { user } = await response.json();
+//     console.log('Dados do usuário recebidos:', user);
+//     displayUserData(user);
+//   } catch (err) {
+//     console.error("Erro ao carregar dados do usuário:", err.message);
+//     showAlert("Erro ao carregar dados do usuário. Tente novamente.", () => {
+//       // localStorage.removeItem("auth");
+//       window.location.href = "/login.html";
+//     });
+//   }
+// });
 
 function displayUserData(user) {
   console.log('Exibindo dados do usuário:', user);
