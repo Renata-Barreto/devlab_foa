@@ -26,33 +26,85 @@ static async getTopicoById(req, res) {
   }
 
   static async avaliarTopico(req, res) {
-    const { id } = req.params;
-    const { rating } = req.body;
+  const { id } = req.params;
+  const { rating } = req.body;
+  const user_id = req.user.id_usr; // Alinhado com authMiddleware.js
+  console.log(`Avaliando tópico ID: ${id} pelo usuário ID: ${user_id} com rating: ${rating}`);
+  try {
     if (!rating || rating < 1 || rating > 5) {
+      console.log(`Avaliação inválida: ${rating}`);
       return res.status(400).json({ error: 'Avaliação inválida (1 a 5)' });
     }
-    try {
-      const topico = await Topico.findById(id, req.user.id);
-      if (!topico) {
-        return res.status(404).json({ error: 'Tópico não encontrado' });
-      }
-      await pool.query(
-        'INSERT INTO avaliacoes (topico_id, user_id, rating) VALUES ($1, $2, $3) ON CONFLICT (topico_id, user_id) DO UPDATE SET rating = $3',
-        [id, req.user.id, rating]
-      );
-      const { rows } = await pool.query(
-        'SELECT AVG(rating) as avg_rating, COUNT(*) as count FROM avaliacoes WHERE topico_id = $1',
-        [id]
-      );
-      const avgRating = parseFloat(rows[0].avg_rating) || 0;
-      const ratingCount = parseInt(rows[0].count) || 0;
-      await pool.query('UPDATE topicos SET rating = $1 WHERE id = $2', [avgRating, id]);
-      res.json({ message: 'Avaliação registrada', rating: avgRating, rating_count: ratingCount });
-    } catch (error) {
-      console.error('Erro ao avaliar tópico:', error);
-      res.status(500).json({ error: 'Erro ao avaliar tópico', details: error.message });
+
+    const topico = await Topico.findById(id, user_id);
+    if (!topico) {
+      console.log(`Tópico ID: ${id} não encontrado`);
+      return res.status(404).json({ error: 'Tópico não encontrado' });
     }
+
+    // Inserir ou atualizar a avaliação
+    await pool.query(
+      'INSERT INTO avaliacoes (topico_id, user_id, rating) VALUES ($1, $2, $3) ' +
+      'ON CONFLICT ON CONSTRAINT unique_avaliacao DO UPDATE SET rating = EXCLUDED.rating, created_at = CURRENT_TIMESTAMP',
+      [id, user_id, rating]
+    );
+    console.log(`Avaliação registrada para tópico ID: ${id}, usuário ID: ${user_id}`);
+
+    // Calcular média e contagem de avaliações
+    const { rows } = await pool.query(
+      'SELECT AVG(rating)::FLOAT AS avg_rating, COUNT(*)::INTEGER AS count ' +
+      'FROM avaliacoes WHERE topico_id = $1',
+      [id]
+    );
+    const avgRating = parseFloat(rows[0].avg_rating) || 0;
+    const ratingCount = parseInt(rows[0].count) || 0;
+    console.log(`Média calculada: ${avgRating}, Contagem: ${ratingCount}`);
+
+    // Atualizar o rating no tópico
+    await pool.query(
+      'UPDATE topicos SET rating = $1 WHERE id = $2',
+      [avgRating, id]
+    );
+    console.log(`Tópico ID: ${id} atualizado com rating: ${avgRating}`);
+
+    res.json({
+      message: 'Avaliação registrada',
+      rating: avgRating,
+      rating_count: ratingCount
+    });
+  } catch (error) {
+    console.error(`Erro ao avaliar tópico ID: ${id}:`, error.message, error.stack);
+    res.status(500).json({ error: 'Erro ao avaliar tópico', details: error.message });
   }
+}
+  // static async avaliarTopico(req, res) {
+  //   const { id } = req.params;
+  //   const { rating } = req.body;
+  //   if (!rating || rating < 1 || rating > 5) {
+  //     return res.status(400).json({ error: 'Avaliação inválida (1 a 5)' });
+  //   }
+  //   try {
+  //     const topico = await Topico.findById(id, req.user.id);
+  //     if (!topico) {
+  //       return res.status(404).json({ error: 'Tópico não encontrado' });
+  //     }
+  //     await pool.query(
+  //       'INSERT INTO avaliacoes (topico_id, user_id, rating) VALUES ($1, $2, $3) ON CONFLICT (topico_id, user_id) DO UPDATE SET rating = $3',
+  //       [id, req.user.id, rating]
+  //     );
+  //     const { rows } = await pool.query(
+  //       'SELECT AVG(rating) as avg_rating, COUNT(*) as count FROM avaliacoes WHERE topico_id = $1',
+  //       [id]
+  //     );
+  //     const avgRating = parseFloat(rows[0].avg_rating) || 0;
+  //     const ratingCount = parseInt(rows[0].count) || 0;
+  //     await pool.query('UPDATE topicos SET rating = $1 WHERE id = $2', [avgRating, id]);
+  //     res.json({ message: 'Avaliação registrada', rating: avgRating, rating_count: ratingCount });
+  //   } catch (error) {
+  //     console.error('Erro ao avaliar tópico:', error);
+  //     res.status(500).json({ error: 'Erro ao avaliar tópico', details: error.message });
+  //   }
+  // }
 
   static async getPosts(req, res) {
     const { filtro } = req.query;
