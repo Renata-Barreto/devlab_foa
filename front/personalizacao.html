@@ -3,10 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/persona.css" />
+    <meta name="description" content="Personalize seu perfil no DevLab" />
+    <link rel="shortcut icon" href="/imagens/fav.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/profile-dropdown-menu.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/persona.css" />
     <title>Personalização de Perfil</title>
   </head>
   <body>
+    <nav class="navbar" id="navbar"></nav>
+
     <form id="personalizacaoForm">
       <div class="left-column">
         <div class="section-title">Foto de Perfil</div>
@@ -37,12 +48,18 @@
       </div>
     </form>
 
-    <script src="js/personalizacao.js"></script>
+    <!-- Scripts -->
+    <script src="/js/menu-drop.js"></script>
+    <script src="/js/personalizacao.js"></script>
     <script>
       function cancelForm() {
-        // Limpar os campos do formulário
-        document.getElementById("personalizacaoForm").reset();
-        // Redirecionar para a página do aluno
+        const form = document.getElementById("personalizacaoForm");
+        if (form) {
+          form.reset();
+          console.log("Formulário de personalização limpo.");
+        } else {
+          console.warn("Elemento #personalizacaoForm não encontrado no DOM.");
+        }
         window.location.href = "/pagina_aluno.html";
       }
     </script>

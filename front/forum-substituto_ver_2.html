@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Fórum do DevLab para discussão de tópicos" />
-    <title>Fórum - DevLab</title>
-    <link rel="shortcut icon" href="/imagens/fav.jpg" type="image/x-icon" />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/navbar.css" />
-    <link rel="stylesheet" href="/css/profile-dropdown-menu.css" />
+    <title>Forum Clone</title>
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/profile-dropdown-menu.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -17,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/forum-substituto.css" />
-    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="css/forum-substituto.css" />
+    <link rel="stylesheet" href="css/sidebar.css" /> <!-- Novo CSS para o menu lateral -->
   </head>
   <body>
     <nav class="navbar" id="navbar"></nav>
@@ -26,17 +23,17 @@
       <nav class="sidebar-nav">
         <ul>
           <li>
-            <a href="#" class="create-topic-link">
+            <a href="#" onclick="openCreateTopicModal(); return false;">
               <i class="fa-solid fa-plus"></i> Criar Tópico
             </a>
           </li>
           <li>
-            <a href="/gerenciar_topico.html">
+            <a href="gerenciar_topico.html">
               <i class="fa-solid fa-list"></i> Gerenciar Tópicos
             </a>
           </li>
           <li>
-            <a href="/pagina_aluno.html">
+            <a href="pagina_aluno.html">
               <i class="fa-solid fa-user"></i> Meu Perfil
             </a>
           </li>
@@ -52,7 +49,12 @@
         type="text"
         id="search-input"
         placeholder="Procure por título, descrição ou tags..."
-        style="width: 27%; padding: 8px; margin-bottom: 20px; border-radius: 10px;"
+        style="
+          width: 27%;
+          padding: 8px;
+          margin-bottom: 20px;
+          border-radius: 10px;
+        "
       />
       <div class="filters">
         <button class="tab-button active" data-filtro="top">
@@ -89,27 +91,28 @@
     </div>
 
     <!-- Modal para criar tópico -->
-    <div id="create-topic-modal" class="modal" style="display: none;">
-      <div class="modal-content">
-        <h2>Criar Novo Tópico</h2>
-        <form id="create-topic-form">
-          <label for="topic-title">Título:</label>
-          <input type="text" id="topic-title" required />
-          <label for="topic-category">Categoria:</label>
-          <select id="topic-category" required>
-            <option value="">Selecione uma categoria</option>
-          </select>
-          <label for="topic-description">Descrição:</label>
-          <textarea id="topic-description" required></textarea>
-          <label for="topic-tags">Tags (separadas por vírgula):</label>
-          <input type="text" id="topic-tags" placeholder="ex: javascript, node, api" />
-          <div class="actions">
-            <button type="button" class="cancel">Cancelar</button>
-            <button type="submit" class="submit">Criar Tópico</button>
-          </div>
-        </form>
+<div id="create-topic-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h2>Criar Novo Tópico</h2>
+    <form id="create-topic-form">
+      <label for="topic-title">Título:</label>
+      <input type="text" id="topic-title" required />
+      <label for="topic-category">Categoria:</label>
+      <select id="topic-category" required>
+        <option value="">Selecione uma categoria</option>
+        <!-- Opções serão preenchidas dinamicamente -->
+      </select>
+      <label for="topic-description">Descrição:</label>
+      <textarea id="topic-description" required></textarea>
+      <label for="topic-tags">Tags (separadas por vírgula):</label>
+      <input type="text" id="topic-tags" placeholder="ex: javascript, node, api" />
+      <div class="actions">
+        <button type="button" class="cancel" onclick="closeCreateTopicModal()">Cancelar</button>
+        <button type="submit" class="submit">Criar Tópico</button>
       </div>
-    </div>
+    </form>
+  </div>
+</div>
 
     <script>
       // Placeholder para evitar erro speakText
@@ -117,8 +120,8 @@
         console.log("speakText chamado com:", text);
       }
     </script>
-    <script src="/js/menu-drop.js" defer></script>
-    <script src="/js/menu.js" defer></script>
-    <script src="/js/forum-substituto.js" defer></script>
+    <script src="js/menu-drop.js" defer></script>
+    <script src="js/menu.js" defer></script>
+    <script src="js/forum-substituto.js" defer></script>
   </body>
 </html>
