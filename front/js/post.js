@@ -339,35 +339,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     alert(`Não foi possível avaliar o tópico: ${error.message}`);
   }
 }
-    // async function avaliarTopico(topicoId, rating) {
-    //   try {
-    //     console.log("Enviando requisição para POST /api/topicos/:id/avaliar");
-    //     const response = await fetch(`http://127.0.0.1:3000/api/topicos/${topicoId}/avaliar`, {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         Authorization: `Bearer ${auth.token}`,
-    //       },
-    //       body: JSON.stringify({ rating: parseInt(rating) }),
-    //     });
-    //     console.log("Status da resposta:", response.status, response.statusText);
-    //     if (!response.ok) {
-    //       let errorData;
-    //       try {
-    //         errorData = await response.json();
-    //       } catch (e) {
-    //         errorData = { error: "Sem mensagem de erro retornada" };
-    //       }
-    //       console.log("Detalhes do erro:", errorData);
-    //       throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
-    //     }
-    //     carregarTopico();
-    //   } catch (error) {
-    //     console.error("Erro ao avaliar tópico:", error);
-    //     alert("Erro ao avaliar tópico: " + error.message);
-    //   }
-    // }
-
+    
     window.likeTopico = likeTopico;
     window.showReplyForm = (respostaId) => {
       document.getElementById(`reply-form-${respostaId}`).style.display = "block";
