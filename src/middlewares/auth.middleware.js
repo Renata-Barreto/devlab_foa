@@ -39,7 +39,7 @@ export const authMiddleware = async (req, res, next) => {
       });
     });
 
-    const user = await userService.findByIdService(decoded.id);
+    const user = await userService.findById(decoded.id);
     if (!user || !user.id_usr) {
       console.log(`Erro: Usuário com id_usr ${decoded.id} não encontrado`, { path: req.path });
       return res.status(401).json({ message: 'Token inválido: Usuário não encontrado' });
@@ -50,7 +50,7 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: 'Usuário inativo' });
     }
 
-    req.user = { ...user, id: decoded.id, id_usr: user.id_usr }; // Adicionado id para consistência
+    req.user = { ...user, id: decoded.id, id_usr: user.id_usr }; 
     console.log(`Usuário autenticado: id_usr ${req.user.id_usr}, id ${req.user.id}`, { path: req.path });
     next();
   } catch (err) {
@@ -59,4 +59,4 @@ export const authMiddleware = async (req, res, next) => {
   }
 };
 
-export default authMiddleware; //<- EM TESTE
+export default authMiddleware; 

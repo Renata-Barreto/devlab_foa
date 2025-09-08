@@ -46,20 +46,20 @@ const userController = {
         return res.status(400).json({ message: 'Preencha todos os campos obrigatórios' });
       }
 
-      const existe = await userService.findByEmailService(email);
+      const existe = await userService.findByEmail(email);
       if (existe) {
         console.log(`Erro: E-mail ${email} já cadastrado`);
         return res.status(409).json({ message: 'Usuário já cadastrado.' });
       }
 
       const body = { name, email, password, avatar, end_usr, cid_usr, est_usr, dtn_usr };
-      const user = await userService.createService(body);
+      const user = await userService.create(body);
       if (!user) {
         console.log('Erro: Falha ao criar usuário');
         return res.status(400).json({ message: 'Erro ao criar usuário' });
       }
 
-      const token = await generateToken(user.id_usr, user.nome_usr, user.email_usr, user.img_usr);
+      const token = generateToken(user.id_usr, user.nome_usr, user.email_usr, user.img_usr);
       console.log(`Usuário criado com ID ${user.id_usr}, token gerado`);
 
       res.status(201).json({
@@ -74,7 +74,7 @@ const userController = {
 
   findAll: async (req, res) => {
     try {
-      const users = await userService.findAllService();
+      const users = await userService.findAll();
       if (users.length === 0) {
         console.log('Nenhum usuário encontrado');
         return res.status(404).json({ message: 'Nenhum usuário cadastrado' });
@@ -148,8 +148,8 @@ const userController = {
       const fotoPath = foto ? `/Uploads/${foto.filename}` : avatar_path || null;
       console.log(`Atualizando usuário ID ${userId}, fotoPath: ${fotoPath}, bio: ${bio}`);
 
-      await userService.updateService(userId, bio, fotoPath);
-      const user = await userService.findByIdService(userId);
+      await userService.update(userId, bio, fotoPath);
+      const user = await userService.findById(userId);
 
       if (!user) {
         console.log(`Erro: Usuário ID ${userId} não encontrado após atualização`);
@@ -183,7 +183,7 @@ const userController = {
         return res.status(401).json({ message: 'Não autorizado' });
       }
 
-      const user = await userService.deleteService(userId);
+      const user = await userService.delete(userId);
       if (!user) {
         console.log(`Erro: Usuário ID ${userId} não encontrado para deleção`);
         return res.status(404).json({ message: 'Usuário não encontrado' });
@@ -204,7 +204,7 @@ const userController = {
         return res.status(401).json({ message: 'Não autorizado' });
       }
 
-      const user = await userService.deleteService1(userId);
+      const user = await userService.delete(userId);
       if (!user) {
         console.log(`Erro: Usuário ID ${userId} não encontrado para deleção permanente`);
         return res.status(404).json({ message: 'Usuário não encontrado' });
