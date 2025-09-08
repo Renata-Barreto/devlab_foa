@@ -20,7 +20,7 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV === 'production'
-        ? 'https://devlab-sf9u.onrender.com'
+        ? 'https://devlab-foa.onrender.com'
         : '*',
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
