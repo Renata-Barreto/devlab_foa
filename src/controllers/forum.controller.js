@@ -1,5 +1,5 @@
 // src/controllers/ForumController.js
-import ForumService from '../services/ForumService.js';
+import ForumService from '../services/forum.service.js';
 
 class ForumController {
   static async getTopicoById(req, res) {
