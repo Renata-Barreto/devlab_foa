@@ -1,6 +1,6 @@
 // src/routes/forum.routes.js
 import { Router } from 'express';
-import ForumController from '../controllers/ForumController.js';
+import ForumController from '../controllers/forum.controller.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = Router();
