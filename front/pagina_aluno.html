@@ -1,26 +1,30 @@
+<!--Precisa arruma o botão de menu-->
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="/imagens/fav.jpg" type="image/x-icon" />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/navbar.css" />
-    <link rel="stylesheet" href="/css/profile-dropdown-menu.css" />
+    <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/profile-dropdown-menu.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
     />
-    <link rel="stylesheet" href="/css/aluno.css" />
+    <link rel="stylesheet" href="css/aluno.css" />
+    <!-- firebase -->
+
     <title>Página do Aluno</title>
   </head>
   <body>
-    <a id="linkIndex" href="/tutorialteste.html" style="display: none"></a>
+    <a id="linkIndex" href="tutorialteste.html" style="display: none"></a>
     <nav class="navbar" id="navbar"></nav>
+
 
     <div class="container">
       <aside class="sidebar">
-        <img class="profile-img2" alt="Imagem de perfil do usuário" />
+        <img class="profile-img2" />
         <h2 id="usuario"></h2>
         <p class="id">FuturoDev</p>
         <button class="edit-button">Editar perfil</button>
@@ -32,11 +36,11 @@
         <div class="social-links">
           <p>
             <i class="fab fa-instagram"></i>
-            <a href="#" target="_blank" id="usuario">Instagram</a>
+            <a href="#" target="_blank" id="usuario"></a>
           </p>
           <p>
             <i class="fab fa-linkedin"></i>
-            <a href="#" target="_blank" id="usuario">LinkedIn</a>
+            <a href="#" target="_blank" id="usuario"></a>
           </p>
           <p>
             <i class="fas fa-envelope"></i>
@@ -57,7 +61,7 @@
         <section class="info">
           <h1>
             Olá! Me chamo
-            <span id="usuario">🧑‍💻✨</span>
+            <div id="usuario">🧑‍💻✨</div>
             🧑‍💻✨
           </h1>
           <h2>Sobre Mim:</h2>
@@ -86,7 +90,7 @@
       </main>
     </div>
 
-    <!-- Modal de confirmação de exclusão -->
+    <!-- confirmação de exclusão -->
     <div id="confirmModal" class="modal" style="display: none">
       <div class="modal-content">
         <p>
@@ -99,7 +103,7 @@
       </div>
     </div>
 
-    <!-- Caixa de alerta -->
+    <!-- mensagens após exclusão -->
     <div id="alertBox" class="hidden">
       <div class="alertContent">
         <p id="alertMessage"></p>
@@ -107,40 +111,32 @@
       </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="/js/menu-drop.js"></script>
-    <script src="/js/aluno.js"></script>
-    <script src="/js/chamar_html.js"></script>
+    <script src="js/menu-drop.js"></script>
+    <script src="js/aluno.js" ></script>
+    <script src="js/chamar_html.js"></script>
+    <script src="js/menu-drop.js"></script>
     <script>
+      // menu
       document.addEventListener("DOMContentLoaded", function () {
         const hamburgerMenu = document.querySelector(".hamburger-menu");
         const navLinks = document.querySelector(".nav_links");
 
-        if (hamburgerMenu && navLinks) {
-          hamburgerMenu.addEventListener("click", function (event) {
-            event.stopPropagation();
-            navLinks.classList.toggle("open");
-            console.log("Menu hambúrguer clicado, toggling nav_links:", navLinks.classList.contains("open"));
-          });
+        hamburgerMenu.addEventListener("click", function (event) {
+          event.stopPropagation();
+          navLinks.classList.toggle("open");
+        });
 
-          document.addEventListener("click", function (event) {
-            if (!navLinks.contains(event.target) && !hamburgerMenu.contains(event.target)) {
-              navLinks.classList.remove("open");
-              console.log("Clique fora do menu, fechando nav_links.");
-            }
-          });
-        } else {
-          console.warn("Elementos .hamburger-menu ou .nav_links não encontrados no DOM.");
-        }
+        document.addEventListener("click", function (event) {
+          if (
+            !navLinks.contains(event.target) &&
+            !hamburgerMenu.contains(event.target)
+          ) {
+            navLinks.classList.remove("open");
+          }
+        });
       });
-
       function entrar() {
-        const linkIndex = document.getElementById("linkIndex");
-        if (linkIndex) {
-          linkIndex.click();
-        } else {
-          console.warn("Elemento #linkIndex não encontrado no DOM.");
-        }
+        document.getElementById("linkIndex").click();
       }
     </script>
   </body>

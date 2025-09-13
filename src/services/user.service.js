@@ -24,7 +24,7 @@ const UserService = {
   },
 
   update: async (id, bio, fotoPath) => {
-    const user = await User.update(id, fotoPath ? { img_usr: fotoPath } : {});
+    const user = await User.updateProfile(id, fotoPath ? { img_usr: fotoPath } : {});
     if (!user) return null;
     return { ...user, ...(bio ? { des_pfl: bio } : {}) };
   },
