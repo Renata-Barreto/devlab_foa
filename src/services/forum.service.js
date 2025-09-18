@@ -4,41 +4,30 @@ import Categoria from '../models/Categoria.js';
 import Tag from '../models/Tag.js';
 import Resposta from '../models/Resposta.js';
 import RespostaReply from '../models/RespostaReply.js';
-import pool from '../database/config.js';
 
 class ForumService {
   static async getTopicoById(id, userId) {
     const topico = await Topico.findById(id, userId);
     if (!topico) throw new Error('Tópico não encontrado');
-    await pool.query('UPDATE topicos SET views = views + 1 WHERE id = $1', [id]);
+
+    await Topico.incrementViews(id);
+
     return topico;
   }
 
-  static async avaliarTopico(id, userId, rating) {
+ static async avaliarTopico(id, userId, rating) {
     if (!rating || rating < 1 || rating > 5) throw new Error('Avaliação inválida (1 a 5)');
 
-    const topico = await Topico.findById(id, userId);
+    const topico = await TopicoRepository.findById(id, userId);
     if (!topico) throw new Error('Tópico não encontrado');
 
-    await pool.query(
-      `INSERT INTO avaliacoes (topico_id, user_id, rating) 
-       VALUES ($1, $2, $3)
-       ON CONFLICT ON CONSTRAINT unique_avaliacao 
-       DO UPDATE SET rating = EXCLUDED.rating, created_at = CURRENT_TIMESTAMP`,
-      [id, userId, rating]
-    );
+    await TopicoRepository.insertOrUpdateAvaliacao(id, userId, rating);
 
-    const { rows } = await pool.query(
-      'SELECT AVG(rating)::FLOAT AS avg_rating, COUNT(*)::INTEGER AS count FROM avaliacoes WHERE topico_id = $1',
-      [id]
-    );
+    const { avgRating, count } = await TopicoRepository.getRatingStats(id);
 
-    const avgRating = parseFloat(rows[0].avg_rating) || 0;
-    const ratingCount = parseInt(rows[0].count) || 0;
+    await TopicoRepository.updateTopicoRating(id, avgRating);
 
-    await pool.query('UPDATE topicos SET rating = $1 WHERE id = $2', [avgRating, id]);
-
-    return { message: 'Avaliação registrada com sucesso', rating: avgRating, rating_count: ratingCount };
+    return { message: 'Avaliação registrada com sucesso', rating: avgRating, rating_count: count };
   }
 
   static async getPosts(filtro) {

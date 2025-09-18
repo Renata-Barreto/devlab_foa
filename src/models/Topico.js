@@ -1,9 +1,37 @@
 // src/models/Topico.js
 import pool from '../database/config.js';
-import Resposta from './Resposta.js';
-import Tag from './Tag.js';
 
 class Topico {
+   static async findById(id, userId) {
+    const { rows } = await pool.query('SELECT * FROM topicos WHERE id = $1', [id]);
+    return rows[0];
+  }
+
+   static async incrementViews(id) {
+    await pool.query('UPDATE topicos SET views = views + 1 WHERE id = $1', [id]);
+  }
+
+  static async insertOrUpdateAvaliacao(topicoId, userId, rating) {
+    await pool.query(
+      `INSERT INTO avaliacoes (topico_id, user_id, rating)
+       VALUES ($1, $2, $3)
+       ON CONFLICT ON CONSTRAINT unique_avaliacao
+       DO UPDATE SET rating = EXCLUDED.rating, created_at = CURRENT_TIMESTAMP`,
+      [topicoId, userId, rating]
+    );
+  }
+
+  static async getRatingStats(topicoId) {
+    const { rows } = await pool.query(
+      'SELECT AVG(rating)::FLOAT AS avg_rating, COUNT(*)::INTEGER AS count FROM avaliacoes WHERE topico_id = $1',
+      [topicoId]
+    );
+    return { avgRating: parseFloat(rows[0].avg_rating) || 0, count: parseInt(rows[0].count) || 0 };
+  }
+
+  static async updateTopicoRating(topicoId, avgRating) {
+    await pool.query('UPDATE topicos SET rating = $1 WHERE id = $2', [avgRating, topicoId]);
+  }
   
   static async findAll(filtro = 'top') {
     let orderBy;
@@ -266,29 +294,6 @@ class Topico {
     throw error;
   }
 }
-  // static async create({ user_id, categoria_id, titulo, descricao, tags }) {
-  //   try {
-  //     const result = await pool.query(
-  //       'INSERT INTO topicos (user_id, categoria_id, titulo, descricao, ativo, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
-  //       [user_id, categoria_id, titulo, descricao, true, 'aberto']
-  //     );
-  //     const topicoId = result.rows[0].id;
-
-  //     if (tags && tags.length > 0) {
-  //       for (const tagId of tags) {
-  //         await pool.query(
-  //           'INSERT INTO topico_tags (topico_id, tag_id) VALUES ($1, $2)',
-  //           [topicoId, tagId]
-  //         );
-  //       }
-  //     }
-
-  //     return { id: topicoId };
-  //   } catch (error) {
-  //     console.error('Erro em Topico.create:', error);
-  //     throw error;
-  //   }
-  // }
 
   static async update(id, { titulo, descricao, categoria_id, tags, ativo, status }) {
     try {

@@ -30,7 +30,7 @@ const generateToken = (id, nome_usr, email_usr, img_usr) => {
     const token = jwt.sign(
       { id, nome_usr, email_usr, img_usr },
       secret,
-      { expiresIn: '7d' } // Alterado para '7d' para consistência com exemplos anteriores
+      { expiresIn: '7d' } 
     );
     console.log('Token gerado:', token);
     return token;
