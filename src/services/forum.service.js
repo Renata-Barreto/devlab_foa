@@ -6,7 +6,7 @@ import Resposta from '../models/Resposta.js';
 import RespostaReply from '../models/RespostaReply.js';
 
 class ForumService {
-  static async getTopicoById(id, userId) {
+  static async getTopicoById(id) {
     const topico = await Topico.findById(id, userId);
     if (!topico) throw new Error('Tópico não encontrado');
 
