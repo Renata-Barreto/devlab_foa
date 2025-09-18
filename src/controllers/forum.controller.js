@@ -4,7 +4,7 @@ import ForumService from '../services/forum.service.js';
 class ForumController {
   static async getTopicoById(req, res) {
     try {
-      const topico = await ForumService.getTopicoById(req.params.id, req.user?.id_usr);
+      const topico = await ForumService.getTopicoById(req.params.id);
       res.json(topico);
     } catch (error) {
       res.status(500).json({ error: error.message });

@@ -2,7 +2,7 @@
 import pool from '../database/config.js';
 
 class Topico {
-   static async findById(id, userId) {
+   static async findById(id) {
     const { rows } = await pool.query('SELECT * FROM topicos WHERE id = $1', [id]);
     return rows[0];
   }
