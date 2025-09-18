@@ -22,7 +22,9 @@
     "jwt-decode": "^4.0.0",
     "multer": "^2.0.0",
     "nodemon": "^3.1.9",
-    "pg": "^8.16.0"
+    "pg": "^8.16.0",
+    "poku": "^3.0.2",
+    "start-server-and-test": "^2.1.0"
   },
   "repository": {
     "type": "git",
