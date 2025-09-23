@@ -188,3 +188,18 @@ document.addEventListener("DOMContentLoaded", () => {
     validateSenha();
   });
 });
+
+function getEmailError(email) {
+  email = email.trim();
+  if (email === "") {
+    return "Preencha o campo.";
+  }
+  if (email !== "" && (!email.includes("@") || !email.includes("."))) {
+    return 'O e-mail deve conter "@" seguido por um domínio. (Ex: devlab@gmail.com)';
+  }
+  return "";
+}
+
+module.exports = { getEmailError };
+
+
