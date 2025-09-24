@@ -7,7 +7,8 @@
     "dev": "nodemon --env-file .env ./src/server.js",
     "test": "npx poku",
     "test:server": "start-server-and-test start http://localhost:3000 test",
-    "test:stress": "autocannon -c 5000 -d 10 http://localhost:3000/admin/topicos/1"
+    "test:stress": "autocannon -c 5000 -d 10 http://localhost:3000/admin/topicos/1",
+    "start": "node ./src/server.js"
   },
   "keywords": [],
   "author": "",
