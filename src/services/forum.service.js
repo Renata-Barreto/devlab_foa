@@ -7,7 +7,7 @@ import RespostaReply from '../models/RespostaReply.js';
 
 class ForumService {
   static async getTopicoById(id) {
-    const topico = await Topico.findById(id, userId);
+    const topico = await Topico.findById(id);
     if (!topico) throw new Error('Tópico não encontrado');
 
     await Topico.incrementViews(id);
@@ -33,7 +33,6 @@ class ForumService {
   static async getPosts(filtro, page = 1, limit = 10) {
   return Topico.findAll(filtro, page, limit);
 }
-
   static async getCategorias() {
     return Categoria.findAll();
   }
