@@ -14,6 +14,7 @@ body {
 }
 
 .sidebar {
+  margin-top: 20px;
   width: 250px;
   background: #1a1a2e;
   color: #fff;
@@ -129,12 +130,14 @@ body {
   margin-bottom: 16px;
   box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2);
   width: 100%;
+  flex: 1 1 auto;
 }
 
 .post-header {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  flex: 1 1 auto;
 }
 
 .post-header img {
