@@ -1,4 +1,3 @@
-// src/front/js/forum-substituto.js
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Iniciando forum-substituto.js - Timestamp:", new Date().toISOString());
 
@@ -81,25 +80,25 @@ document.addEventListener("DOMContentLoaded", () => {
   async function carregarPosts(filtro = "top", searchTerm = "") {
     if (!postContainer) return;
     try {
-      console.log(`Carregando posts com filtro: ${filtro}, busca: ${searchTerm}`);
       let url = `/api/forum/posts?filtro=${filtro}`;
-      if (searchTerm) {
-        url += `&search=${encodeURIComponent(searchTerm)}`;
-      }
+      if (searchTerm) url += `&search=${encodeURIComponent(searchTerm)}`;
       const resposta = await fetch(url);
-      console.log("Status da resposta:", resposta.status, resposta.statusText);
       if (!resposta.ok) {
         const errorData = await resposta.json().catch(() => ({}));
-        console.error("Detalhes do erro:", errorData);
         throw new Error(`Erro HTTP: ${resposta.status} - ${errorData.error || resposta.statusText}`);
       }
       const posts = await resposta.json();
-      console.log("Posts recebidos:", posts);
-
+      window.posts = posts || [];
       postContainer.innerHTML = "";
-      if (posts.length === 0) {
-        postContainer.innerHTML = "<p>Nenhum tópico encontrado.</p>";
+
+      if (!window.posts.length) {
+        postContainer.innerHTML = "Nenhum tópico encontrado.";
+        if (document.getElementById('paginate')) document.getElementById('paginate').style.display = 'none';
         return;
+      }
+      if (document.getElementById('paginate')) document.getElementById('paginate').style.display = '';
+      if (typeof window.initPaginacao === "function") {
+        window.initPaginacao();
       }
 
       posts.forEach((post) => {
