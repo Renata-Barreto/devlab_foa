@@ -30,9 +30,9 @@ class ForumService {
     return { message: 'Avaliação registrada com sucesso', rating: avgRating, rating_count: count };
   }
 
-  static async getPosts(filtro) {
-    return Topico.findAll(filtro);
-  }
+  static async getPosts(filtro, page = 1, limit = 10) {
+  return Topico.findAll(filtro, page, limit);
+}
 
   static async getCategorias() {
     return Categoria.findAll();

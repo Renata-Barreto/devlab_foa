@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let posts = [];
   let currentPage = 1;
-  const perPage = 3;
+  const perPage = 5;
   let totalPages = 1;
 
   function updatePosts() {

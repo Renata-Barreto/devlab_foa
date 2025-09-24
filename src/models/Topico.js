@@ -33,60 +33,79 @@ class Topico {
     await pool.query('UPDATE topicos SET rating = $1 WHERE id = $2', [avgRating, topicoId]);
   }
   
-  static async findAll(filtro = 'top') {
-    let orderBy;
-    switch (filtro) {
-      case 'novo':
-        orderBy = 'created_at DESC';
-        break;
-      case 'popular':
-        orderBy = 'views DESC';
-        break;
-      case 'fechado':
-        orderBy = 'status = \'fechado\' DESC, created_at DESC';
-        break;
-      default:
-        orderBy = 'likes DESC';
-    }
-
-    try {
-      const { rows } = await pool.query(`
-        SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
-        FROM topicos t
-        JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
-        JOIN categorias c ON t.categoria_id = c.id
-        WHERE t.ativo = true
-        ORDER BY ${orderBy}
-      `);
-      const posts = await Promise.all(
-        rows.map(async (row) => {
-          const tagsQuery = await pool.query(
-            'SELECT t.nome FROM tags t JOIN topico_tags tt ON t.id = tt.tag_id WHERE tt.topico_id = $1',
-            [row.id]
-          );
-          return {
-            id: row.id,
-            user_id: row.user_id,
-            user: { nome: row.user_nome, avatar: row.user_avatar },
-            categoria: row.categoria_nome,
-            titulo: row.titulo,
-            descricao: row.descricao,
-            views: row.views || 0,
-            likes: row.likes || 0,
-            comments: row.comments || 0,
-            time: row.created_at,
-            tags: tagsQuery.rows.map((tag) => tag.nome),
-            ativo: row.ativo,
-            status: row.status || 'aberto',
-          };
-        })
-      );
-      return posts;
-    } catch (error) {
-      console.error('Erro em Topico.findAll:', error);
-      throw error;
-    }
+  static async findAll(filtro = 'top', page = 1, limit = 10) {
+  let orderBy;
+  switch (filtro) {
+    case 'novo':
+      orderBy = 'created_at DESC';
+      break;
+    case 'popular':
+      orderBy = 'views DESC';
+      break;
+    case 'fechado':
+      orderBy = "status = 'fechado' DESC, created_at DESC";
+      break;
+    default:
+      orderBy = 'likes DESC';
   }
+
+  const offset = (page - 1) * limit;
+
+  try {
+    const { rows } = await pool.query(`
+      SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
+      FROM topicos t
+      JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
+      JOIN categorias c ON t.categoria_id = c.id
+      WHERE t.ativo = true
+      ORDER BY ${orderBy}
+      LIMIT $1 OFFSET $2
+    `, [limit, offset]);
+
+    // contar total pra devolver no JSON (bom pro frontend saber quantas páginas existem)
+    const totalResult = await pool.query(`
+      SELECT COUNT(*) FROM topicos t WHERE t.ativo = true
+    `);
+    const total = parseInt(totalResult.rows[0].count, 10);
+
+    const posts = await Promise.all(
+      rows.map(async (row) => {
+        const tagsQuery = await pool.query(
+          'SELECT t.nome FROM tags t JOIN topico_tags tt ON t.id = tt.tag_id WHERE tt.topico_id = $1',
+          [row.id]
+        );
+        return {
+          id: row.id,
+          user_id: row.user_id,
+          user: { nome: row.user_nome, avatar: row.user_avatar },
+          categoria: row.categoria_nome,
+          titulo: row.titulo,
+          descricao: row.descricao,
+          views: row.views || 0,
+          likes: row.likes || 0,
+          comments: row.comments || 0,
+          time: row.created_at,
+          tags: tagsQuery.rows.map((tag) => tag.nome),
+          ativo: row.ativo,
+          status: row.status || 'aberto',
+        };
+      })
+    );
+
+    return {
+      data: posts,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  } catch (error) {
+    console.error('Erro em Topico.findAll:', error);
+    throw error;
+  }
+}
 
 
   static async findById(id, userId) {

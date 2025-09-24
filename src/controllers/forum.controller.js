@@ -24,13 +24,14 @@ class ForumController {
   }
 
   static async getPosts(req, res) {
-    try {
-      const posts = await ForumService.getPosts(req.query.filtro);
-      res.json(posts);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+  try {
+    const { filtro, page = 1, limit = 10 } = req.query;
+    const posts = await ForumService.getPosts(filtro, parseInt(page), parseInt(limit));
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
+}
 
   static async getCategorias(req, res) {
     try {

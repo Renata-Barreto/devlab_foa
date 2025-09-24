@@ -15,7 +15,7 @@ async function carregarNavbar() {
   }
 
   try {
-    const response = await fetch("/navbar.html");
+    const response = await fetch("navbar.html");
     if (!response.ok) {
       throw new Error(`Erro ao carregar navbar: ${response.status} ${response.statusText}`);
     }
@@ -52,11 +52,11 @@ async function carregarNavbar() {
         nomeEntrar.innerHTML = `Entrar <i class="fa-solid fa-angle-down"></i>`;
       }
       if (btn && profileImg) {
-        profileImg.style.backgroundImage = `url('/Uploads/avatar-padrao.png')`;
+        profileImg.style.backgroundImage = `url('Uploads/avatar-padrao.png')`;
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
           console.log("Botão de login clicado, redirecionando para /login.html");
-          window.location.href = "/login.html";
+          window.location.href = "login.html";
         });
       }
       inicializarMenuHamburger();
@@ -81,7 +81,7 @@ async function carregarNavbar() {
           nomeEntrar.innerHTML = `Usuário <i class="fa-solid fa-angle-down"></i>`;
         }
         if (profileImg) {
-          profileImg.style.backgroundImage = `url('/Uploads/avatar-padrao.png')`;
+          profileImg.style.backgroundImage = `url('Uploads/avatar-padrao.png')`;
         }
         inicializarMenuHamburger();
         return;
