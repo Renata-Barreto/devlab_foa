@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!auth || !auth.token) {
       console.warn("Token de autenticação não encontrado. Redirecionando...");
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       localStorage.removeItem("auth");
       window.location.href = "/login.html";
       return;
@@ -28,18 +28,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       const userResponse = await fetch("/api/users", {
         headers: { Authorization: `Bearer ${auth.token}` },
       });
-      console.log("Status da resposta:", userResponse.status, userResponse.statusText);
+      console.log(
+        "Status da resposta:",
+        userResponse.status,
+        userResponse.statusText
+      );
       if (!userResponse.ok) {
         const errorData = await userResponse.json().catch(() => ({}));
         console.error("Detalhes do erro:", errorData);
-        throw new Error(`Erro na requisição: ${userResponse.status} - ${errorData.message || 'Sem mensagem'}`);
+        throw new Error(
+          `Erro na requisição: ${userResponse.status} - ${
+            errorData.message || "Sem mensagem"
+          }`
+        );
       }
       const user = await userResponse.json();
       console.log("Usuário recebido:", user);
       userData = {
-        nome: user.user.nome_usr || "Usuário",
-        avatar: user.user.img_usr || "/Uploads/avatar-padrao.png",
-        email: user.user.email_usr || "Sem email",
+        nome: user.nome_usr || "Usuário",
+        avatar: user.img_usr || "/Uploads/avatar-padrao.png",
+        email: user.email_usr || "Sem email",
       };
     } catch (err) {
       console.error("Erro ao buscar dados do usuário:", err.message);
@@ -62,11 +70,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.warn("Elemento #profile-info não encontrado.");
     }
 
-    const topicoId = sessionStorage.getItem("currentTopicoId");
-    console.log("Tópico ID recuperado do sessionStorage:", topicoId);
-    const questionArea = document.querySelector(".question-area");
+    const urlParams = new URLSearchParams(window.location.search);
+    const topicoId = urlParams.get("id"); 
+    console.log("Tópico ID da URL:", topicoId);
+
     if (!topicoId) {
-      console.warn("Tópico ID não encontrado no sessionStorage.");
+      console.warn("Tópico ID não encontrado na URL.");
       if (questionArea) {
         questionArea.innerHTML = "<p>Tópico não encontrado.</p>";
       }
@@ -83,11 +92,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch(`/api/forum/topicos/${topicoId}`, {
           headers: { Authorization: `Bearer ${auth.token}` },
         });
-        console.log("Status da resposta:", response.status, response.statusText);
+        console.log(
+          "Status da resposta:",
+          response.status,
+          response.statusText
+        );
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           console.error("Detalhes do erro:", errorData);
-          throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+          throw new Error(
+            `Erro HTTP: ${response.status} - ${
+              errorData.error || response.statusText
+            }`
+          );
         }
         const topico = await response.json();
         console.log("Tópico recebido:", topico);
@@ -96,7 +113,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (topicCard) {
           topicCard.innerHTML = `
             <header class="topic-header">
-              <img src="${topico.user.avatar || "/Uploads/avatar-padrao.png"}" alt="Usuário" class="avatar-sm" />
+              <img src="${
+                topico.user.avatar || "/Uploads/avatar-padrao.png"
+              }" alt="Usuário" class="avatar-sm" />
               <div>
                 <strong>${topico.user.nome}</strong><br />
                 <small>${new Date(topico.time).toLocaleString()}</small>
@@ -108,7 +127,9 @@ document.addEventListener("DOMContentLoaded", async () => {
               ${topico.tags.map((tag) => `<span>${tag}</span>`).join("")}
             </div>
             <div class="actions">
-              <button class="like-btn ${topico.liked ? "liked" : ""}" data-topico-id="${topico.id}">
+              <button class="like-btn ${
+                topico.liked ? "liked" : ""
+              }" data-topico-id="${topico.id}">
                 👍 ${topico.likes || 0}
               </button>
             </div>
@@ -131,10 +152,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (stars.length) {
           stars.forEach((star) => {
             star.classList.remove("filled");
-            if (topico.user_rating && star.dataset.rating <= topico.user_rating) {
+            if (
+              topico.user_rating &&
+              star.dataset.rating <= topico.user_rating
+            ) {
               star.classList.add("filled");
             }
-            star.addEventListener("click", () => avaliarTopico(topico.id, star.dataset.rating));
+            star.addEventListener("click", () =>
+              avaliarTopico(topico.id, star.dataset.rating)
+            );
           });
         } else {
           console.warn("Elementos .stars .fa-star não encontrados.");
@@ -147,31 +173,45 @@ document.addEventListener("DOMContentLoaded", async () => {
               (resposta) => `
                 <article class="answer-card">
                   <header>
-                    <img src="${resposta.user_avatar || "/Uploads/avatar-padrao.png"}" alt="Usuário" class="avatar-sm" />
+                    <img src="${
+                      resposta.user_avatar || "/Uploads/avatar-padrao.png"
+                    }" alt="Usuário" class="avatar-sm" />
                     <div>
                       <strong>${resposta.user_nome}</strong>
-                      <small>${new Date(resposta.created_at).toLocaleString()}</small>
+                      <small>${new Date(
+                        resposta.created_at
+                      ).toLocaleString()}</small>
                     </div>
                   </header>
                   <p>${resposta.conteudo}</p>
                   <div class="actions">
-                    <button class="like-btn ${resposta.liked ? "liked" : ""}" data-resposta-id="${resposta.id}">
+                    <button class="like-btn ${
+                      resposta.liked ? "liked" : ""
+                    }" data-resposta-id="${resposta.id}">
                       👍 ${resposta.likes || 0}
                     </button>
-                    <a href="#" class="reply-link" data-resposta-id="${resposta.id}">Responder</a>
+                    <a href="#" class="reply-link" data-resposta-id="${
+                      resposta.id
+                    }">Responder</a>
                   </div>
                   <div id="replies-${resposta.id}">
                     ${resposta.replies
                       .map(
                         (reply) => `
                           <div class="reply">
-                            <strong>${reply.user_nome}</strong>: ${reply.conteudo}
-                            <small>${new Date(reply.created_at).toLocaleString()}</small>
+                            <strong>${reply.user_nome}</strong>: ${
+                          reply.conteudo
+                        }
+                            <small>${new Date(
+                              reply.created_at
+                            ).toLocaleString()}</small>
                           </div>
                         `
                       )
                       .join("")}
-                    <form class="reply-form" id="reply-form-${resposta.id}" style="display: none;">
+                    <form class="reply-form" id="reply-form-${
+                      resposta.id
+                    }" style="display: none;">
                       <textarea placeholder="Digite sua resposta aqui" required></textarea>
                       <div class="actions">
                         <button type="button" class="cancel">Cancelar</button>
@@ -186,7 +226,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           // Vincular eventos de like e reply
           answersSection.querySelectorAll(".like-btn").forEach((button) => {
-            button.addEventListener("click", () => likeResposta(button.dataset.respostaId));
+            button.addEventListener("click", () =>
+              likeResposta(button.dataset.respostaId)
+            );
           });
           answersSection.querySelectorAll(".reply-link").forEach((link) => {
             link.addEventListener("click", (e) => {
@@ -209,11 +251,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                   },
                   body: JSON.stringify({ resposta_id: respostaId, conteudo }),
                 });
-                console.log("Status da resposta:", response.status, response.statusText);
+                console.log(
+                  "Status da resposta:",
+                  response.status,
+                  response.statusText
+                );
                 if (!response.ok) {
                   const errorData = await response.json().catch(() => ({}));
                   console.error("Detalhes do erro:", errorData);
-                  throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+                  throw new Error(
+                    `Erro HTTP: ${response.status} - ${
+                      errorData.error || response.statusText
+                    }`
+                  );
                 }
                 form.reset();
                 hideReplyForm(respostaId);
@@ -225,7 +275,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
             const cancelButton = form.querySelector(".cancel");
             if (cancelButton) {
-              cancelButton.addEventListener("click", () => hideReplyForm(form.id.replace("reply-form-", "")));
+              cancelButton.addEventListener("click", () =>
+                hideReplyForm(form.id.replace("reply-form-", ""))
+              );
             }
           });
         } else {
@@ -247,11 +299,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 },
                 body: JSON.stringify({ topico_id: topicoId, conteudo }),
               });
-              console.log("Status da resposta:", response.status, response.statusText);
+              console.log(
+                "Status da resposta:",
+                response.status,
+                response.statusText
+              );
               if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
                 console.error("Detalhes do erro:", errorData);
-                throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+                throw new Error(
+                  `Erro HTTP: ${response.status} - ${
+                    errorData.error || response.statusText
+                  }`
+                );
               }
               commentForm.reset();
               carregarTopico();
@@ -275,16 +335,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function likeTopico(topicoId) {
       try {
-        console.log("Enviando requisição para POST /api/forum/topicos/:id/like");
+        console.log(
+          "Enviando requisição para POST /api/forum/topicos/:id/like"
+        );
         const response = await fetch(`/api/forum/topicos/${topicoId}/like`, {
           method: "POST",
           headers: { Authorization: `Bearer ${auth.token}` },
         });
-        console.log("Status da resposta:", response.status, response.statusText);
+        console.log(
+          "Status da resposta:",
+          response.status,
+          response.statusText
+        );
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           console.error("Detalhes do erro:", errorData);
-          throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+          throw new Error(
+            `Erro HTTP: ${response.status} - ${
+              errorData.error || response.statusText
+            }`
+          );
         }
         carregarTopico();
       } catch (error) {
@@ -295,16 +365,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function likeResposta(respostaId) {
       try {
-        console.log("Enviando requisição para POST /api/forum/respostas/:id/like");
-        const response = await fetch(`/api/forum/respostas/${respostaId}/like`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${auth.token}` },
-        });
-        console.log("Status da resposta:", response.status, response.statusText);
+        console.log(
+          "Enviando requisição para POST /api/forum/respostas/:id/like"
+        );
+        const response = await fetch(
+          `/api/forum/respostas/${respostaId}/like`,
+          {
+            method: "POST",
+            headers: { Authorization: `Bearer ${auth.token}` },
+          }
+        );
+        console.log(
+          "Status da resposta:",
+          response.status,
+          response.statusText
+        );
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           console.error("Detalhes do erro:", errorData);
-          throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+          throw new Error(
+            `Erro HTTP: ${response.status} - ${
+              errorData.error || response.statusText
+            }`
+          );
         }
         carregarTopico();
       } catch (error) {
@@ -315,7 +398,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function avaliarTopico(topicoId, rating) {
       try {
-        console.log("Enviando requisição para POST /api/forum/topicos/:id/avaliar", { topicoId, rating });
+        console.log(
+          "Enviando requisição para POST /api/forum/topicos/:id/avaliar",
+          { topicoId, rating }
+        );
         const response = await fetch(`/api/forum/topicos/${topicoId}/avaliar`, {
           method: "POST",
           headers: {
@@ -324,11 +410,19 @@ document.addEventListener("DOMContentLoaded", async () => {
           },
           body: JSON.stringify({ rating: parseInt(rating) }),
         });
-        console.log("Status da resposta:", response.status, response.statusText);
+        console.log(
+          "Status da resposta:",
+          response.status,
+          response.statusText
+        );
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           console.error("Detalhes do erro:", errorData);
-          throw new Error(`Erro HTTP: ${response.status} - ${errorData.error || response.statusText}`);
+          throw new Error(
+            `Erro HTTP: ${response.status} - ${
+              errorData.error || response.statusText
+            }`
+          );
         }
         carregarTopico();
       } catch (error) {
@@ -358,7 +452,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     carregarTopico();
   } catch (err) {
     console.error("Erro crítico em post.js:", err.message);
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     localStorage.removeItem("auth");
     window.location.href = "/login.html";
   }

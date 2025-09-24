@@ -335,34 +335,36 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function visualizarTopico(topicoId) {
-    console.log(
-      "Visualizando tópico ID:",
-      topicoId,
-      "Timestamp:",
-      new Date().toISOString()
-    );
-    const authRaw = localStorage.getItem("auth");
-    console.log("Auth raw do localStorage:", authRaw);
-    let auth;
-    try {
-      auth = JSON.parse(authRaw);
-      console.log("Auth parsed:", auth);
-    } catch (parseError) {
-      console.error("Erro ao parsear auth:", parseError.message);
-      alert("Erro de autenticação. Faça login novamente.");
-      window.location.href = "login.html";
-      return;
-    }
-    if (!auth || !auth.token) {
-      console.warn("Usuário não autenticado. Redirecionando para login.");
-      alert("Por favor, faça login para visualizar o tópico.");
-      window.location.href = "login.html";
-      return;
-    }
-    sessionStorage.setItem("currentTopicoId", topicoId);
-    console.log("Redirecionando para /post.html com topicoId:", topicoId);
-    window.location.href = "post.html";
+  console.log(
+    "Visualizando tópico ID:",
+    topicoId,
+    "Timestamp:",
+    new Date().toISOString()
+  );
+
+  const authRaw = localStorage.getItem("auth");
+  let auth;
+
+  try {
+    auth = JSON.parse(authRaw);
+    console.log("Auth parsed:", auth);
+  } catch (parseError) {
+    console.error("Erro ao parsear auth:", parseError.message);
+    alert("Erro de autenticação. Faça login novamente.");
+    window.location.href = "login.html";
+    return;
   }
+
+  if (!auth || !auth.token) {
+    console.warn("Usuário não autenticado. Redirecionando para login.");
+    alert("Por favor, faça login para visualizar o tópico.");
+    window.location.href = "login.html";
+    return;
+  }
+  console.log("Redirecionando para post.html com topicoId:", topicoId);
+  window.location.href = `post.html?id=${topicoId}`;
+}
+
 
   function openCreateTopicModal() {
     console.log("Abrindo modal de criação de tópico");
