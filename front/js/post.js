@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     async function carregarTopico() {
+      const questionArea = document.querySelector(".question-area");
       if (!questionArea) {
         console.warn("Elemento .question-area não encontrado.");
         return;
