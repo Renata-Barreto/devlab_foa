@@ -18,10 +18,10 @@ const app = express();
 // Configuração de CORS
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? 'https://devlab-foa.onrender.com'
-        : 'http://localhost:3000',
+    origin:[
+      process.env.NODE_ENV === 'production',
+        'https://devlab-foa.onrender.com',
+        'http://localhost:3000',],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
