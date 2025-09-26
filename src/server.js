@@ -19,7 +19,6 @@ const app = express();
 app.use(
   cors({
     origin:[
-      process.env.NODE_ENV === 'production',
         'https://devlab-foa.onrender.com',
         'http://localhost:3000',],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
