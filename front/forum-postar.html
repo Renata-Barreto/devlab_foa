@@ -106,46 +106,37 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const auth = JSON.parse(localStorage.getItem("auth"));
-        if (!auth || !auth.token) {
-          window.location.href = "login.html";
-          return;
-        }
+        const authRaw = localStorage.getItem("auth");
+        let auth, userId;
 
-        let userId;
         try {
+          auth = JSON.parse(authRaw);
+          if (!auth || !auth.token) throw new Error("Token ausente");
           const decoded = jwt_decode(auth.token);
           userId = decoded.id;
           console.log("Usuário autenticado:", decoded);
         } catch (err) {
-          console.error("Token inválido:", err);
+          console.error("Erro de autenticação:", err.message);
           localStorage.removeItem("auth");
           window.location.href = "login.html";
           return;
         }
 
-        let tagify;
+        // Inicializar Quill
+        const quill = new Quill("#editor", {
+          theme: "snow",
+          placeholder: "Digite sua descrição aqui...",
+        });
 
+        // Carregar Tags
+        let tagify;
         async function carregarTags() {
           try {
-            const res = await fetch("http://127.0.0.1:3000/api/tags");
-            if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+            const res = await fetch("https://devlab-foa.onrender.com/api/forum/tags");
             const tags = await res.json();
-            console.log("Tags carregadas:", tags);
-            const input = document.getElementById("tags");
-            tagify = new Tagify(input, {
-              whitelist: tags.map((tag) => ({
-                value: tag.nome,
-                id: tag.id,
-              })),
+            tagify = new Tagify(document.getElementById("tags"), {
+              whitelist: tags.map((t) => ({ value: t.nome, id: t.id })),
               enforceWhitelist: false,
-              dropdown: {
-                enabled: 1,
-                classname: "tags-look",
-                maxItems: 10,
-                position: "text",
-                closeOnSelect: false,
-              },
             });
           } catch (err) {
             console.error("Erro ao carregar tags:", err);
@@ -153,20 +144,17 @@
         }
 
         async function carregarCategorias() {
-          const categoriaSelect = document.getElementById("categoria");
+          const select = document.getElementById("categoria");
           try {
-            const res = await fetch("http://127.0.0.1:3000/api/categorias");
-            if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+            const res = await fetch("https://devlab-foa.onrender.com/api/forum/categorias");
             const categorias = await res.json();
-            console.log("Categorias carregadas:", categorias);
-            categoriaSelect.innerHTML =
+            select.innerHTML =
               '<option value="" disabled selected>Escolha uma categoria</option>';
-
             categorias.forEach((cat) => {
               const option = document.createElement("option");
               option.value = cat.id;
               option.textContent = cat.nome;
-              categoriaSelect.appendChild(option);
+              select.appendChild(option);
             });
           } catch (err) {
             console.error("Erro ao carregar categorias:", err);
@@ -176,117 +164,66 @@
         carregarTags();
         carregarCategorias();
 
-        const quill = new Quill("#editor", {
-          theme: "snow",
-          placeholder: "Digite sua descrição aqui...",
-        });
-
-        const btn = document.getElementById("criarTopico");
+        // Botão Criar Tópico
+        const btnCriar = document.getElementById("criarTopico");
         const overlay = document.getElementById("loadingOverlay");
 
-        document.addEventListener("DOMContentLoaded", () => {
-  const authRaw = localStorage.getItem("auth");
-  let auth, userId;
+        btnCriar.addEventListener("click", async () => {
+          const titulo = document.getElementById("titulo").value.trim();
+          const descricao = quill.root.innerHTML.trim();
+          const categoriaId = document.getElementById("categoria").value;
+          const tags = tagify.value.map((t) => t.value);
 
-  try {
-    auth = JSON.parse(authRaw);
-    if (!auth || !auth.token) throw new Error("Token ausente");
-    const decoded = jwt_decode(auth.token);
-    userId = decoded.id;
-    console.log("Usuário autenticado:", decoded);
-  } catch (err) {
-    console.error("Erro de autenticação:", err.message);
-    localStorage.removeItem("auth");
-    window.location.href = "login.html";
-    return;
-  }
+          if (!titulo || !descricao || !categoriaId) {
+            alert("Preencha todos os campos obrigatórios.");
+            return;
+          }
 
-  // Inicializar Quill
-  const quill = new Quill("#editor", {
-    theme: "snow",
-    placeholder: "Digite sua descrição aqui...",
-  });
+          try {
+            overlay.style.display = "flex";
 
-  // Inicializar Tagify
-  let tagify;
-  const tagsInput = document.getElementById("tags");
-  tagify = new Tagify(tagsInput, { enforceWhitelist: false });
+            const response = await fetch(
+              "https://devlab-foa.onrender.com/api/forum/topicos",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${auth.token}`,
+                },
+                body: JSON.stringify({
+                  titulo,
+                  descricao,
+                  categoria_id: parseInt(categoriaId),
+                  tags,
+                  user_id: userId,
+                }),
+              }
+            );
 
-  // Botão criar tópico
-  const btnCriar = document.getElementById("criarTopico");
-  const overlay = document.getElementById("loadingOverlay");
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => ({}));
+              throw new Error(
+                `Erro HTTP: ${response.status} - ${
+                  errorData.error || response.statusText
+                }`
+              );
+            }
 
-  btnCriar.addEventListener("click", async (e) => {
-    e.preventDefault();
+            const newTopic = await response.json();
+            console.log("Tópico criado:", newTopic);
 
-    const titulo = document.getElementById("titulo").value.trim();
-    const descricao = quill.root.innerHTML.trim();
-    const categoriaId = document.getElementById("categoria").value;
-    const tags = tagify.value.map((t) => t.value);
+            overlay.innerHTML = `<div style="font-size:2rem;color:#00ff88;">✔ Postado!</div>`;
 
-    if (!titulo || !descricao || !categoriaId) {
-      alert("Preencha todos os campos obrigatórios.");
-      return;
-    }
-
-    try {
-      overlay.style.display = "flex";
-
-      console.log("Enviando requisição para POST /api/forum/topicos", {
-        titulo,
-        descricao,
-        categoria_id: parseInt(categoriaId),
-        tags,
-        user_id: userId,
-      });
-
-      const response = await fetch("/api/forum/topicos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.token}`,
-        },
-        body: JSON.stringify({
-          titulo,
-          descricao,
-          categoria_id: parseInt(categoriaId),
-          tags,
-          user_id: userId,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          `Erro HTTP: ${response.status} - ${
-            errorData.error || response.statusText
-          }`
-        );
-      }
-
-      const newTopic = await response.json();
-      console.log("Tópico criado:", newTopic);
-
-      overlay.innerHTML = `
-        <div style="font-size: 3rem; color: #00ff88;">
-          <i class="fa-solid fa-check"></i>
-        </div>
-        <div style="margin-top: 1rem;">Postado!</div>
-      `;
-
-      setTimeout(() => {
-        window.location.href = `post.html?id=${newTopic.id}`;
-      }, 1500);
-    } catch (error) {
-      console.error("Erro ao criar tópico:", error.message);
-      overlay.innerHTML = `<div>Erro: ${error.message}</div>`;
-      setTimeout(() => (overlay.style.display = "none"), 2000);
-    }
-  });
-});
-
+            setTimeout(() => {
+              window.location.href = `post.html?id=${newTopic.id}`;
+            }, 1500);
+          } catch (err) {
+            console.error("Erro ao criar tópico:", err.message);
+            overlay.innerHTML = `<div>Erro: ${err.message}</div>`;
+            setTimeout(() => (overlay.style.display = "none"), 2000);
+          }
+        });
       });
     </script>
-    <script src="/js/menu-drop.js" defer></script>
   </body>
 </html>
