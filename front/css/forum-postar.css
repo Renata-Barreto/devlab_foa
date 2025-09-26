@@ -7,7 +7,7 @@
       body {
         font-family: "Segoe UI", sans-serif;
         background-color: #f4f4f4;
-        color: #ffffff;
+        color: #000000;
       }
       
       .layout {
@@ -89,7 +89,7 @@
         padding: 20px;
         background: #fff;
         border-left: 1px solid #e0e0e0;
-        padding-top: 130px;
+        padding-top: 50px;
       }
 
       .right-panel h2 {

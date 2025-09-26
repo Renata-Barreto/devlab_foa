@@ -77,7 +77,7 @@ const User = {
     return rows[0];
   },
 
-  softDelete: async (id) => {
+  delete: async (id) => {
     const query = `
       UPDATE dev_lab_usuarios
       SET ativo = FALSE
