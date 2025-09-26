@@ -1,4 +1,4 @@
-import { test, assert, describe, beforeEach, afterEach} from 'poku'
+import { test, assert, describe } from 'poku'
 
 
 describe('TESTES DE PÁGINAS VÁLIDAS',{background:'cyan'})

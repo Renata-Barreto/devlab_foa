@@ -1,7 +1,7 @@
-import { test, assert, describe } from 'poku'
+import { test, assert, describe, beforeEach } from 'poku'
 import { login } from '../controllers/auth.controller.js'
 
-describe('auth.controller.js login', { background: 'purple'})
+describe('TESTE DE LOGIN', { background: 'purple'})
 
 function mockRes() {
   const res = {}
