@@ -122,6 +122,28 @@ body {
   color: white;
 }
 
+.filters select {
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: none;
+  background: #f0f0f0;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+
+.filters select:hover {
+  background: #e0e0e0;
+}
+
+
+.filters select:focus {
+  background: #fff;
+  box-shadow: 0 0 0 2px #3333; /* efeito de foco */
+}
+
+
 .post-card {
   background: white;
   border-radius: 8px;
