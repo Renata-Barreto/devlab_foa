@@ -35,24 +35,149 @@ form {
     align-items: center;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
 .navbar {
-    position: relative !important;
-    z-index: 1000; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 0px 0px 30px 30px;
+  height: 70px; /* Altura fixa para cálculo */
 }
 
-.nav_links.open {
-    position: absolute;
-    top: 60px; 
-    left: 0;
-    width: 100%;
-    background-color: #f7f7f7;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+.nav_logo {
+  display: flex;
+  align-items: center;
+  color: #000000;
+  font-size: 24px;
+  font-weight: 600;
+  margin-left: 10px; /* Reduzido para alinhamento */
+}
+
+.nav_logo img {
+  width: 120px; /* Reduzido para evitar aumento da navbar */
+  height: auto;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.navbar ul {
+  list-style-type: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding-left: 25%;
+}
+
+.nav_links {
+  color: #000000;
+}
+
+.nav_links li a {
+  color: #000000;
+  text-align: center;
+  text-decoration: none;
+  padding: 10px 12px;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 10px;
+}
+
+.nav_links li a:hover {
+  background-color: #8DF7E2;
+  color: #201b2c;
+}
+
+.nav_links a i {
+  margin-right: 8px;
 }
 
 .hamburger-menu {
-    z-index: 1010; 
+  display: none;
+  cursor: pointer;
+  position: absolute;
+  left: 15px;
+  top: 25px;
+  z-index: 1002;
 }
+
+.hamburger-menu .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #000;
+  margin: 4px 0;
+  transition: 0.4s;
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    justify-content: flex-end; /* Alinha hamburger e dropdown à direita */
+    padding: 10px;
+  }
+
+  .navbar ul {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    background-color: #ffffff;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    z-index: 1000;
+    padding: 15px;
+    width: 200px;
+  }
+
+  .nav_links.open {
+    display: flex;
+  }
+
+  .hamburger-menu {
+    display: block;
+    position: absolute;
+    left: 15px;
+    top: 25px;
+  }
+
+  .nav_logo {
+    display: none; /* Oculta logo em telas menores */
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    height: 60px;
+  }
+
+  .hamburger-menu {
+    top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 8px;
+  }
+
+  .hamburger-menu {
+    left: 10px;
+    top: 18px;
+  }
+}
+
+
+body.cadastro-page .profile-dropdown {
+    display: none !important;
+}
+
 
 .main-cadastro, .left-cadastro, .right-cadastro {
     position: relative;

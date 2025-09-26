@@ -4,40 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/login.css">
-    <link rel="stylesheet" href="css/navbar.css">
+    
     <title>Login - DevLab</title>
     <link rel="shortcut icon" href="imagens/fav.jpg" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-    <!-- firebase -->
-     
-    <!--script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script-->
+    <script src="js/menu-drop.js" defer></script>
+
+
 
 </head>
-<body>
+<body class="login-page">
     
     <a id="linkIndex" href="tutorialteste.html" style="display: none;"></a>
     
-    <nav class="navbar">
-        <div class="nav_logo">
-            <a href="index.html"> <img src="imagens/tema_claro.png" alt="Logo" class="logo-img"> </a>
-        </div>
-        <ul class="nav-ul nav_links">
-            <li><a href="index.html">Início</a></li>
-            <li><a href="tutorial.html">Tutoriais</a></li>
-            <li><a href="teste-ferramenta.html">Exercícios</a></li>
-            <li><a href="forum-substituto.html">Fórum</a></li>
-            <li><a href="sobre.html">Sobre nós</a></li>
-            <li><a href="contato.html">Contato</a></li>
+   <nav class="navbar" id="navbar" style="display: flex; justify-content: flex-start; align-items: center;">
+</nav>
 
-        </ul>
-        <div class="hamburger-menu" onclick="toggleMenu()">
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-        </div>
-    </nav>
+
     <div class="main-login">
         <div class="left-login">
             <h1>Bem vindo de volta! </h1>
@@ -52,10 +35,7 @@
         <span class="right">CADASTRO</span>
       </div>
                 <h1>Entrar</h1>
-                <!-- <div class="social-icons">
-                    <a href="#" id="login-github" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="#" id="google-login" aria-label="Google"><i class="fab fa-google"></i></a>
-                </div> -->
+               
               <div id="alertBox" class="hidden">
                 <div class="alertContent">
                     <p id="alertMessage"></p>
