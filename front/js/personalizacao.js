@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     console.log("Enviando requisição para GET /api/users com token:", token);
-    const response = await fetch("https://devlab-foa.onrender.com/api/users", {
+    const response = await fetch("https://devlab-foa.onrender.com/api/users/", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -171,7 +171,7 @@ if (personalizacaoForm) {
 
     try {
       console.log("Enviando requisição para PATCH /api/users");
-      const response = await fetch("https://devlab-foa.onrender.com/api/users", {
+      const response = await fetch("https://devlab-foa.onrender.com/api/users/", {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,

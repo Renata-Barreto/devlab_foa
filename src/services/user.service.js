@@ -25,7 +25,7 @@ const UserService = {
 
  update: async (id, bio, fotoPath) => {
   console.log(`UserService update called with id: ${id}, bio: ${bio}, fotoPath: ${fotoPath}`);
-  const user = await User.updateProfile(id, bio || null, fotoPath || null);
+  const user = await User.updateProfile(id, bio ?? null, fotoPath ?? null);
   console.log("UserService update result:", user);
   
   if (!user) return null;
