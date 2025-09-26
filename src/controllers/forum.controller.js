@@ -120,6 +120,7 @@ class ForumController {
     try {
       const id = parseInt(req.params.id);
       await ForumService.deleteTopico(id);
+      console.log(`Tópico deletado: ${id}`);  
       res.status(204).json({ message: 'Tópico deletado com sucesso' });
     } catch (error) {
       res.status(500).json({ error: error.message });

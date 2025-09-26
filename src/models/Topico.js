@@ -408,7 +408,12 @@ class Topico {
 
   static async delete(id) {
     try {
-      await pool.query("UPDATE topicos SET ativo = false WHERE id = $1", [id]);
+      const { rowCount } = await pool.query(
+    "UPDATE topicos SET ativo = false WHERE id = $1",
+    [id]
+  );
+  console.log('Linhas afetadas:', rowCount);
+  return rowCount;
     } catch (error) {
       console.error("Erro em Topico.delete:", error);
       throw error;
