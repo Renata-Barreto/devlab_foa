@@ -28,7 +28,7 @@ const UserService = {
   const user = await User.updateProfile(id, bio ?? null, fotoPath ?? null);
   console.log("UserService update result:", user);
   
-  if (!user) return null;
+  if (!user) return user = await User.insertProfile(id, bio || null, fotoPath || null);
   return user;
 },
 
