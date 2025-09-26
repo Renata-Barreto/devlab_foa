@@ -10,6 +10,7 @@ const login = async (req, res) => {
       console.log("Erro: E-mail ou senha não fornecidos");
       return res.status(400).json({ error: "E-mail e senha são obrigatórios" });
     }
+    const { user, senhaCorreta } = await loginService(email, password);
 
     if (!user || !user.ativo) {
       console.log(
