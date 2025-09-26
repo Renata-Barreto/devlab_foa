@@ -23,11 +23,11 @@ const UserService = {
     return await User.findAll();
   },
 
-  update: async (id, bio, fotoPath) => {
-    const user = await User.updateProfile(id,bio,fotoPath ? { prf_pfl: fotoPath } : {});
-    if (!user) return null;
-    return { ...user, ...(bio ? { des_pfl: bio } : {}) };
-  },
+ update: async (id, bio, fotoPath) => {
+  const user = await User.updateProfile(id, bio || null, fotoPath || null);
+  if (!user) return null;
+  return user;
+},
 
   deactivate: async (id) => {
     return await User.deactivate(id);
