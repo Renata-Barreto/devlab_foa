@@ -47,29 +47,40 @@ class Topico {
   let orderBy;
   switch (filtro) {
     case "novo":
-      orderBy = "created_at DESC";
+      orderBy = "t.created_at DESC";
       break;
     case "popular":
-      orderBy = "views DESC";
+      orderBy = "t.views DESC";
       break;
     case "fechado":
-      orderBy = "status = 'fechado' DESC, created_at DESC";
+      orderBy = "t.status = 'fechado' DESC, t.created_at DESC";
       break;
     default:
-      orderBy = "likes DESC";
+      orderBy = "t.likes DESC";
   }
 
   const offset = (page - 1) * limit;
-  const whereClauses = ["t.ativo = true"];
-  const values = [limit, offset]; 
-  let idx = 3;
+
+  // Parâmetros para a query principal
+  const postQueryValues = [limit, offset];
+  const postWhereClauses = ["t.ativo = true"];
+  let postParamIndex = 3;
+
+  // Parâmetros para a query de contagem
+  const countQueryValues = [];
+  const countWhereClauses = ["t.ativo = true"];
+  let countParamIndex = 1;
 
   if (categoriaId) {
-    whereClauses.push(`t.categoria_id = $${idx++}`);
-    values.push(categoriaId);
+    postWhereClauses.push(`t.categoria_id = $${postParamIndex++}`);
+    postQueryValues.push(categoriaId);
+
+    countWhereClauses.push(`t.categoria_id = $${countParamIndex++}`);
+    countQueryValues.push(categoriaId);
   }
 
-  const whereSQL = whereClauses.length ? "WHERE " + whereClauses.join(" AND ") : "";
+  const postWhereSQL = postWhereClauses.length ? "WHERE " + postWhereClauses.join(" AND ") : "";
+  const countWhereSQL = countWhereClauses.length ? "WHERE " + countWhereClauses.join(" AND ") : "";
 
   const { rows } = await pool.query(
     `
@@ -77,16 +88,16 @@ class Topico {
     FROM topicos t
     JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
     JOIN categorias c ON t.categoria_id = c.id
-    ${whereSQL}
+    ${postWhereSQL}
     ORDER BY ${orderBy}
     LIMIT $1 OFFSET $2
   `,
-    values
+    postQueryValues
   );
 
   const totalResult = await pool.query(
-    `SELECT COUNT(*) FROM topicos t ${whereSQL}`,
-    categoriaId ? [categoriaId] : []
+    `SELECT COUNT(*) FROM topicos t ${countWhereSQL}`,
+    countQueryValues
   );
   const total = parseInt(totalResult.rows[0].count, 10);
 
@@ -124,7 +135,6 @@ class Topico {
     },
   };
 }
-
 
   static async findById(id, userId) {
     try {
