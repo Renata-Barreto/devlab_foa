@@ -118,7 +118,7 @@ class ForumController {
   }
   static async deleteTopico(req, res) {
     try {
-      const { id } = req.params;
+      const id = parseInt(req.params.id);
       await ForumService.deleteTopico(id);
       res.status(204).json({ message: 'Tópico deletado com sucesso' });
     } catch (error) {
