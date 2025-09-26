@@ -128,7 +128,7 @@ const userController = {
           id_usr: user.id_usr,
           nome_usr: user.nome_usr,
           email_usr: user.email_usr,
-          img_usr: user.prf_pfl || user.img_usr,
+          img_usr: user.prf_pfl,
           des_pfl: user.des_pfl || null,
           prf_pfl: user.prf_pfl || null,
           cat_usr: user.cat_usr,
@@ -158,6 +158,11 @@ const userController = {
 
           const { bio, avatar_path } = req.body;
           const foto = req.file;
+          console.log("Dados recebidos para update:", {
+            bio,
+            avatar_path,
+            foto: foto ? foto.filename : null,
+          });
 
           if (!bio && !foto && !avatar_path) {
             console.log("Erro: Nenhum campo fornecido para atualização");
@@ -202,7 +207,7 @@ const userController = {
               id_usr: user.id_usr,
               nome_usr: user.nome_usr,
               email_usr: user.email_usr,
-              img_usr: user.prf_pfl || user.img_usr,
+              img_usr: user.prf_pfl,
               des_pfl: user.des_pfl,
               cat_usr: user.cat_usr,
               tipo: user.cat_usr === 1 ? "adm" : "aluno",
