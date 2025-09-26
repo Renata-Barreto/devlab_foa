@@ -15,5 +15,6 @@ router.post('/replies', authMiddleware, ForumController.createReply);
 router.post('/topicos/:id/like', authMiddleware, ForumController.likeTopico);
 router.post('/respostas/:id/like', authMiddleware, ForumController.likeResposta);
 router.post('/topicos/:id/avaliar', authMiddleware, ForumController.avaliarTopico);
+router.patch('/topicos/:id', ForumController.deleteTopico);
 
 export default router;

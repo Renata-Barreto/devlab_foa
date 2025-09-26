@@ -67,6 +67,10 @@ class ForumService {
   static async likeReply(reply_id, user_id) {
     return RespostaReply.like(reply_id, user_id);
   }
+  static async deleteTopico(id) {
+    const topico = await Topico.findById(id);
+    if (!topico) throw new Error('Tópico não encontrado');
+  }
 }
 
 export default ForumService;
