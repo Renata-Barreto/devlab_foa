@@ -113,21 +113,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Modal de criação de tópico
-  if (openModalLink) {
-    console.log("Vinculando evento ao .create-topic-link");
-    openModalLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      console.log("Clique em .create-topic-link detectado");
-      openCreateTopicModal();
-    });
-  }
+  
 
-  if (cancelButton) {
-    cancelButton.addEventListener("click", closeCreateTopicModal);
-  }
-
-  async function carregarPosts(filtro = "top", searchTerm = "", page = 1) {
+  async function carregarPosts(filtro = "top", searchTerm = "", page = 1, categoriaId = "") {
     if (!postContainer) return;
 
     currentFiltro = filtro;
@@ -137,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       let url = `/api/forum/posts?filtro=${filtro}&page=${page}&limit=10`;
       if (searchTerm) url += `&search=${encodeURIComponent(searchTerm)}`;
+      if (categoriaId) url += `&categoria=${categoriaId}`;
 
       const resposta = await fetch(url);
       if (!resposta.ok) throw new Error(`Erro HTTP: ${resposta.status}`);
@@ -214,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     try {
-      console.log("Carregando categorias via GET /api/forum/categorias");
+ 
       const response = await fetch("/api/forum/categorias");
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));

@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Fórum do DevLab para discussão de tópicos" />
+    <meta
+      name="description"
+      content="Fórum do DevLab para discussão de tópicos"
+    />
     <title>Fórum - DevLab</title>
     <link rel="shortcut icon" href="/imagens/fav.jpg" type="image/x-icon" />
     <link rel="stylesheet" href="css/style.css" />
@@ -53,7 +56,12 @@
         type="text"
         id="search-input"
         placeholder="Procure por título, descrição ou tags..."
-        style="width: 27%; padding: 8px; margin-bottom: 20px; border-radius: 10px;"
+        style="
+          width: 27%;
+          padding: 8px;
+          margin-bottom: 20px;
+          border-radius: 10px;
+        "
       />
       <div class="filters">
         <button class="tab-button active" data-filtro="top">
@@ -65,21 +73,23 @@
         <button class="tab-button" data-filtro="popular">
           <i class="fa-solid fa-fire"></i> Popular
         </button>
-        <button class="tab-button" data-filtro="fechado">
-          <i class="fa-solid fa-circle-check"></i> Fechado
-        </button>
+        <select
+          id="category-filter"
+          style="margin-left: 10px; padding: 5px; border-radius: 5px"
+        >
+          <option value="">Todas as categorias</option>
+        </select>
       </div>
       <div id="post-container"></div>
       <div id="paginate">
         <div class="controls">
-            <div class="first">&#171;</div>
-            <div class="prev"><</div>
-            <div class="numbers">
-            </div>
-            <div class="next">></div>
-            <div class="last">&#187;</div>
+          <div class="first">&#171;</div>
+          <div class="prev"><</div>
+          <div class="numbers"></div>
+          <div class="next">></div>
+          <div class="last">&#187;</div>
         </div>
-    </div>
+      </div>
     </div>
     <div class="right-panel">
       <div>
@@ -98,8 +108,6 @@
         </ul>
       </div>
     </div>
-
-    
 
     <script>
       // Placeholder para evitar erro speakText

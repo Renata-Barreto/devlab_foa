@@ -25,8 +25,8 @@ class ForumController {
 
   static async getPosts(req, res) {
   try {
-    const { filtro, page = 1, limit = 10 } = req.query;
-    const posts = await ForumService.getPosts(filtro, parseInt(page), parseInt(limit));
+    const { filtro, page = 1, limit = 10, categoriaId } = req.query;
+    const posts = await ForumService.getPosts(filtro, parseInt(page), parseInt(limit),categoriaId ? parseInt(categoriaId) : null);
     res.json(posts);
   } catch (error) {
     res.status(500).json({ error: error.message });
