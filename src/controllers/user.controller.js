@@ -190,6 +190,7 @@ const userController = {
           console.log(
             `Atualizando usuário ID ${userId}, fotoPath: ${fotoPath}, bio: ${bio}`
           );
+          
 
           await userService.update(userId, bio, fotoPath);
           const user = await userService.findById(userId);

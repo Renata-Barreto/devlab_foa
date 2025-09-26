@@ -38,7 +38,7 @@ app.use(express.static(path.join(__dirname, '../front'), {
     }
   }
 }));
-app.use('/uploads', express.static(path.join(__dirname, '../front/Uploads')));
+app.use('/Uploads', express.static(path.join(__dirname, '../front/Uploads')));
 
 // Rotas da API
 app.use('/api/users', userRoutes);
