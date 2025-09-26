@@ -43,98 +43,85 @@ class Topico {
     ]);
   }
 
-  static async findAll(filtro = "top", page = 1, limit = 10, categoriaId = null) {
-  let orderBy;
-  switch (filtro) {
-    case "novo":
-      orderBy = "t.created_at DESC";
-      break;
-    case "popular":
-      orderBy = "t.views DESC";
-      break;
-    case "fechado":
-      orderBy = "t.status = 'fechado' DESC, t.created_at DESC";
-      break;
-    default:
-      orderBy = "t.likes DESC";
+  static async findAll(
+    filtro = "top",
+    page = 1,
+    limit = 10,
+    categoriaId = null
+  ) {
+    let orderBy;
+    switch (filtro) {
+      case "novo":
+        orderBy = "t.created_at DESC";
+        break;
+      case "popular":
+        orderBy = "t.views DESC";
+        break;
+      case "fechado":
+        orderBy = "t.status = 'fechado' DESC, t.created_at DESC";
+        break;
+      default:
+        orderBy = "t.likes DESC";
+    }
+
+    const offset = (page - 1) * limit;
+
+    // Parâmetros para a query principal
+
+    const { rows } = await pool.query(
+      `
+      SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
+      FROM topicos t
+      JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
+      LEFT JOIN categorias c ON t.categoria_id = c.id
+      WHERE t.ativo = true
+        AND ($1::int IS NULL OR t.categoria_id = $1)
+      ORDER BY ${orderBy}
+      LIMIT $2 OFFSET $3
+      `,
+      [categoriaId, limit, offset]
+    );
+
+    const totalResult = await pool.query(
+      `SELECT COUNT(*) FROM topicos t WHERE t.ativo = true AND ($1::int IS NULL OR t.categoria_id = $1)`,
+      [categoriaId]
+    );
+    const total = parseInt(totalResult.rows[0].count, 10);
+
+    const posts = await Promise.all(
+      rows.map(async (row) => {
+        const tagsQuery = await pool.query(
+          "SELECT t.nome FROM tags t JOIN topico_tags tt ON t.id = tt.tag_id WHERE tt.topico_id = $1",
+          [row.id]
+        );
+        return {
+          id: row.id,
+          user_id: row.user_id,
+          user: { nome: row.user_nome, avatar: row.user_avatar },
+          categoria: { id: row.categoria_id, nome: row.categoria_nome },
+          titulo: row.titulo,
+          descricao: row.descricao,
+          views: row.views || 0,
+          likes: row.likes || 0,
+          comments: row.comments || 0,
+          time: row.created_at,
+          tags: tagsQuery.rows.map((tag) => tag.nome),
+          ativo: row.ativo,
+          status: row.status || "aberto",
+        };
+      })
+    );
+
+    return {
+      data: posts,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
-
-  const offset = (page - 1) * limit;
-
-  // Parâmetros para a query principal
-  const postQueryValues = [limit, offset];
-  const postWhereClauses = ["t.ativo = true"];
-  let postParamIndex = 3;
-
-  // Parâmetros para a query de contagem
-  const countQueryValues = [];
-  const countWhereClauses = ["t.ativo = true"];
-  let countParamIndex = 1;
-
-  if (categoriaId) {
-    postWhereClauses.push(`t.categoria_id = $${postParamIndex++}`);
-    postQueryValues.push(categoriaId);
-
-    countWhereClauses.push(`t.categoria_id = $${countParamIndex++}`);
-    countQueryValues.push(categoriaId);
-  }
-
-  const postWhereSQL = postWhereClauses.length ? "WHERE " + postWhereClauses.join(" AND ") : "";
-  const countWhereSQL = countWhereClauses.length ? "WHERE " + countWhereClauses.join(" AND ") : "";
-
-  const { rows } = await pool.query(
-    `
-    SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
-    FROM topicos t
-    JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
-    JOIN categorias c ON t.categoria_id = c.id
-    ${postWhereSQL}
-    ORDER BY ${orderBy}
-    LIMIT $1 OFFSET $2
-  `,
-    postQueryValues
-  );
-
-  const totalResult = await pool.query(
-    `SELECT COUNT(*) FROM topicos t ${countWhereSQL}`,
-    countQueryValues
-  );
-  const total = parseInt(totalResult.rows[0].count, 10);
-
-  const posts = await Promise.all(
-    rows.map(async (row) => {
-      const tagsQuery = await pool.query(
-        "SELECT t.nome FROM tags t JOIN topico_tags tt ON t.id = tt.tag_id WHERE tt.topico_id = $1",
-        [row.id]
-      );
-      return {
-        id: row.id,
-        user_id: row.user_id,
-        user: { nome: row.user_nome, avatar: row.user_avatar },
-        categoria: { id: row.categoria_id, nome: row.categoria_nome },
-        titulo: row.titulo,
-        descricao: row.descricao,
-        views: row.views || 0,
-        likes: row.likes || 0,
-        comments: row.comments || 0,
-        time: row.created_at,
-        tags: tagsQuery.rows.map((tag) => tag.nome),
-        ativo: row.ativo,
-        status: row.status || "aberto",
-      };
-    })
-  );
-
-  return {
-    data: posts,
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-    },
-  };
-}
 
   static async findById(id, userId) {
     try {

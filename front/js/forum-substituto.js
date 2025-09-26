@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       let url = `/api/forum/posts?filtro=${currentFiltro}&page=${currentPage}&limit=10`;
       if (currentSearchTerm) url += `&search=${encodeURIComponent(currentSearchTerm)}`;
-      if (currentCategoria) url += `&categoria=${currentCategoria}`;
+      if (currentCategoria) url += `&categoriaId=${currentCategoria}`;
       
       const resposta = await fetch(url);
       if (!resposta.ok) throw new Error(`Erro HTTP: ${resposta.status}`);
