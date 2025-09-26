@@ -10,6 +10,7 @@ const login = async (req, res) => {
       console.log("Erro: E-mail ou senha não fornecidos");
       return res.status(400).json({ error: "E-mail e senha são obrigatórios" });
     }
+
     const user = await loginService(email);
 
     if (!user || !user.ativo) {
@@ -20,6 +21,7 @@ const login = async (req, res) => {
         .status(404)
         .json({ error: "Usuário não encontrado ou inativo" });
     }
+
     const senhaCorreta = bcrypt.compareSync(password, user.pwd_usr);
 
     if (!senhaCorreta) {
