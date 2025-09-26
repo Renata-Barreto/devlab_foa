@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = `post.html?id=${topicoId}`;
   }
 
-  // Listeners de eventos
+ 
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
       buttons.forEach((btn) => btn.classList.remove("active"));

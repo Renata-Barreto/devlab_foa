@@ -66,8 +66,6 @@ class Topico {
 
     const offset = (page - 1) * limit;
 
-    // Parâmetros para a query principal
-
     const { rows } = await pool.query(
       `
       SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
