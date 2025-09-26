@@ -111,7 +111,7 @@ class Topico {
         id: row.id,
         user_id: row.user_id,
         user: { nome: row.user_nome, avatar: row.user_avatar },
-        categoria: row.categoria_nome,
+        categoria: { id: row.categoria_id, nome: row.categoria_nome },
         titulo: row.titulo,
         descricao: row.descricao,
         views: row.views || 0,
