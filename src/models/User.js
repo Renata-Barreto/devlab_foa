@@ -56,14 +56,14 @@ const User = {
     return rows[0];
   },
 
-  updateProfile: async (id_usr, des_pfl, img_usr) => {
+  updateProfile: async (id_usr, des_pfl,prf_pfl) => {
     const query = `
       UPDATE dev_lab_perfil
-      SET des_pfl = $1, img_usr = $2
+      SET des_pfl = $1, prf_pfl = $2
       WHERE id_usr = $3
-      RETURNING id_pfl, id_usr, des_pfl, img_usr;
+      RETURNING id_pfl, id_usr, des_pfl, prf_pfl;
     `;
-    const { rows } = await pool.query(query, [des_pfl, img_usr, id_usr]);
+    const { rows } = await pool.query(query, [des_pfl, prf_pfl, id_usr]);
     return rows[0];
   },
 

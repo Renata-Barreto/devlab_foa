@@ -202,7 +202,7 @@ const userController = {
               id_usr: user.id_usr,
               nome_usr: user.nome_usr,
               email_usr: user.email_usr,
-              img_usr: user.img_usr,
+              img_usr: user.prf_pfl || user.img_usr,
               des_pfl: user.des_pfl,
               cat_usr: user.cat_usr,
               tipo: user.cat_usr === 1 ? "adm" : "aluno",
