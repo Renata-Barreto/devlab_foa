@@ -40,7 +40,7 @@ const upload = multer({
 const userController = {
   create: async (req, res) => {
     try {
-      const { name, email, password, avatar, end_usr, cid_usr, est_usr, dtn_usr } = req.body;
+      const { name, email, password, end_usr, cid_usr, est_usr, dtn_usr } = req.body;
       if (!name || !email || !password) {
         console.log('Erro: Campos obrigatórios (name, email, password) não fornecidos');
         return res.status(400).json({ message: 'Preencha todos os campos obrigatórios' });
@@ -51,6 +51,7 @@ const userController = {
         console.log(`Erro: E-mail ${email} já cadastrado`);
         return res.status(409).json({ message: 'Usuário já cadastrado.' });
       }
+      const avatar = req.file ? req.file.filename : null;
 
       const body = { name, email, password, avatar, end_usr, cid_usr, est_usr, dtn_usr };
       const user = await userService.create(body);
