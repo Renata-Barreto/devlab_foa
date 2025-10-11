@@ -1,4 +1,4 @@
-import { test, assert, describe, beforeEach } from 'poku'
+import { test, assert, describe } from 'poku'
 import { login } from '../controllers/auth.controller.js'
 
 describe('TESTE DE LOGIN', { background: 'purple'})

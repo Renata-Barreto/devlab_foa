@@ -32,6 +32,6 @@ await test('GET /posts retorna objeto com paginação e registros', async () => 
   assert.strictEqual(
     data[postsKey].length, 
     expectedLimit, 
-    `Deve retornar ${expectedLimit} registros por página`
+    `Deve retornar 10 registros por página`
   );
 });
