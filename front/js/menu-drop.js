@@ -178,7 +178,7 @@ async function carregarNavbar() {
       // Mostra o nome por 2 segundos e depois some
       if (nomeEntrar) {
         setTimeout(() => {
-          nomeEntrar.classList.add("fade-out");
+          nomeEntrar.classList.add("fadee-out");
         }, 2000); // 2 segundos visível
       }
 

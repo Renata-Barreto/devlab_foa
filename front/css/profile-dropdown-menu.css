@@ -140,7 +140,7 @@
   }
 }
 
-#nome_entrar.fade-out {
+#nome_entrar.fadee-out {
   animation: nomeFadeOut 1s forwards;
 }
 
