@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curso de JavaScript</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: #fff;
+  color: #333;
+}
+
+/* ====== Cabeçalho ====== */
+.curso-header {
+  background: #f6f6f8;
+  padding: 40px 80px;
+  border-bottom: 2px solid #007bff;
+}
+
+.curso-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-left: 27%;
+}
+
+.curso-logo {
+  width: 85px;
+}
+
+.curso-subtitulo {
+  font-size: 17px;
+  color: #444;
+  margin-bottom: -6px;
+}
+
+.curso-titulo {
+  font-size: 40px;
+  color: #3C2A4D;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  width: 300px;
+  height: 8px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress {
+  width: 40%;
+  height: 100%;
+  background: #3C2A4D;
+  border-radius: 10px;
+}
+
+.progress-text {
+  margin-left: 10px;
+  color: #555;
+  font-size: 14px;
+}
+
+/* ====== Descrição ====== */
+.curso-descricao {
+  max-width: 800px;
+  margin: 40px auto;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* ====== Conteúdo ====== */
+.curso-conteudo {
+  max-width: 800px;
+  margin: 0 auto 80px;
+}
+
+.conteudo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.conteudo-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+}
+
+.voltar {
+  font-size: 14px;
+  color: #3C2A4D;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.modulos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modulo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+  padding: 18px 20px;
+  transition: 0.2s;
+}
+
+.modulo:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.modulo .icone i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-style: normal;
+  font-weight: bold;
+}
+
+.modulo.completo .icone i {
+  color: #2ecc71;
+  border: 2px solid #2ecc71;
+}
+
+.modulo.bloqueado .icone i {
+  color: #ccc;
+  border: 2px solid #ccc;
+}
+
+.modulo h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #222;
+}
+
+.modulo p {
+  font-size: 14px;
+  color: #777;
+}
+</style>
+</head>
+<body>
+
+  <!-- Cabeçalho do curso -->
+  <section class="curso-header">
+    <div class="curso-info">
+      <img src="imagens/logo-js.png" alt="Logo JavaScript" class="curso-logo">
+      <div>
+        <p class="curso-subtitulo">curso de</p>
+        <h1 class="curso-titulo">JavaScript</h1>
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <span class="progress-text">40% completo</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Descrição -->
+  <section class="curso-descricao">
+    <p>
+      JavaScript é uma linguagem de programação usada principalmente para criar funcionalidades interativas em páginas web. 
+      Ele permite que desenvolvedores manipulem elementos HTML e CSS, adicionando animações, validações de formulários 
+      e atualizações dinâmicas de conteúdo sem recarregar a página. É uma das principais linguagens para desenvolvimento 
+      web e é executado diretamente no navegador.
+    </p>
+  </section>
+
+  <!-- Conteúdo -->
+  <section class="curso-conteudo">
+    <div class="conteudo-header">
+      <h2>Conteúdo</h2>
+      <a href="#" class="voltar">Voltar de Onde Parei</a>
+    </div>
+
+    <div class="modulos">
+      <div class="modulo completo">
+        <div class="icone"><i>✔</i></div>
+        <div class="texto">
+          <h3>Introdução à JavaScript</h3>
+          <p>Aula 01</p>
+        </div>
+      </div>
+
+      <div class="modulo completo">
+        <div class="icone"><i>✔</i></div>
+        <div class="texto">
+          <h3>Comandos básicos</h3>
+          <p>Aula 02</p>
+        </div>
+      </div>
+
+      <div class="modulo completo">
+        <div class="icone"><i>✔</i></div>
+        <div class="texto">
+          <h3>Tipos de variáveis</h3>
+          <p>Aula 03</p>
+        </div>
+      </div>
+
+      <div class="modulo bloqueado">
+        <div class="icone"><i>○</i></div>
+        <div class="texto">
+          <h3>Manipulando eventos DOM</h3>
+          <p>Aula 04</p>
+        </div>
+      </div>
+
+      <div class="modulo bloqueado">
+        <div class="icone"><i>○</i></div>
+        <div class="texto">
+          <h3>Funções</h3>
+          <p>Aula 05</p>
+        </div>
+      </div>
+
+      <div class="modulo bloqueado">
+        <div class="icone"><i>○</i></div>
+        <div class="texto">
+          <h3>Classes e Objetos</h3>
+          <p>Aula 06</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

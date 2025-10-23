@@ -1,6 +1,9 @@
 // src/front/js/menu-drop.js
 async function carregarNavbar() {
-  console.log("Iniciando carregarNavbar - Timestamp:", new Date().toISOString());
+  console.log(
+    "Iniciando carregarNavbar - Timestamp:",
+    new Date().toISOString()
+  );
 
   const authRaw = localStorage.getItem("auth");
   console.log("authRaw:", authRaw);
@@ -17,7 +20,9 @@ async function carregarNavbar() {
   try {
     const response = await fetch("navbar.html");
     if (!response.ok) {
-      throw new Error(`Erro ao carregar navbar: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Erro ao carregar navbar: ${response.status} ${response.statusText}`
+      );
     }
     const data = await response.text();
     const navbar = document.getElementById("navbar");
@@ -31,7 +36,9 @@ async function carregarNavbar() {
     }
 
     // Selecionar elementos após carregar o HTML
-    const profileDropdownList = document.querySelector(".profile-dropdown-list");
+    const profileDropdownList = document.querySelector(
+      ".profile-dropdown-list"
+    );
     const btn = document.querySelector(".profile-dropdown-btn");
     const nomeEntrar = document.getElementById("nome_entrar");
     const profileImg = btn?.querySelector(".profile-img");
@@ -40,7 +47,8 @@ async function carregarNavbar() {
     const exitItem = document.getElementById("Deslogar");
 
     if (!btn) console.warn("Elemento .profile-dropdown-btn não encontrado.");
-    if (!profileDropdownList) console.warn("Elemento .profile-dropdown-list não encontrado.");
+    if (!profileDropdownList)
+      console.warn("Elemento .profile-dropdown-list não encontrado.");
     if (!nomeEntrar) console.warn("Elemento #nome_entrar não encontrado.");
     if (!profileImg) console.warn("Elemento .profile-img não encontrado.");
     if (!linkContato) console.warn("Elemento #link-contato não encontrado.");
@@ -55,7 +63,9 @@ async function carregarNavbar() {
         profileImg.style.backgroundImage = `url('Uploads/avatar-padrao.png')`;
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
-          console.log("Botão de login clicado, redirecionando para /login.html");
+          console.log(
+            "Botão de login clicado, redirecionando para /login.html"
+          );
           window.location.href = "login.html";
         });
       }
@@ -71,7 +81,11 @@ async function carregarNavbar() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Status da resposta:", userResponse.status, userResponse.statusText);
+      console.log(
+        "Status da resposta:",
+        userResponse.status,
+        userResponse.statusText
+      );
 
       if (!userResponse.ok) {
         console.warn(`Erro ao carregar usuário: ${userResponse.status}`);
@@ -91,7 +105,12 @@ async function carregarNavbar() {
       const user = responseData.user || responseData; // Compatível com { user: {...} } ou direta
       console.log("Usuário carregado:", user);
 
-      let nome = user.nome_usr || user.name || user.username || user.email?.split("@")[0] || "Usuário";
+      let nome =
+        user.nome_usr ||
+        user.name ||
+        user.username ||
+        user.email?.split("@")[0] ||
+        "Usuário";
       nome = nome.split(" ")[0];
       nome = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
       if (nome.length > 8) nome = nome.slice(0, 8) + "...";
@@ -113,11 +132,17 @@ async function carregarNavbar() {
       if (btn && profileDropdownList) {
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
-          console.log("Dropdown clicado, toggling active:", !profileDropdownList.classList.contains("active"));
+          console.log(
+            "Dropdown clicado, toggling active:",
+            !profileDropdownList.classList.contains("active")
+          );
           profileDropdownList.classList.toggle("active");
         });
         window.addEventListener("click", (e) => {
-          if (!btn.contains(e.target) && !profileDropdownList.contains(e.target)) {
+          if (
+            !btn.contains(e.target) &&
+            !profileDropdownList.contains(e.target)
+          ) {
             console.log("Fechando dropdown por clique fora");
             profileDropdownList.classList.remove("active");
           }
@@ -127,13 +152,16 @@ async function carregarNavbar() {
       const tipo = user.tipo || auth?.userTipo || "aluno";
       if (tipo === "adm" && linkContato) {
         linkContato.setAttribute("href", "/mensagens.html");
-        console.log("Link #link-contato atualizado para /mensagens.html (admin)");
+        console.log(
+          "Link #link-contato atualizado para /mensagens.html (admin)"
+        );
       }
 
       if (perfilBtn) {
         perfilBtn.addEventListener("click", (e) => {
           e.preventDefault();
-          const destino = tipo === "adm" ? "/pagina_adm.html" : "/pagina_aluno.html";
+          const destino =
+            tipo === "adm" ? "/pagina_adm.html" : "/pagina_aluno.html";
           console.log("Botão #Perfil clicado, redirecionando para:", destino);
           window.location.href = destino;
         });
@@ -146,6 +174,12 @@ async function carregarNavbar() {
           localStorage.removeItem("auth");
           window.location.href = "/login.html";
         });
+      }
+      // Mostra o nome por 2 segundos e depois some
+      if (nomeEntrar) {
+        setTimeout(() => {
+          nomeEntrar.classList.add("fade-out");
+        }, 2000); // 2 segundos visível
       }
 
       inicializarMenuHamburger();
@@ -173,23 +207,34 @@ function inicializarMenuHamburger() {
     hamburgerMenu.addEventListener("click", (event) => {
       event.stopPropagation();
       navLinks.classList.toggle("open");
-      console.log("Hamburger menu clicado, estado:", navLinks.classList.contains("open"));
+      console.log(
+        "Hamburger menu clicado, estado:",
+        navLinks.classList.contains("open")
+      );
     });
 
     document.addEventListener("click", (event) => {
-      if (!navLinks.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+      if (
+        !navLinks.contains(event.target) &&
+        !hamburgerMenu.contains(event.target)
+      ) {
         navLinks.classList.remove("open");
         console.log("Fechando nav_links por clique fora");
       }
     });
     console.log("Menu hambúrguer inicializado com sucesso.");
   } else {
-    console.warn("Elementos .hamburger-menu ou .nav_links não encontrados no DOM.");
+    console.warn(
+      "Elementos .hamburger-menu ou .nav_links não encontrados no DOM."
+    );
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM carregado, iniciando carregarNavbar - Timestamp:", new Date().toISOString());
+  console.log(
+    "DOM carregado, iniciando carregarNavbar - Timestamp:",
+    new Date().toISOString()
+  );
   carregarNavbar();
 });
 
