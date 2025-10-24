@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aula — Visualizador</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #3c2a4d;
+  --muted: #6b7280;
+  --bg: #ffffff;
+  --radius: 12px;
+  --sidebar-w: 350px;
+  --sidebar-collapsed-w: 88px;
+}
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; height:100%; font-family:Poppins,sans-serif; background: var(--bg); color:#111; }
+
+/* Topbar */
+.topbar {
+  position: fixed; top:0; left:0; right:0; height:64px;
+  display:flex; align-items:center; justify-content:center; gap:20px;
+  padding:0 20px; background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.85));
+  box-shadow: 0 1px 0 rgba(16,24,40,0.04); z-index:50;
+}
+.topbar-inner { width:100%; max-width:1200px; display:flex; align-items:center; gap:16px; }
+.progress-wrap { flex:1; display:flex; align-items:center; gap:12px; }
+.progress-text { font-size:13px; color:var(--muted); width:160px; }
+.progress-track { flex:1; height:8px; background:#eee; border-radius:999px; overflow:hidden; }
+.progress-bar { height:100%; background:var(--accent); width:0%; }
+.nav-actions { display:flex; gap:18px; align-items:center; }
+.nav-actions button { background:transparent; border:none; color:var(--accent); font-weight:600; cursor:pointer; }
+.back-btn { background:transparent; border:none; color:var(--accent); font-weight:600; cursor:pointer; font-size:14px; margin-right:20px; }
+
+/* Container */
+.container { display:flex; width:100%; min-height:100vh; padding-top:84px; overflow-x:hidden; }
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background:#fff;
+  border-radius: var(--radius);
+  padding:14px;
+  box-shadow: 0 8px 30px rgba(16,24,40,0.04);
+  transition: transform 0.3s ease;
+  position: relative; z-index:2;
+}
+.sidebar.collapsed { transform: translateX(calc(-1 * (var(--sidebar-w) - var(--sidebar-collapsed-w)))); box-shadow:none; }
+.collapse-btn { position:absolute; top:20px; right:-20px; width:40px; height:40px; border-radius:50%; background:var(--accent); color:#fff; border:4px solid #fff; cursor:pointer; display:grid; place-items:center; z-index:3; transition: transform 0.3s ease; }
+
+/* Sidebar content */
+.course-title { font-weight:600; color:var(--accent); margin-bottom:8px; font-size:14px; }
+.module-block { margin-bottom:16px; }
+.module-header { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; }
+.module-header strong { font-size:13px; }
+.lessons-list { display:flex; flex-direction:column; gap:8px; }
+.lesson-item { display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:10px; border:1px solid transparent; cursor:pointer; transition:all 0.15s ease; }
+.lesson-item:hover { background: rgba(60,42,77,0.06); border-color: rgba(60,42,77,0.03); }
+.lesson-item.active { background: linear-gradient(90deg, rgba(60,42,77,0.06), rgba(96,165,250,0.02)); border-color: rgba(60,42,77,0.06); }
+.lesson-item .left { display:flex; gap:10px; align-items:center; }
+.lesson-index { width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-size:13px; font-weight:600; border:2px solid rgba(60,42,77,0.08); }
+.lesson-title { font-size:14px; }
+.lesson-sub { font-size:12px; color:var(--muted); }
+.badge-done { background:#16a34a; color:#fff; padding:4px 8px; border-radius:999px; font-size:12px; }
+
+/* Main content */
+.content { flex:1; background:#fff; border-radius:12px; padding:28px; box-shadow: 0 8px 30px rgba(16,24,40,0.04); transition: margin 0.3s ease; position:relative; }
+.title { font-size:36px; margin:6px 0 10px; color:#222; }
+.subtitle { color:var(--muted); margin-bottom:14px; }
+.lesson-body { line-height:1.7; color:#222; margin-top:16px; }
+.controls-top { display:flex; gap:8px; margin-top:12px; }
+.btn { padding:8px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); background:transparent; cursor:pointer; }
+.btn.primary { background:var(--accent); color:#fff; border:none; }
+
+/* Responsive */
+@media (max-width:1000px){ .container{flex-direction:column;} .sidebar{width:100%; min-width:100%; margin-top:10px;} .collapse-btn{right:12px; top:8px;} }
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <button class="back-btn" onclick="window.history.back()">← Voltar</button>
+    <div class="progress-wrap">
+      <div class="progress-text"><strong id="percentText">0% COMPLETO</strong></div>
+      <div class="progress-track"><div class="progress-bar" id="topProgress"></div></div>
+      <div style="width:120px;text-align:right;" class="muted" id="stepsText">0 / 0 aulas</div>
+    </div>
+    <div class="nav-actions">
+      <button id="prevTop" style="display:none">← Aula Anterior</button>
+      <button id="nextTop" style="display:none">Próxima Aula →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Container -->
+<div class="container">
+  <aside class="sidebar" id="sidebar">
+    <div class="course-title">Curso: HTML, CSS & JavaScript</div>
+    <div id="modulesWrapper"></div>
+    <button class="collapse-btn" id="collapseBtn">◀</button>
+  </aside>
+
+  <main class="content" id="mainContent">
+    <h1 class="title" id="lessonTitle">Escolha uma aula</h1>
+    <p class="subtitle" id="lessonSub">O conteúdo aparecerá aqui.</p>
+    <div class="lesson-body" id="lessonBody"></div>
+    <div class="controls-top">
+      <button class="btn" id="prevLesson">← Aula Anterior</button>
+      <button class="btn primary" id="nextLesson">Próxima Aula →</button>
+    </div>
+  </main>
+</div>
+
+<script>
+let modules = []; // aqui você vai popular via fetch do backend
+// Exemplo local:
+modules = [
+  {name:"Módulo 1", lessons:[{title:"Aula 1", sub:"Intro", content:"Conteúdo 1"},{title:"Aula 2", sub:"HTML", content:"Conteúdo 2"}]},
+  {name:"Módulo 2", lessons:[{title:"Aula 1", sub:"CSS", content:"Conteúdo 1"},{title:"Aula 2", sub:"Flexbox", content:"Conteúdo 2"}]}
+];
+
+const sidebar = document.getElementById('sidebar');
+const collapseBtn = document.getElementById('collapseBtn');
+const modulesWrapper = document.getElementById('modulesWrapper');
+const lessonTitle = document.getElementById('lessonTitle');
+const lessonSub = document.getElementById('lessonSub');
+const lessonBody = document.getElementById('lessonBody');
+const percentText = document.getElementById('percentText');
+const topProgress = document.getElementById('topProgress');
+const stepsText = document.getElementById('stepsText');
+
+let currentModule = 0;
+let currentLesson = 0;
+
+function renderModules(){
+  modulesWrapper.innerHTML = '';
+  modules.forEach((mod,mIndex)=>{
+    const block = document.createElement('div');
+    block.classList.add('module-block');
+    const header = document.createElement('div');
+    header.classList.add('module-header');
+    header.innerHTML = `<strong>${mod.name}</strong>`;
+    block.appendChild(header);
+
+    const list = document.createElement('div');
+    list.classList.add('lessons-list');
+    mod.lessons.forEach((lesson,lIndex)=>{
+      const item = document.createElement('div');
+      item.classList.add('lesson-item');
+      item.innerHTML = `<div class="left"><div class="lesson-index">${lIndex+1}</div><div class="lesson-title">${lesson.title}<div class="lesson-sub">${lesson.sub}</div></div></div>`;
+      item.addEventListener('click', ()=>selectLesson(mIndex,lIndex));
+      list.appendChild(item);
+    });
+    block.appendChild(list);
+    modulesWrapper.appendChild(block);
+  });
+}
+
+function selectLesson(m,l){
+  currentModule=m;
+  currentLesson=l;
+  const lesson=modules[m].lessons[l];
+  lessonTitle.textContent = lesson.title;
+  lessonSub.textContent = lesson.sub;
+  lessonBody.textContent = lesson.content;
+  updateActiveLesson();
+  updateProgress();
+}
+
+function updateActiveLesson(){
+  document.querySelectorAll('.lesson-item').forEach(el=>el.classList.remove('active'));
+  const moduleBlock = modulesWrapper.children[currentModule];
+  moduleBlock.querySelectorAll('.lesson-item')[currentLesson].classList.add('active');
+}
+
+function updateProgress(){
+  const moduleLessons = modules[currentModule].lessons.length;
+  const doneLessons = currentLesson+1;
+  const percent = Math.floor(doneLessons/moduleLessons*100);
+  percentText.textContent = percent+'% COMPLETO';
+  topProgress.style.width = percent+'%';
+  stepsText.textContent = doneLessons+' / '+moduleLessons+' aulas';
+}
+
+// Prev/Next
+document.getElementById('prevLesson').addEventListener('click', ()=>{
+  if(currentLesson>0) selectLesson(currentModule,currentLesson-1);
+  else if(currentModule>0) selectLesson(currentModule-1, modules[currentModule-1].lessons.length-1);
+});
+document.getElementById('nextLesson').addEventListener('click', ()=>{
+  if(currentLesson<modules[currentModule].lessons.length-1) selectLesson(currentModule,currentLesson+1);
+  else if(currentModule<modules.length-1) selectLesson(currentModule+1,0);
+});
+
+// Collapse sidebar
+collapseBtn.addEventListener('click', ()=>{
+  sidebar.classList.toggle('collapsed');
+  collapseBtn.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
+});
+
+renderModules();
+selectLesson(0,0);
+</script>
+</body>
+</html>

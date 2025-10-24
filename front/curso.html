@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Curso de JavaScript</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="js/menu-drop.js" defer></script>
+  
+   <link rel="stylesheet" href="css/profile-dropdown-menu.css">
+  <link rel="stylesheet" href="css/hamburguer.css">
+  <link rel="stylesheet" href="css/footer.css">  <link rel="stylesheet" href="css/navbar.css">
+  <script src="js/chamar_html.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <style>* {
   margin: 0;
   padding: 0;
@@ -15,13 +21,13 @@
 body {
   background: #fff;
   color: #333;
+  margin-top: 60px;
 }
 
 /* ====== Cabeçalho ====== */
 .curso-header {
   background: #f6f6f8;
-  padding: 40px 80px;
-  border-bottom: 2px solid #007bff;
+  padding: 40px 80px;;
 }
 
 .curso-info {
@@ -139,6 +145,9 @@ body {
 .modulo.completo .icone i {
   color: #2ecc71;
   border: 2px solid #2ecc71;
+}.modulo.aberto .icone i {
+  color: #2ecc71;
+  border: 2px solid #2ecc71;
 }
 
 .modulo.bloqueado .icone i {
@@ -159,6 +168,7 @@ body {
 </style>
 </head>
 <body>
+  <nav class="navbar" id="navbar"></nav>
 
   <!-- Cabeçalho do curso -->
   <section class="curso-header">
@@ -201,16 +211,16 @@ body {
         </div>
       </div>
 
-      <div class="modulo completo">
-        <div class="icone"><i>✔</i></div>
+      <div class="modulo aberto">
+        <div class="icone"><i>○</i></div>
         <div class="texto">
           <h3>Comandos básicos</h3>
           <p>Aula 02</p>
         </div>
       </div>
 
-      <div class="modulo completo">
-        <div class="icone"><i>✔</i></div>
+      <div class="modulo bloqueado">
+        <div class="icone"><i class="fa-solid fa-lock"></i></div>
         <div class="texto">
           <h3>Tipos de variáveis</h3>
           <p>Aula 03</p>
@@ -218,7 +228,7 @@ body {
       </div>
 
       <div class="modulo bloqueado">
-        <div class="icone"><i>○</i></div>
+        <div class="icone"><i class="fa-solid fa-lock"></i></div>
         <div class="texto">
           <h3>Manipulando eventos DOM</h3>
           <p>Aula 04</p>
@@ -226,7 +236,7 @@ body {
       </div>
 
       <div class="modulo bloqueado">
-        <div class="icone"><i>○</i></div>
+        <div class="icone"><i class="fa-solid fa-lock"></i></div>
         <div class="texto">
           <h3>Funções</h3>
           <p>Aula 05</p>
@@ -234,7 +244,7 @@ body {
       </div>
 
       <div class="modulo bloqueado">
-        <div class="icone"><i>○</i></div>
+        <div class="icone"><i class="fa-solid fa-lock"></i></div>
         <div class="texto">
           <h3>Classes e Objetos</h3>
           <p>Aula 06</p>
@@ -242,6 +252,8 @@ body {
       </div>
     </div>
   </section>
+   <footer class="footer" id="footer"></footer>
+  <script src="js/menu-drop.js" defer></script>
 
 </body>
 </html>

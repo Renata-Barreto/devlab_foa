@@ -1,177 +1,433 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard - DevLab</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --primary: #3C2A4D;
-  --secondary: #61F0E1;
-  --bg: #f9f9f9;
-  --text: #333;
-  --white: #fff;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HyperComplex Dashboard - Análise de Foco</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ======================================= */
+        /* === 1. VARIÁVEIS E ESTILOS GLOBAIS === */
+        /* ======================================= */
+        :root {
+            /* Cores Dark Mode (Hipercomplexo) */
+            --bg-dark: #121212;
+            --bg-card: #1E1E1E;
+            --bg-sidebar: #0f0f0f;
+            --text-light: #E0E0E0;
+            --text-muted: #B0B0B0;
+            
+            /* Cores de Destaque (Vibrantes) */
+            --accent-blue: #00ADB5; /* Ciano/Aqua */
+            --accent-purple: #9b59b6; /* Roxo */
+            --accent-green: #2ecc71; /* Verde */
+            --accent-red: #e74c3c; /* Vermelho */
+            
+            /* Gradientes e Sombras */
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --gradient-card-border: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            --progress-gradient: linear-gradient(90deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
+            
+            /* Espaçamento e Borda */
+            --spacing-lg: 2rem;
+            --spacing-md: 1.5rem;
+            --border-radius: 12px;
+        }
 
-* { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
-body { background: var(--bg); color: var(--text); }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-light);
+        }
 
-header {
-  background: var(--white);
-  padding: 15px 40px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 2px solid var(--secondary);
-  position: sticky; top:0; z-index: 1000;
-}
+        body {
+            background-color: var(--bg-dark);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-header h1 { color: var(--primary); font-size: 22px; }
-header nav a { margin-left: 20px; text-decoration:none; color: var(--primary); font-weight:500; }
+        /* ======================================= */
+        /* === 2. SIDEBAR (Navegação Esquerda) === */
+        /* ======================================= */
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-sidebar);
+            padding: var(--spacing-lg) 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            flex-shrink: 0;
+        }
 
-.container {
-  display: flex;
-  margin-top: 20px;
-  padding: 0 40px;
-  gap: 20px;
-}
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+        }
 
-.sidebar {
-  width: 250px;
-  background: var(--white);
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem var(--spacing-md);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background-color 0.3s, color 0.3s;
+            border-left: 5px solid transparent;
+        }
 
-.sidebar h2 { margin-bottom: 15px; font-size: 18px; color: var(--primary);}
-.sidebar a {
-  display:block; padding:10px 5px; color: var(--primary); text-decoration:none;
-  border-radius:5px; margin-bottom:5px;
-  transition:0.2s;
-}
-.sidebar a:hover { background: var(--secondary); color: var(--white); }
+        .nav-link i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
 
-.main {
-  flex:1;
-  background: var(--white);
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: var(--bg-card);
+            color: var(--accent-blue);
+            border-left: 5px solid var(--accent-blue);
+        }
 
-.card {
-  background: #f1f1f1;
-  padding:15px 20px;
-  border-radius:10px;
-  margin-bottom:15px;
-}
+        /* ======================================= */
+        /* === 3. CONTEÚDO PRINCIPAL (Main) === */
+        /* ======================================= */
+        .main-content {
+            flex-grow: 1;
+            padding: var(--spacing-lg);
+            overflow-y: auto;
+        }
 
-.card h3 { font-size:16px; margin-bottom:5px; color: var(--primary); }
-.card button {
-  padding:7px 15px; border:none; border-radius:5px;
-  background: var(--primary); color: var(--white); cursor:pointer;
-}
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
 
-h2 { margin-bottom: 15px; color: var(--primary); }
+        .header h1 {
+            font-size: 2rem;
+            color: var(--text-light);
+        }
 
-textarea { width:100%; height:150px; padding:10px; border-radius:5px; border:1px solid #ccc; resize:none; }
-input, select { width:100%; padding:8px; margin-bottom:10px; border-radius:5px; border:1px solid #ccc; }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-card);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+        }
 
-button.save {
-  background: var(--secondary);
-  color: var(--primary);
-  font-weight:600;
-  border:none;
-  padding:10px 15px;
-  border-radius:5px;
-  cursor:pointer;
-}
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 1.2rem;
+            border: 2px solid var(--accent-blue);
+        }
 
-</style>
+        /* ======================================= */
+        /* === 4. LAYOUT E CARTÕES DE DADOS === */
+        /* ======================================= */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent; /* Para o efeito de borda gradiente */
+        }
+        
+        /* Detalhe: Borda Gradiente (Efeito Complexo) */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: var(--border-radius);
+            padding: 1px; /* Espessura da borda */
+            background: var(--gradient-card-border);
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+            opacity: 0.2; /* Suaviza o efeito */
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+            cursor: default;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            /* Cor do Ícone Dinâmica */
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .card-change {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .positive { color: var(--accent-green); }
+        .negative { color: var(--accent-red); }
+
+        /* ======================================= */
+        /* === 5. GRÁFICOS E TABELAS (Complexo) === */
+        /* ======================================= */
+        .chart-area {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Gráfico grande à esquerda, detalhes à direita */
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .chart-box {
+            min-height: 400px;
+        }
+
+        /* Detalhe: Barra de Progresso Personalizada */
+        .progress-container {
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            background-color: var(--bg-dark);
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--progress-gradient);
+            transition: width 1s ease-out;
+        }
+
+        /* Detalhe: Linha de Status (Simulação de Tabela/Lista) */
+        .status-list {
+            list-style: none;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background-color 0.2s;
+        }
+
+        .status-item:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .status-label {
+            color: var(--text-muted);
+        }
+
+        .status-value {
+            font-weight: 600;
+            /* Cor será definida pelo JS */
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <h1>DevLab Dashboard</h1>
-  <nav>
-    <a href="#">Sair</a>
-  </nav>
-</header>
-
-<div class="container">
-  <aside class="sidebar">
-    <h2>Menu</h2>
-    <a href="#" onclick="showSection('cursos')">Gerenciar Cursos</a>
-    <a href="#" onclick="showSection('aulas')">Gerenciar Aulas</a>
-    <a href="#" onclick="showSection('forum')">Gerenciar Fórum</a>
-    <a href="#" onclick="showSection('stats')">Estatísticas</a>
-  </aside>
-
-  <main class="main">
-    <!-- Cursos -->
-    <div id="cursos" class="section">
-      <h2>Cursos</h2>
-      <div class="card">
-        <h3>Adicionar Novo Curso</h3>
-        <input type="text" placeholder="Nome do curso">
-        <textarea placeholder="Descrição do curso"></textarea>
-        <button class="save">Salvar Curso</button>
-      </div>
+    <div class="sidebar">
+        <h2><i class="fas fa-brain"></i> Foco | DASH</h2>
+        <a href="#" class="nav-link active" data-nav="overview"><i class="fas fa-tachometer-alt"></i> Visão Geral</a>
+        <a href="#" class="nav-link" data-nav="performance"><i class="fas fa-chart-line"></i> Performance</a>
+        <a href="#" class="nav-link" data-nav="reports"><i class="fas fa-file-alt"></i> Relatórios</a>
+        <a href="#" class="nav-link" data-nav="settings"><i class="fas fa-cog"></i> Configurações</a>
     </div>
 
-    <!-- Aulas -->
-    <div id="aulas" class="section" style="display:none;">
-      <h2>Aulas e Módulos</h2>
-      <div class="card">
-        <h3>Adicionar Módulo</h3>
-        <input type="text" placeholder="Nome do módulo">
-        <button class="save">Salvar Módulo</button>
-      </div>
-      <div class="card">
-        <h3>Adicionar Aula</h3>
-        <select>
-          <option>Módulo 1</option>
-          <option>Módulo 2</option>
-        </select>
-        <input type="text" placeholder="Título da Aula">
-        <textarea placeholder="Conteúdo da aula (HTML)"></textarea>
-        <button class="save">Salvar Aula</button>
-      </div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Visão Geral da Produtividade</h1>
+            <div class="user-profile">
+                <div class="profile-pic"><i class="fas fa-user"></i></div>
+                <span>Usuário Complexo</span>
+            </div>
+        </div>
+
+        <div class="data-grid">
+            <div class="card" data-metric="focus-time">
+                <div class="card-header"><i class="card-icon fas fa-clock" style="color: var(--accent-blue);"></i> TEMPO TOTAL DE FOCO</div>
+                <div class="card-value">124 hrs</div>
+                <div class="card-change positive"><i class="fas fa-arrow-up"></i> +12% (Última Semana)</div>
+            </div>
+
+            <div class="card" data-metric="productivity">
+                <div class="card-header"><i class="card-icon fas fa-cogs" style="color: var(--accent-green);"></i> PRODUTIVIDADE MÉDIA</div>
+                <div class="card-value">88.5%</div>
+                <div class="card-change positive"><i class="fas fa-arrow-up"></i> +4.1% (Último Mês)</div>
+            </div>
+
+            <div class="card" data-metric="interruptions">
+                <div class="card-header"><i class="card-icon fas fa-bell-slash" style="color: var(--accent-red);"></i> SESSÕES INTERROMPIDAS</div>
+                <div class="card-value">14</div>
+                <div class="card-change negative"><i class="fas fa-arrow-down"></i> -2.5% (Último Mês)</div>
+            </div>
+
+            <div class="card" data-metric="score">
+                <div class="card-header"><i class="card-icon fas fa-star" style="color: var(--accent-purple);"></i> CONCENTRAÇÃO SCORE</div>
+                <div class="card-value">9.2</div>
+                <div class="card-change positive"><i class="fas fa-arrow-up"></i> +0.1% (Hoje)</div>
+            </div>
+        </div>
+
+        <div class="chart-area">
+            <div class="card chart-box">
+                <div class="card-header" style="color: var(--accent-blue);">VISÃO GERAL DA PERFORMANCE SEMANAL</div>
+                <div style="text-align: center; margin-top: 100px; font-size: 1.5rem; color: var(--text-muted);">
+                    <i class="fas fa-chart-area" style="color: var(--accent-blue); opacity: 0.5;"></i><br>
+                    Gráfico Interativo (Simulação de Dados)
+                </div>
+                
+                <div class="progress-container">
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Progresso da Meta Mensal (75%)</p>
+                    <div class="progress-bar">
+                        <div id="monthly-progress" class="progress-fill" style="width: 75%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card chart-box">
+                <div class="card-header" style="color: var(--accent-purple);">DETALHES DE STATUS ATUAL</div>
+                <ul class="status-list">
+                    <li class="status-item"><span class="status-label">Sessão Atual:</span> <span class="status-value active-status" data-color="accent-blue">Foco Profundo</span></li>
+                    <li class="status-item"><span class="status-label">Próxima Tarefa:</span> <span class="status-value" data-color="text-muted">Ajuste de Algoritmo</span></li>
+                    <li class="status-item"><span class="status-label">Duração Estimada:</span> <span class="status-value" data-color="text-light">1h 30m</span></li>
+                    <li class="status-item"><span class="status-label">Interrupções Pendentes:</span> <span class="status-value critical-status" data-color="accent-red">3</span></li>
+                    <li class="status-item"><span class="status-label">Status da Conexão:</span> <span class="status-value" data-color="accent-green">Online</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+            <button id="update-button" style="background: var(--accent-blue); border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: background-color 0.3s;">
+                <i class="fas fa-redo"></i> Atualizar Dados (JS)
+            </button>
+            <p style="color: var(--text-muted); font-size: 0.8rem;">Dashboard Versão 1.0 Alpha | Copyright &copy; 2025</p>
+        </div>
+
     </div>
 
-    <!-- Fórum -->
-    <div id="forum" class="section" style="display:none;">
-      <h2>Postagens do Fórum</h2>
-      <div class="card">
-        <h3>Nova Postagem</h3>
-        <input type="text" placeholder="Título da postagem">
-        <textarea placeholder="Conteúdo do fórum"></textarea>
-        <button class="save">Salvar Postagem</button>
-      </div>
-    </div>
+    <script>
+        // =======================================
+        // === JAVASCRIPT (Funções e Interações) ===
+        // =======================================
 
-    <!-- Estatísticas -->
-    <div id="stats" class="section" style="display:none;">
-      <h2>Estatísticas</h2>
-      <div class="card">
-        <h3>Total de Cursos: 5</h3>
-      </div>
-      <div class="card">
-        <h3>Total de Aulas: 20</h3>
-      </div>
-      <div class="card">
-        <h3>Total de Postagens: 34</h3>
-      </div>
-    </div>
-  </main>
-</div>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebarLinks = document.querySelectorAll('.nav-link');
+            const dataCards = document.querySelectorAll('.card[data-metric]');
+            const statusValues = document.querySelectorAll('.status-value');
+            const updateButton = document.getElementById('update-button');
+            const monthlyProgress = document.getElementById('monthly-progress');
 
-<script>
-function showSection(sec) {
-  document.querySelectorAll('.section').forEach(s => s.style.display='none');
-  document.getElementById(sec).style.display='block';
-}
-</script>
+            // Função 1: Navegação na Sidebar (Simulação de Troca de Conteúdo)
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove 'active' de todos e adiciona ao clicado
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    
+                    const navTarget = link.getAttribute('data-nav');
+                    console.log(`Navegando para: ${navTarget.toUpperCase()}`);
+                    document.querySelector('.header h1').textContent = 
+                        navTarget === 'overview' ? 'Visão Geral da Produtividade' : 
+                        navTarget.charAt(0).toUpperCase() + navTarget.slice(1);
+                    
+                    // Simulação visual de carregamento
+                    document.querySelector('.main-content').style.opacity = 0.5;
+                    setTimeout(() => {
+                        document.querySelector('.main-content').style.opacity = 1;
+                    }, 300);
+                });
+            });
+
+            // Função 2: Detalhes de Status (Cor Dinâmica)
+            statusValues.forEach(item => {
+                const colorVarName = item.getAttribute('data-color');
+                if (colorVarName) {
+                    // Busca a cor na variável CSS :root
+                    const colorValue = getComputedStyle(document.documentElement).getPropertyValue(`--${colorVarName}`);
+                    item.style.color = colorValue || 'var(--text-light)';
+                }
+            });
+
+            // Função 3: Atualização de Dados (Simulação de API Call)
+            updateButton.addEventListener('click', () => {
+                const newFocusTime = (Math.random() * 5).toFixed(1);
+                const newProductivity = (80 + Math.random() * 20).toFixed(1);
+                const newInterruptions = Math.floor(Math.random() * 10) + 10;
+
+                // 1. Atualiza os Cartões
+                document.querySelector('.card[data-metric="focus-time"] .card-value').textContent = `${(124 + parseFloat(newFocusTime)).toFixed(0)} hrs`;
+                document.querySelector('.card[data-metric="productivity"] .card-value').textContent = `${newProductivity}%`;
+                document.querySelector('.card[data-metric="interruptions"] .card-value').textContent = `${newInterruptions}`;
+                
+                // 2. Atualiza a Barra de Progresso
+                const newProgress = (Math.random() * 100).toFixed(0);
+                monthlyProgress.style.width = `${newProgress}%`;
+                document.querySelector('.progress-container p').textContent = `Progresso da Meta Mensal (${newProgress}%)`;
+
+                // Efeito visual de confirmação
+                updateButton.textContent = 'Dados Atualizados!';
+                updateButton.style.backgroundColor = 'var(--accent-green)';
+                setTimeout(() => {
+                    updateButton.textContent = 'Atualizar Dados (JS)';
+                    updateButton.style.backgroundColor = 'var(--accent-blue)';
+                }, 1500);
+            });
+            
+            // Inicializa a navegação
+            sidebarLinks[0].click();
+        });
+    </script>
 
 </body>
 </html>

@@ -137,6 +137,7 @@ async function carregarNavbar() {
             !profileDropdownList.classList.contains("active")
           );
           profileDropdownList.classList.toggle("active");
+         
         });
         window.addEventListener("click", (e) => {
           if (
@@ -145,6 +146,7 @@ async function carregarNavbar() {
           ) {
             console.log("Fechando dropdown por clique fora");
             profileDropdownList.classList.remove("active");
+            
           }
         });
       }
@@ -175,12 +177,7 @@ async function carregarNavbar() {
           window.location.href = "/login.html";
         });
       }
-      // Mostra o nome por 2 segundos e depois some
-      if (nomeEntrar) {
-        setTimeout(() => {
-          nomeEntrar.classList.add("fadee-out");
-        }, 2000); // 2 segundos visível
-      }
+      
 
       inicializarMenuHamburger();
     } catch (error) {
