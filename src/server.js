@@ -3,6 +3,7 @@ import express from 'express';
 import userRoutes from './routes/user.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import forumRoutes from './routes/forum.routes.js';
+import cursoRoutes from './routes/curso.routes.js';
 import config from './config.js';
 import cors from 'cors';
 import syncDatabase from './database/sync.js';
@@ -43,7 +44,8 @@ app.use('/Uploads', express.static(path.join(__dirname, '../front/Uploads')));
 // Rotas da API
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/forum', forumRoutes); // Alterado de '/api' para '/api/forum'
+app.use('/api/forum', forumRoutes); 
+app.use('/api/cursos', cursoRoutes);
 
 
 
