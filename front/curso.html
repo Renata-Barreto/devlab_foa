@@ -191,24 +191,20 @@ body {
   <footer class="footer" id="footer"></footer>
 
 <script>
-/* ============================
-   🔥 OPCÃO A — Tudo dinâmico
-   ============================ */
-
 const API_BASE = "https://devlab-foa.onrender.com/api";
 const authRaw = localStorage.getItem("auth");
-let auth;
-auth = JSON.parse(authRaw)
+let auth = JSON.parse(authRaw);
 const cursoId = new URLSearchParams(window.location.search).get("id");
 
 // Se não estiver logado → volta pro login
- if (!auth || !auth.token) {
-      console.warn("Token de autenticação não encontrado. Redirecionando...");
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      localStorage.removeItem("auth");
-      window.location.href = "/login.html";
-      return;
-    }
+if (!auth || !auth.token) {
+  console.warn("Token de autenticação não encontrado. Redirecionando...");
+  setTimeout(() => {
+    localStorage.removeItem("auth");
+    window.location.href = "/login.html";
+  }, 2000);
+  return;
+}
 
 async function carregarCurso() {
   const res = await fetch(`${API_BASE}/curso/${cursoId}`, {
@@ -222,7 +218,6 @@ async function carregarCurso() {
 
   const curso = await res.json();
 
-  // Cabeçalho
   document.getElementById("curso-header-info").innerHTML = `
       <img src="imagens/logo-js.png" class="curso-logo">
       <div>
@@ -236,7 +231,6 @@ async function carregarCurso() {
       </div>
   `;
 
-  // Descrição
   document.getElementById("descricao-curso").innerHTML = `
     <p>${curso.descricao}</p>
   `;
@@ -284,6 +278,5 @@ document.getElementById("voltarParei").addEventListener("click", () => {
 
 carregarCurso();
 </script>
-
-</body>
+</body> 
 </html>
