@@ -22,7 +22,6 @@ const Curso = {
 
           a.aula_id,
           a.titulo AS nome_aula,
-          a.conteudo,
           a.ordem AS ordem_aula,
 
           COALESCE(pa.status = 'concluida', FALSE) AS aula_concluida,
