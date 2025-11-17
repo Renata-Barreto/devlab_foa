@@ -207,7 +207,7 @@ if (!token || !user) {
 
 async function carregarCurso() {
   const res = await fetch(`${API_BASE}/curso/${cursoId}`, {
-    headers: { "Authorization": `Bearer ${token}` }
+    headers: { "Authorization": `Bearer ${auth.token}` }
   });
 
   if (!res.ok) {
