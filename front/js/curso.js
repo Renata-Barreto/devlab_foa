@@ -30,7 +30,7 @@ async function carregarCurso(){
   renderSkeleton();
   try {
     const res = await fetch(`${API_BASE}/curso/${cursoId}`, {
-      headers: { "Authorization": `Bearer ${auth.token}` }
+      headers: { Authorization: `Bearer ${auth.token}` }
     });
     if (!res.ok) {
       throw new Error(`Erro ao buscar curso: ${res.status}`);
