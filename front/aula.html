@@ -67,6 +67,7 @@ html, body { margin:0; padding:0; height:100%; font-family:Poppins,sans-serif; b
 
 /* Main content */
 .content { flex:1; background:#fff; border-radius:12px; padding:28px; box-shadow: 0 8px 30px rgba(16,24,40,0.04); transition: margin 0.3s ease; position:relative; }
+.content.shifted {margin-left: calc(-1 * (var(--sidebar-w) - var(--sidebar-collapsed-w)));}
 .title { font-size:36px; margin:6px 0 10px; color:#222; }
 .subtitle { color:var(--muted); margin-bottom:14px; }
 .lesson-body { line-height:1.7; color:#222; margin-top:16px; }
@@ -199,8 +200,11 @@ document.getElementById('nextLesson').addEventListener('click', ()=>{
 // Collapse sidebar
 collapseBtn.addEventListener('click', ()=>{
   sidebar.classList.toggle('collapsed');
+  document.getElementById('mainContent').classList.toggle('shifted');
+  
   collapseBtn.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
 });
+
 
 renderModules();
 selectLesson(0,0);

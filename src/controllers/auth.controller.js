@@ -36,6 +36,7 @@ const login = async (req, res) => {
       user.img_usr
     );
     const userTipo = user.cat_usr === 1 ? "adm" : "aluno";
+    console.log(token)
 
     console.log(
       `Login bem-sucedido para o usuário ID ${user.id_usr}, tipo: ${userTipo}`

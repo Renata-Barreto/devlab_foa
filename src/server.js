@@ -45,7 +45,7 @@ app.use('/Uploads', express.static(path.join(__dirname, '../front/Uploads')));
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/forum', forumRoutes); 
-app.use('/api/cursos', cursoRoutes);
+app.use('/api/curso', cursoRoutes);
 
 
 
