@@ -15,7 +15,7 @@ const cursoService = {
     const curso = {
       id: result.rows[0].curso_id,
       nome: result.rows[0].nome_curso,
-      descricao: result.rows[0].descricao_curso, 
+      descricao: result.rows[0].descricao, 
       progresso: result.rows[0].progresso,
       modulos: [],
     };
@@ -39,7 +39,7 @@ const cursoService = {
         conteudo: r.conteudo || "",
         status: r.aula_concluida ? "concluida" : "pendente",
         liberada: false,
-        ordem_aula: r.ordem_aula, // <-- NOME CORRETO
+        ordem_aula: r.ordem_aula, 
       });
     });
 
