@@ -15,40 +15,56 @@ const cursoService = {
     const curso = {
       id: result.rows[0].curso_id,
       nome: result.rows[0].nome_curso,
+      descricao: result.rows[0].descricao_curso, 
       progresso: result.rows[0].progresso,
-      modulos: []
+      modulos: [],
     };
 
     const mapa = {};
 
-    result.rows.forEach(r => {
+    result.rows.forEach((r) => {
       if (!mapa[r.modulo_id]) {
         mapa[r.modulo_id] = {
           id: r.modulo_id,
           nome: r.nome_modulo,
           ordem_modulo: r.ordem_modulo,
           concluido: false,
-          aulas: []
+          aulas: [],
         };
       }
 
       mapa[r.modulo_id].aulas.push({
         id: r.aula_id,
         titulo: r.nome_aula,
-        subtitulo: r.subtitulo || "Aula do curso",
         conteudo: r.conteudo || "",
-        ordem_aula: r.ordem_aula,
-        status: r.aula_concluida ? "concluida" : "pendente"
+        status: r.aula_concluida ? "concluida" : "pendente",
+        liberada: false,
+        ordem_aula: r.ordem_aula, // <-- NOME CORRETO
       });
     });
 
     curso.modulos = Object.values(mapa)
       .sort((a, b) => a.ordem_modulo - b.ordem_modulo)
-      .map(mod => {
+      .map((mod) => {
         mod.aulas.sort((a, b) => a.ordem_aula - b.ordem_aula);
-        mod.concluido = mod.aulas.every(a => a.status === "concluida");
+        mod.concluido = mod.aulas.every((a) => a.status === "concluida");
         return mod;
       });
+
+    // liberar aulas corretamente
+    curso.modulos.forEach((mod) => {
+      // 1. liberar a primeira aula do módulo
+      if (mod.aulas.length > 0) {
+        mod.aulas[0].liberada = true;
+      }
+
+      // 2. liberar aula seguinte à concluída
+      for (let i = 0; i < mod.aulas.length - 1; i++) {
+        if (mod.aulas[i].status === "concluida") {
+          mod.aulas[i + 1].liberada = true;
+        }
+      }
+    });
 
     return curso;
   },
@@ -64,7 +80,7 @@ const cursoService = {
     const aula = await Curso.getAulaById(aulaId);
     if (!aula) throw new Error("Aula não encontrada");
     return aula;
-  }
+  },
 };
 
 export default cursoService;

@@ -15,6 +15,8 @@ const Curso = {
       `SELECT 
           c.curso_id,
           c.nome AS nome_curso,
+          c.descricao,
+
 
           m.modulo_id,
           m.nome AS nome_modulo,
