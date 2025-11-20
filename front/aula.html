@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,25 +10,41 @@
 
 <body>
   <div class="container">
+
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <h2 id="cursoNome"></h2>
-      <div id="listaModulos"></div>
+
+      <!-- ESTE é o ID correto que o JS usa -->
+      <div id="sidebar-modulos"></div>
     </aside>
 
     <!-- Conteúdo -->
     <main class="conteudo">
-      <h1 id="tituloAula"></h1>
-      <div id="conteudoAula"></div>
+
+      <!-- Título e subtítulo com IDs QUE O JS ESPERA -->
+      <h1 id="lessonTitle"></h1>
+      <h3 id="lessonSub"></h3>
+
+      <!-- Corpo da aula -->
+      <div id="lessonBody"></div>
+
+      <!-- Status da aula (marcar concluída) -->
+      <div id="markStatus"></div>
 
       <div class="nav-buttons">
-        <button id="btnPrev">Aula Anterior</button>
-        <button id="btnConcluir">Concluir Aula</button>
-        <button id="btnNext">Próxima Aula</button>
+        <button id="prevBtn">Aula Anterior</button>
+
+        <!-- botao concluir -->
+        <button id="markBtn">Concluir Aula</button>
+
+        <button id="nextBtn">Próxima Aula</button>
       </div>
     </main>
+
   </div>
 
   <script src="js/aula.js"></script>
 </body>
+
 </html>

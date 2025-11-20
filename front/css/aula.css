@@ -75,3 +75,23 @@ box-shadow:none; } .collapse-btn { position:absolute; top:20px; right:-20px; wid
   font-size: 12px;
   transform: translateY(-4px);
 }
+
+.btn-bottom {
+  margin-top: 40px;
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.btn-bottom:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: .7;
+}

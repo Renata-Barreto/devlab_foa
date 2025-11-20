@@ -110,7 +110,8 @@ function renderAula(aula, curso){
     renderSidebar(curso, aula.aula_id);
 
     // PREV / NEXT
-    setupPrevNext(curso, aula.aula_id);
+    atualizarBotoes(curso, aula);
+
 }
 
 /* ============================================================
@@ -228,29 +229,73 @@ function renderSidebar(curso, currentId){
     });
 }
 
-/* ============================================================
-   PREV / NEXT
-   ============================================================ */
-function setupPrevNext(curso, currentId){
-    prevBtn.style.display = "none";
-    nextBtn.style.display = "none";
 
-    if (!curso || !curso.modulos) return;
 
-    const flat = [];
-    curso.modulos.forEach(m => (m.aulas || []).forEach(a => flat.push(a.id)));
 
-    const idx = flat.findIndex(id => String(id) === String(currentId));
-    if (idx === -1) return;
 
-    if (idx > 0) {
-        prevBtn.style.display = "inline-block";
-        prevBtn.onclick = () => window.location.href = `/aula.html?id=${flat[idx - 1]}`;
+// BOTÃO PRINCIPAL (FINAL DA PÁGINA)
+const bottomBtn = document.createElement("button");
+bottomBtn.id = "btnBottom";
+bottomBtn.className = "btn-bottom";
+document.querySelector(".conteudo").appendChild(bottomBtn);
+
+// --- ATUALIZA TODOS OS BOTÕES DE NAVEGAÇÃO ---
+function atualizarBotoes(curso, aulaAtual) {
+
+    // ---- BOTÕES DO TOPO ----
+    const lista = [];
+    curso.modulos.forEach(m => m.aulas.forEach(a => lista.push(a)));
+    const index = lista.findIndex(a => a.id == aulaAtual.id);
+
+    // Botão anterior
+    if (index <= 0) {
+        prevBtn.disabled = true;
+    } else {
+        prevBtn.disabled = false;
+        prevBtn.onclick = () => {
+            window.location.href = `/aula.html?id=${lista[index - 1].id}`;
+        };
     }
 
-    if (idx < flat.length - 1) {
-        nextBtn.style.display = "inline-block";
-        nextBtn.onclick = () => window.location.href = `/aula.html?id=${flat[idx + 1]}`;
+    // Botão Próxima (TOPO)
+    const proximaAula = lista[index + 1];
+
+    if (!aulaAtual.concluida) {
+        nextBtn.disabled = true;
+    } else if (proximaAula) {
+        nextBtn.disabled = false;
+        nextBtn.onclick = () => {
+            window.location.href = `/aula.html?id=${proximaAula.id}`;
+        };
+    } else {
+        nextBtn.disabled = true;
+    }
+
+    // ---- BOTÃO DO FINAL ----
+    if (!aulaAtual.concluida) {
+        bottomBtn.textContent = "Concluir e ir para a próxima";
+        bottomBtn.disabled = false;
+        bottomBtn.onclick = async () => {
+            await concluirAula(aulaAtual.id);
+
+            if (proximaAula) {
+                window.location.href = `/aula.html?id=${proximaAula.id}`;
+            } else {
+                bottomBtn.textContent = "Módulo concluído ✔";
+                bottomBtn.disabled = true;
+            }
+        };
+    } else {
+        bottomBtn.textContent = proximaAula ? "Próxima aula" : "Módulo concluído";
+        bottomBtn.disabled = false;
+
+        if (proximaAula) {
+            bottomBtn.onclick = () => {
+                window.location.href = `/aula.html?id=${proximaAula.id}`;
+            };
+        } else {
+            bottomBtn.disabled = true;
+        }
     }
 }
 
