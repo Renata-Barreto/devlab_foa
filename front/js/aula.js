@@ -35,7 +35,6 @@ carregarAula();
    BUSCAR AULA
    ============================================================ */
 async function carregarAula() {
-    renderSkeleton();
 
     try {
         // Aula atual
