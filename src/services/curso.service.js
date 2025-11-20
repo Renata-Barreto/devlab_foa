@@ -15,7 +15,7 @@ const cursoService = {
     const curso = {
       id: result.rows[0].curso_id,
       nome: result.rows[0].nome_curso,
-      descricao: result.rows[0].descricao, 
+      descricao: result.rows[0].descricao,
       progresso: result.rows[0].progresso,
       modulos: [],
     };
@@ -29,6 +29,7 @@ const cursoService = {
           nome: r.nome_modulo,
           ordem_modulo: r.ordem_modulo,
           concluido: false,
+          aberto: false, // <-- já inicializa
           aulas: [],
         };
       }
@@ -39,7 +40,7 @@ const cursoService = {
         conteudo: r.conteudo || "",
         status: r.aula_concluida ? "concluida" : "pendente",
         liberada: false,
-        ordem_aula: r.ordem_aula, 
+        ordem_aula: r.ordem_aula,
       });
     });
 
@@ -51,19 +52,31 @@ const cursoService = {
         return mod;
       });
 
-    // liberar aulas corretamente
     curso.modulos.forEach((mod) => {
-      // 1. liberar a primeira aula do módulo
-      if (mod.aulas.length > 0) {
-        mod.aulas[0].liberada = true;
+      // 1. liberar primeira aula
+      if (curso.modulos.length > 0 && curso.modulos[0].aulas.length > 0) {
+        curso.modulos[0].aulas[0].liberada = true;
       }
-
-      // 2. liberar aula seguinte à concluída
+      // 2. liberar a próxima aula após concluída
       for (let i = 0; i < mod.aulas.length - 1; i++) {
         if (mod.aulas[i].status === "concluida") {
           mod.aulas[i + 1].liberada = true;
         }
       }
+      // 3. definir módulo aberto (se tem aula liberada OU concluída)
+      mod.aberto = mod.aulas.some(
+        (a) => a.liberada || a.status === "concluida"
+      );
+      // 4. módulo concluído
+      mod.concluido = mod.aulas.every((a) => a.status === "concluida");
+      // NUMERAÇÃO GLOBAL
+      let numero = 1;
+      curso.modulos.forEach((mod) => {
+        mod.aulas.forEach((a) => {
+          a.numeroGlobal = numero;
+          numero++;
+        });
+      });
     });
 
     return curso;
