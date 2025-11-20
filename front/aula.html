@@ -1,50 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aula</title>
+    <link rel="stylesheet" href="css/aula.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aula</title>
-  <link rel="stylesheet" href="css/aula.css" />
-</head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <h2 id="cursoNome"></h2>
 
-<body>
-  <div class="container">
+        <!-- ESTE é o ID correto que o JS usa -->
+        <div id="sidebar-modulos"></div>
+      </aside>
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <h2 id="cursoNome"></h2>
+      <!-- Conteúdo -->
+      <main class="conteudo">
+        <!-- Título e subtítulo com IDs QUE O JS ESPERA -->
+        <!-- Topo fixo da aula -->
+        <div class="top-info">
+          <h2 id="topTitle"></h2>
+          <p id="topMeta"></p>
+        </div>
 
-      <!-- ESTE é o ID correto que o JS usa -->
-      <div id="sidebar-modulos"></div>
-    </aside>
+        <h1 id="lessonTitle"></h1>
+        <h3 id="lessonSub"></h3>
 
-    <!-- Conteúdo -->
-    <main class="conteudo">
+        <!-- Corpo da aula -->
+        <div id="lessonBody"></div>
 
-      <!-- Título e subtítulo com IDs QUE O JS ESPERA -->
-      <h1 id="lessonTitle"></h1>
-      <h3 id="lessonSub"></h3>
+        <!-- Status da aula (marcar concluída) -->
+        <div id="markStatus"></div>
 
-      <!-- Corpo da aula -->
-      <div id="lessonBody"></div>
+        <div class="nav-buttons">
+          <button id="prevBtn">Aula Anterior</button>
 
-      <!-- Status da aula (marcar concluída) -->
-      <div id="markStatus"></div>
+          <!-- botao concluir -->
+          <button id="markBtn">Concluir Aula</button>
 
-      <div class="nav-buttons">
-        <button id="prevBtn">Aula Anterior</button>
+          <button id="nextBtn">Próxima Aula</button>
+        </div>
+      </main>
+    </div>
 
-        <!-- botao concluir -->
-        <button id="markBtn">Concluir Aula</button>
-
-        <button id="nextBtn">Próxima Aula</button>
-      </div>
-    </main>
-
-  </div>
-
-  <script src="js/aula.js"></script>
-</body>
-
+    <script src="js/aula.js"></script>
+  </body>
 </html>
