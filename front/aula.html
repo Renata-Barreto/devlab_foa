@@ -1,131 +1,203 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Aula — Visualizador</title>
-
-  <link rel="stylesheet" href="css/profile-dropdown-menu.css">
-  <link rel="stylesheet" href="css/hamburguer.css">
-  <link rel="stylesheet" href="css/footer.css">
-  <link rel="stylesheet" href="css/navbar.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-
-  <style>
-    /* (mantive o visual que você já usava — apenas utilitários pra o conteúdo) */
-    *{box-sizing:border-box;font-family:'Poppins',sans-serif}
-    body{background:#fff;color:#111;margin-top:64px}
-    .topbar{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:center;padding:0 20px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.85));z-index:50}
-    .topbar-inner{width:100%;max-width:1200px;display:flex;align-items:center;gap:16px}
-    .container{display:flex;width:100%;min-height:100vh;padding-top:84px;overflow-x:hidden}
-    .sidebar{width:350px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 8px 30px rgba(16,24,40,0.04)}
-    .content{flex:1;background:#fff;border-radius:12px;padding:28px;box-shadow:0 8px 30px rgba(16,24,40,0.04)}
-    .lesson-body{line-height:1.7;color:#222;margin-top:16px}
-    .controls-top{display:flex;gap:8px;margin-top:12px}
-    .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:transparent;cursor:pointer}
-    .btn.primary{background:#3C2A4D;color:#fff;border:none}
-    .badge-done{background:#16a34a;color:#fff;padding:4px 8px;border-radius:999px;font-size:12px}
-    .lesson-meta{color:#666;font-size:14px}
-    .skeleton{background:#eee;border-radius:8px;height:14px;display:inline-block}
-    /* SIDEBAR DESLIZANDO */
-.sidebar {
-  width: 320px;
-  background: #fff;
-  border-radius: 12px 0 0 12px;
-  padding: 14px;
-  box-shadow: 0 8px 30px rgba(16,24,40,0.04);
-  position: fixed;
-  top: 64px;
-  bottom: 0;
-  left: -260px;   /* escondida */
-  transition: all .3s ease;
-  z-index: 20;
-}
-
-/* Barrinha visível para abrir */
-.sidebar::after {
-  content: "";
-  position: absolute;
-  right: -16px;
-  top: 50%;
-  width: 16px;
-  height: 80px;
-  background: #3C2A4D;
-  border-radius: 0 8px 8px 0;
-  cursor: pointer;
-}
-
-/* Sidebar aberta */
-.sidebar.open {
-  left: 0;
-}
-
-/* Módulo */
-.mod-block { margin-bottom: 12px; }
-.mod-title { font-weight: bold; margin-bottom: 6px; }
-
-/* Aulas */
-.mod-lessons { padding-left: 8px; }
-.lesson-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 8px;
-  border-radius: 6px;
-  margin-bottom: 4px;
-}
-
-.lesson-item.active {
-  background: #eee;
-  font-weight: bold;
-}
-
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula</title>
+  <link rel="stylesheet" href="css/aula.css" />
 </head>
+
 <body>
-
-  <!-- Topbar -->
-  <div class="topbar">
-    <div class="topbar-inner">
-      <button class="btn" onclick="history.back()">← Voltar</button>
-      <div style="flex:1">
-        <strong id="topTitle">Carregando...</strong>
-        <div class="lesson-meta" id="topMeta"></div>
-      </div>
-      <div>
-        <button id="prevBtn" class="btn" style="display:none">← Anterior</button>
-        <button id="nextBtn" class="btn" style="display:none">Próximo →</button>
-      </div>
-    </div>
-  </div>
-
   <div class="container">
-    <aside class="sidebar" id="sidebar">
-      <div id="modulesList">
-        <!-- lista de módulos/aulas (populate) -->
-        <div class="skeleton" style="height:18px;width:120px;margin-bottom:12px"></div>
-        <div class="skeleton" style="height:14px;width:180px;margin-bottom:8px"></div>
-      </div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2 id="cursoNome"></h2>
+      <div id="listaModulos"></div>
     </aside>
 
-    <main class="content" id="mainContent">
-      <h1 id="lessonTitle">Carregando...</h1>
-      <p id="lessonSub" class="lesson-meta"></p>
+    <!-- Conteúdo -->
+    <main class="conteudo">
+      <h1 id="tituloAula"></h1>
+      <div id="conteudoAula"></div>
 
-      <div class="controls-top" style="margin-top:6px">
-        <button id="markBtn" class="btn primary" style="display:none">
-          <i class="fa-regular fa-circle-check"></i> Marcar como concluída
-        </button>
-        <span id="markStatus" style="margin-left:12px"></span>
-      </div>
-
-      <div class="lesson-body" id="lessonBody">
-        <!-- conteúdo HTML da aula -->
+      <div class="nav-buttons">
+        <button id="btnPrev">Aula Anterior</button>
+        <button id="btnConcluir">Concluir Aula</button>
+        <button id="btnNext">Próxima Aula</button>
       </div>
     </main>
   </div>
 
-  <footer class="footer" id="footer"></footer>
+  <script type="module">
 
-  <script type="module" src="js/aula.js"></script>
+    // ===== UTIL =====
+    function getId(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    const cursoId = getId("curso");
+    const aulaId = getId("aula");
+
+    let cursoData = null;      // curso completo
+    let aulasLineares = [];    // lista de aulas em ordem
+
+    // ======================================================
+    // ===== CARREGAR CURSO COMPLETO (para montar sidebar) ==
+    // ======================================================
+    async function carregarCurso() {
+      const res = await fetch(`/api/curso/${cursoId}`);
+      if (!res.ok) return alert("Erro ao carregar curso.");
+      const data = await res.json();
+      cursoData = data;
+
+      document.getElementById("cursoNome").innerText = data.nome;
+
+      gerarListaLinearAulas();
+      montarSidebar();
+    }
+
+    // gera uma lista linear única: aula 1, 2, 3, 4...
+    function gerarListaLinearAulas() {
+      aulasLineares = [];
+
+      cursoData.modulos.forEach((mod) => {
+        mod.aulas.forEach((a) => {
+          aulasLineares.push({
+            ...a,
+            moduloId: mod.id,
+            moduloNome: mod.nome
+          });
+        });
+      });
+
+      // garante ordem absoluta
+      aulasLineares.sort((a, b) => a.ordem_aula - b.ordem_aula);
+    }
+
+    // ======================================================
+    // ========== CARREGAR AULA ATUAL =======================
+    // ======================================================
+    async function carregarAula() {
+      const res = await fetch(`/api/curso/aula/${aulaId}`);
+      if (!res.ok) return alert("Erro ao carregar aula.");
+      const aula = await res.json();
+
+      document.getElementById("tituloAula").innerText = aula.titulo;
+      document.getElementById("conteudoAula").innerHTML = aula.conteudo;
+
+      configurarBotoesNavegacao();
+    }
+
+    // ======================================================
+    // ======== SIDE BAR BLOQUEADA (LÓGICA IGUAL CURSO) ======
+    // ======================================================
+    function montarSidebar() {
+      const container = document.getElementById("listaModulos");
+      container.innerHTML = "";
+
+      cursoData.modulos.forEach((mod) => {
+        const modDiv = document.createElement("div");
+        modDiv.classList.add("modulo");
+
+        const titulo = document.createElement("h3");
+        titulo.innerText = mod.nome;
+        modDiv.appendChild(titulo);
+
+        mod.aulas.forEach((a) => {
+          const aulaDiv = document.createElement("div");
+          aulaDiv.classList.add("aula-item");
+
+          // bloqueio igual página de curso
+          if (!a.liberada) aulaDiv.classList.add("bloqueada");
+          if (a.status === "concluida") aulaDiv.classList.add("concluida");
+
+          const idx = aulasLineares.findIndex(x => x.id == a.id);
+          aulaDiv.innerHTML = `
+            <span class="numero">${idx + 1}</span>
+            <span>${a.titulo}</span>
+          `;
+
+          if (a.liberada) {
+            aulaDiv.style.cursor = "pointer";
+            aulaDiv.onclick = () => {
+              window.location.href = `/pages/aula.html?curso=${cursoId}&aula=${a.id}`;
+            };
+          }
+
+          modDiv.appendChild(aulaDiv);
+        });
+
+        container.appendChild(modDiv);
+      });
+    }
+
+    // ======================================================
+    // ===== BOTÕES PREV / NEXT  ============================
+    // ======================================================
+    function configurarBotoesNavegacao() {
+      const indexAtual = aulasLineares.findIndex(a => a.id == aulaId);
+
+      const btnPrev = document.getElementById("btnPrev");
+      const btnNext = document.getElementById("btnNext");
+
+      // anterior
+      if (indexAtual > 0) {
+        btnPrev.onclick = () => {
+          const prev = aulasLineares[indexAtual - 1];
+          window.location.href = `/pages/aula.html?curso=${cursoId}&aula=${prev.id}`;
+        };
+      } else {
+        btnPrev.style.opacity = "0.4";
+        btnPrev.style.pointerEvents = "none";
+      }
+
+      // próxima
+      const proxima = aulasLineares[indexAtual + 1];
+      if (proxima && proxima.liberada) {
+        btnNext.onclick = () => {
+          window.location.href = `/pages/aula.html?curso=${cursoId}&aula=${proxima.id}`;
+        };
+      } else {
+        btnNext.style.opacity = "0.4";
+        btnNext.style.pointerEvents = "none";
+      }
+
+      // botão concluir
+      document.getElementById("btnConcluir").onclick = concluirAulaAtual;
+    }
+
+    // ======================================================
+    // =============== CONCLUIR AULA ========================
+    // ======================================================
+    async function concluirAulaAtual() {
+      const res = await fetch(`/api/curso/aula/${aulaId}/concluir`, {
+        method: "PATCH"
+      });
+
+      if (!res.ok) {
+        const txt = await res.text();
+        return alert("Erro: " + txt);
+      }
+
+      // recarrega curso para liberar próxima aula
+      await carregarCurso();
+
+      // atualiza prev/next + sidebar
+      configurarBotoesNavegacao();
+      montarSidebar();
+
+      alert("Aula concluída!");
+    }
+
+    // ======================================================
+    // =============== INICIALIZAÇÃO =========================
+    // ======================================================
+    (async () => {
+      await carregarCurso();
+      await carregarAula();
+    })();
+
+  </script>
 </body>
 </html>
