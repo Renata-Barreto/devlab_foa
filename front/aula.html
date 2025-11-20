@@ -27,6 +27,58 @@
     .badge-done{background:#16a34a;color:#fff;padding:4px 8px;border-radius:999px;font-size:12px}
     .lesson-meta{color:#666;font-size:14px}
     .skeleton{background:#eee;border-radius:8px;height:14px;display:inline-block}
+    /* SIDEBAR DESLIZANDO */
+.sidebar {
+  width: 320px;
+  background: #fff;
+  border-radius: 12px 0 0 12px;
+  padding: 14px;
+  box-shadow: 0 8px 30px rgba(16,24,40,0.04);
+  position: fixed;
+  top: 64px;
+  bottom: 0;
+  left: -260px;   /* escondida */
+  transition: all .3s ease;
+  z-index: 20;
+}
+
+/* Barrinha visível para abrir */
+.sidebar::after {
+  content: "";
+  position: absolute;
+  right: -16px;
+  top: 50%;
+  width: 16px;
+  height: 80px;
+  background: #3C2A4D;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+}
+
+/* Sidebar aberta */
+.sidebar.open {
+  left: 0;
+}
+
+/* Módulo */
+.mod-block { margin-bottom: 12px; }
+.mod-title { font-weight: bold; margin-bottom: 6px; }
+
+/* Aulas */
+.mod-lessons { padding-left: 8px; }
+.lesson-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.lesson-item.active {
+  background: #eee;
+  font-weight: bold;
+}
+
   </style>
 </head>
 <body>

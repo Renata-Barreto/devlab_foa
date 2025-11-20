@@ -114,17 +114,22 @@ function renderSidebar(curso, currentId){
 
     curso.modulos.forEach(m => {
         const bloco = document.createElement("div");
-        bloco.innerHTML = `<strong>${m.nome}</strong>`;
+        bloco.className = "mod-block";
+        bloco.innerHTML = `<div class="mod-title">${m.nome}</div>`;
+
         const lista = document.createElement("div");
+        lista.className = "mod-lessons";
 
         m.aulas.forEach(a => {
             const div = document.createElement("div");
-            div.className = (a.id == currentId) ? "active" : "";
+            div.className = "lesson-item" + (a.id == currentId ? " active" : "");
             div.style.cursor = "pointer";
 
             div.innerHTML = `
-                <span>${a.nome}</span>
-                <span>${a.status === "concluida" ? "✔" : "•"}</span>
+                <span>${a.titulo}</span>
+                <span class="status-icon">
+                    ${a.status === "concluida" ? "✔" : "•"}
+                </span>
             `;
 
             div.onclick = () => {
@@ -138,6 +143,7 @@ function renderSidebar(curso, currentId){
         modulesListEl.appendChild(bloco);
     });
 }
+
 
 function setupPrevNext(curso, currentId){
     prevBtn.style.display = "none";
@@ -161,3 +167,10 @@ function setupPrevNext(curso, currentId){
         nextBtn.onclick = () => window.location.href = `/aula.html?id=${flat[i+1]}`;
     }
 }
+// Toggle da sidebar
+const sidebarEl = document.getElementById("sidebar");
+sidebarEl.addEventListener("click", (e) => {
+    if (e.target === sidebarEl) return; 
+});
+sidebarEl.addEventListener("mouseenter", () => sidebarEl.classList.add("open"));
+sidebarEl.addEventListener("mouseleave", () => sidebarEl.classList.remove("open"));

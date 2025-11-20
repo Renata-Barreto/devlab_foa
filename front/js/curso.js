@@ -145,7 +145,7 @@ function renderModulos(modulos) {
         <div style="flex:1">
           <div style="display:flex;gap:8px;align-items:center">
             <strong style="font-size:14px">${a.titulo}</strong>
-            <small style="color:#777">• Aula ${a.ordem_aula}</small>
+            <small style="color:#777">• Aula ${a.numeroGlobal}</small>
             ${
               a.status === "concluida"
                 ? '<span class="badge-done" style="margin-left:8px">Concluída</span>'
