@@ -70,12 +70,12 @@ const cursoService = {
       // 4. módulo concluído
       mod.concluido = mod.aulas.every((a) => a.status === "concluida");
       // NUMERAÇÃO GLOBAL
-      let numero = 1;
-      curso.modulos.forEach((mod) => {
-        mod.aulas.forEach((a) => {
-          a.numeroGlobal = numero;
-          numero++;
-        });
+    });
+    let numeroGlobal = 1;
+    curso.modulos.forEach((mod) => {
+      mod.aulas.forEach((a) => {
+        a.numeroGlobal = numeroGlobal;
+        numeroGlobal++;
       });
     });
 
