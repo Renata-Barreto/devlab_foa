@@ -20,7 +20,6 @@ const aulaId = new URLSearchParams(window.location.search).get("id");
 const titleEl = document.getElementById("lessonTitle");
 const subEl = document.getElementById("lessonSub");
 const bodyEl = document.getElementById("lessonBody");
-const modulesListEl = document.getElementById("modulesList");
 const markBtn = document.getElementById("markBtn");
 const markStatus = document.getElementById("markStatus");
 const prevBtn = document.getElementById("prevBtn");
@@ -62,23 +61,8 @@ async function carregarAula() {
         console.error(e);
         titleEl.textContent = "Erro ao carregar aula";
         bodyEl.innerHTML = "<p>Erro ao conectar no servidor</p>";
-        modulesListEl.innerHTML = "<div>Erro ao carregar módulos</div>";
+        
     }
-}
-
-/* ============================================================
-   SKELETON
-   ============================================================ */
-function renderSkeleton(){
-    titleEl.textContent = "Carregando...";
-    bodyEl.innerHTML = `
-        <div class="skeleton" style="height:18px;width:70%"></div>
-        <div class="skeleton" style="height:14px;width:80%;margin-top:8px"></div>
-    `;
-    modulesListEl.innerHTML = `
-        <div class="skeleton" style="height:18px;width:120px;margin-bottom:12px"></div>
-        <div class="skeleton" style="height:14px;width:180px;margin-bottom:8px"></div>
-    `;
 }
 
 /* ============================================================
