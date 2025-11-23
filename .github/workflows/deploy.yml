@@ -2,7 +2,7 @@ name: Deploy Site Windows Server
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] 
 
 jobs:
   deploy:
@@ -31,4 +31,5 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           iisreset
+
 
