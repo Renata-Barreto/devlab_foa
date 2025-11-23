@@ -158,7 +158,7 @@ function renderModulos(modulos) {
           ${
             a.liberada
               ? `<button class="btn-small open-aula" data-id="${a.id}">Abrir</button>`
-              : `<span class="tooltip" data-tip="Conclua a aula anterior para liberar">🔒</span>`
+              : `<span class="tooltip" data-tip="Conclua a aula anterior para liberar"><i class='fa-solid fa-lock'></i></span>`
           }
         </div>
       `;
@@ -170,7 +170,7 @@ function renderModulos(modulos) {
           window.location.href = `/aula.html?id=${a.id}`;
         });
       } else {
-        // tooltip já presente
+       
       }
 
       lessonsList.appendChild(la);

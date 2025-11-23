@@ -1,7 +1,3 @@
-/* ============================================================
-   APP.AULA.JS — UNIFICADO
-   (conteúdo da aula + sidebar + prev/next + hover)
-   ============================================================ */
 
 const API_BASE = "https://devlab-foa.onrender.com/api";
 
@@ -91,7 +87,7 @@ function renderAula(aula, curso){
 
     // Sidebar unificada (design + lógica igual ao curso)
     renderSidebar(curso, aula.aula_id);
-
+    atualizarProgresso(curso);
     // PREV / NEXT
     atualizarBotoes(curso, aula);
 
@@ -124,9 +120,7 @@ async function concluirAula(id){
     }
 }
 
-/* ============================================================
-   SIDEBAR (VERSÃO FINAL — ÚNICA)
-   ============================================================ */
+
 function renderSidebar(curso, currentId){
     sidebarLista.innerHTML = "";
 
@@ -289,3 +283,87 @@ try {
     sidebarEl.addEventListener("mouseenter", () => sidebarEl.classList.add("open"));
     sidebarEl.addEventListener("mouseleave", () => sidebarEl.classList.remove("open"));
 } catch {}
+
+/* ============================================================
+   NAV SUPERIOR COM PROGRESSO (USANDO API)
+   ============================================================ */
+
+// Criar NAV
+const nav = document.createElement("div");
+nav.id = "navProgresso";
+nav.style.cssText = `
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+`;
+
+nav.innerHTML = `
+    <button id="btnVoltar" style="
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        padding: 8px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+    ">◀ Voltar</button>
+
+    <div style="flex: 1;">
+        <div id="progressText" style="font-size: 15px; margin-bottom: 4px;"></div>
+        
+        <div style="
+            width: 100%; 
+            height: 6px; 
+            background: #e5e5e5; 
+            border-radius: 4px;
+            overflow: hidden;
+        ">
+            <div id="progressBar" style="
+                height: 6px;
+                width: 0%;
+                background: #4CAF50;
+                transition: width .3s;
+            "></div>
+        </div>
+    </div>
+`;
+
+document.body.prepend(nav);
+
+// Botão voltar
+document.getElementById("btnVoltar").onclick = () => history.back();
+
+
+/* ============================================================
+   ATUALIZA PROGRESSO (AGORA USANDO SUA API)
+   ============================================================ */
+function atualizarProgresso(curso){
+    if (!curso || !curso.modulos) return;
+
+    // recebe da API
+    const pct = Number(curso.progresso) || 0;
+
+    // calcular total e concluídas
+    let total = 0;
+    let concluidas = 0;
+
+    curso.modulos.forEach(mod => {
+        mod.aulas.forEach(a => {
+            total++;
+            if (a.status === "concluida") concluidas++;
+        });
+    });
+
+    // texto (ex: 2/15 aulas — 14%)
+    document.getElementById("progressText").textContent =
+        `${concluidas}/${total} aulas — ${pct}%`;
+
+    // barra
+    document.getElementById("progressBar").style.width = pct + "%";
+}
