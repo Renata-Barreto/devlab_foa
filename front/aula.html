@@ -28,28 +28,31 @@
       </div>
     </div>
 
-   <div class="container">
+    <div class="container">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="course-title">
+            <h2 id="cursoNome"> Curso De JavaScript</h2>
+          </div>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
+          <button class="toggle-sidebar-btn">
+            <span>◀</span>
+          </button>
+        </div>
+        <div class="sidebar-inner">
+         
+          <div id="sidebar-modulos"></div>
+        </div>
+      </aside>
 
-  <div class="sidebar-header">
-      <div class="course-title">Curso De JavaScript</div>
-      <button class="toggle-sidebar-btn"></button>
-  </div>
+      <button id="toggleSidebar" class="toggle-sidebar-btn">
+        <span>&#10095;</span>
+      </button>
 
-  <div class="sidebar-content">
-     
-  </div>
-
-</div>
-
-
-
-    <!-- CONTEÚDO -->
-    <main class="conteudo">
-
-        <div style="height: 80px;"></div>
+      <!-- CONTEÚDO -->
+      <main class="conteudo">
+        <div style="height: 80px"></div>
 
         <h2 id="topTitle"></h2>
         <p id="topMeta"></p>
@@ -62,13 +65,9 @@
         <div id="markStatus"></div>
 
         <div class="nav-buttons">
-            <button id="markBtn">Concluir Aula</button>
+          <button id="markBtn">Concluir Aula</button>
         </div>
-
-    </main>
-
-
-
+      </main>
     </div>
 
     <script src="js/aula.js"></script>
