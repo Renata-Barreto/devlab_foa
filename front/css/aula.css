@@ -121,7 +121,7 @@ html,body{margin:0;padding:0;height:100%;font-family:Poppins,system-ui,Segoe UI,
    CONTEÚDO PRINCIPAL (empurra quando sidebar aberto)
    ========================================================= */
 .conteudo{
-  margin-left:var(--sidebar-w);
+  margin-left: calc(var(--sidebar-w) + 20px);
   transition:margin-left .28s ease, max-width .28s ease;
   padding:28px;
   min-height:calc(100vh - 84px);
