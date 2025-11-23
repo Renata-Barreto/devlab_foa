@@ -19,7 +19,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        source: "./"                 
+        source: "./"              
         target: ${{ secrets.REMOTE_PATH }}
 
     - name: Restart IIS (optional)
@@ -31,4 +31,3 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           iisreset
-
