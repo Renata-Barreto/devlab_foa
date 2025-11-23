@@ -175,12 +175,11 @@ html, body {
 
 /* Botão de abrir/fechar */
 .toggle-sidebar-btn {
-  position: fixed;      /* ← AGORA ele não some nunca */
-  top: 104px;           /* 64px da topbar + 40px */
-  left: calc(var(--sidebar-w) - 16px);
+  position: absolute;
+  top: 20px;
+  right: -16px;       /* fica para fora, grudado */
   width: 32px;
   height: 32px;
-
   background: var(--accent);
   color: #fff;
   border-radius: 50%;
@@ -189,8 +188,8 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 3000;        /* ← sempre acima de tudo */
-  transition: transform .3s ease, left .3s ease;
+  z-index: 9999;
+  transition: transform .3s ease;
 }
 
 /* Quando sidebar fecha → botão vai para borda da tela */
@@ -221,6 +220,13 @@ html, body {
 /* Quando sidebar fechado → ocupar a tela inteira */
 .sidebar.closed ~ .conteudo {
   margin-left: 0 !important;
+}
+.sidebar.closed {
+  transform: translateX(calc(-1 * var(--sidebar-w) + 20px)); 
+}
+
+.sidebar.closed .toggle-sidebar-btn {
+  transform: translateX(0) rotate(180deg); 
 }
 
 /* =========================================================
