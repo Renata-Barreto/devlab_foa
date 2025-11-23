@@ -128,7 +128,11 @@ html, body {
 
 /* Sidebar FECHADO (estado que o JS ativa) */
 .sidebar.closed {
-  transform: translateX(calc(-1 * var(--sidebar-w)));
+  transform: translateX(calc(-1 * var(--sidebar-w))); 
+   width: 20px;           
+  min-width: 20px;
+  padding: 0;
+  overflow: hidden;
 }
 
 /* Botão de abrir/fechar */
@@ -303,15 +307,45 @@ html, body {
 /* =========================================================
    RESPONSIVE
    ========================================================= */
+
 @media (max-width: 1000px) {
-  .container {
-    flex-direction: column;
+
+ 
+  .conteudo {
+    margin-left: 0 !important;
+    width: 100%;
   }
 
+  
   .sidebar {
-    width: 100%;
-    min-width: 100%;
-    margin-top: 10px;
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    transform: translateX(-100%); 
+    position: fixed;
+    top: 64px;
+    left: 0;
+    height: calc(100vh - 64px);
+    z-index: 999; 
+    border-right: 1px solid #ddd;
+  }
+
+ 
+  .sidebar:not(.closed) {
+    transform: translateX(0);
+  }
+
+  .sidebar.closed {
+    transform: translateX(calc(-100% + 40px)); 
+    width: var(--sidebar-w); 
+    min-width: var(--sidebar-w);
+    padding: 16px;
+  }
+
+
+  .toggle-sidebar-btn {
+    right: -16px;
+    top: 40px;
+    z-index: 2000;
   }
 }
 
