@@ -108,10 +108,8 @@ html, body {
 }
 
 /* =========================================================
-   SIDEBAR (CORRIGIDO)
+   SIDEBAR 
    ========================================================= */
-
-/* Sidebar ABERTO */
 .sidebar {
   position: fixed;
   top: 64px;
@@ -120,20 +118,26 @@ html, body {
   height: calc(100vh - 64px);
   background: #fff;
   border-right: 1px solid #ddd;
-  padding: 16px;
-  overflow-y: auto;
+  padding: 0;         
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;     
   transition: transform .3s ease;
   z-index: 20;
 }
 
-/* Sidebar FECHADO (estado que o JS ativa) */
-.sidebar.closed {
-  transform: translateX(calc(-1 * var(--sidebar-w))); 
-   width: 20px;           
-  min-width: 20px;
-  padding: 0;
-  overflow: hidden;
+
+.sidebar-inner {
+  flex: 1;
+  overflow-y: auto;   
+  padding: 16px;
 }
+
+
+.sidebar.closed {
+  transform: translateX(calc(-100% + 40px));
+}
+
 
 /* Botão de abrir/fechar */
 .toggle-sidebar-btn {
