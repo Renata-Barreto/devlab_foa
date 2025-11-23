@@ -136,6 +136,41 @@ html, body {
 .sidebar.closed {
   transform: translateX(calc(-100% + 40px));
 }
+/* Área fixa no topo do sidebar */
+.sidebar-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: #0b22ff;   /* cor que aparece no seu print */
+  color: #fff;
+  padding: 16px 14px;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Ajuste do botão para ficar dentro da caixa fixa */
+.sidebar-header .toggle-sidebar-btn {
+  position: static; /* remove absolute */
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  color: #0b22ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Conteúdo que rola */
+.sidebar-content {
+  margin-top: 10px;
+  padding: 10px 0;
+  overflow-y: auto;
+  height: calc(100vh - 64px - 70px); /* altura da tela - topbar - header fixo */
+}
+
 
 
 /* Botão de abrir/fechar */
