@@ -1,7 +1,4 @@
-/* ============================================================
-   APP.AULA.JS — UNIFICADO
-   (conteúdo da aula + sidebar + prev/next + toggle sidebar)
-   ============================================================ */
+
 
 const API_BASE = "https://devlab-foa.onrender.com/api";
 
@@ -45,9 +42,7 @@ let sidebarState = 'open'; // 'open' | 'closed'
 setupSidebarToggle();
 carregarAula();
 
-/* ============================================================
-   BUSCAR AULA
-   ============================================================ */
+
 async function carregarAula() {
   try {
     const rAula = await fetch(`${API_BASE}/curso/aula/${aulaId}`, {
@@ -73,11 +68,8 @@ async function carregarAula() {
   }
 }
 
-/* ============================================================
-   RENDER AULA + SIDEBAR + PREV/NEXT
-   ============================================================ */
+
 function renderAula(aula, curso){
-  // Conteúdo da aula
   titleEl.textContent = aula.titulo || "Sem título";
   subEl.textContent = aula.nome_modulo || "";
   bodyEl.innerHTML = aula.conteudo || "<p>Sem conteúdo</p>";
@@ -87,7 +79,6 @@ function renderAula(aula, curso){
 
   try { localStorage.setItem("ultimaAula", aula.aula_id); } catch {}
 
-  // Botão concluído
   if (aula.concluida) {
     markBtn.style.display = "none";
     markStatus.innerHTML = `<span class="badge-done">Concluída</span>`;
@@ -98,17 +89,12 @@ function renderAula(aula, curso){
     markBtn.onclick = () => concluirAula(aula.aula_id);
   }
 
-  // Sidebar + Progresso
   renderSidebar(curso, aula.aula_id);
   atualizarProgresso(curso);
-
-  // Botões navegação
   atualizarBotoes(curso, aula);
 }
 
-/* ============================================================
-   CONCLUIR AULA
-   ============================================================ */
+
 async function concluirAula(id){
   markBtn.disabled = true;
   markBtn.textContent = "Salvando...";
@@ -133,9 +119,7 @@ async function concluirAula(id){
   }
 }
 
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
+
 function renderSidebar(curso, currentId){
   sidebarLista.innerHTML = "";
 
@@ -147,7 +131,6 @@ function renderSidebar(curso, currentId){
 
   cursoNome.textContent = curso.nome || "Curso";
 
-  // NUMERO GLOBAL
   let global = 0;
   curso.modulos.forEach(mod => {
     (mod.aulas || []).forEach(a => {
@@ -156,7 +139,6 @@ function renderSidebar(curso, currentId){
     });
   });
 
-  // Renderizar módulos
   curso.modulos.forEach(mod => {
     const mDiv = document.createElement("div");
     mDiv.className = "module-block";
@@ -189,7 +171,7 @@ function renderSidebar(curso, currentId){
               ? "<span class='badge-done'>✔</span>"
               : a.liberada
               ? `<button class="open-aula" data-id="${a.id}">Ir</button>`
-              : `<span class="tooltip" data-tip="Conclua a anterior">🔒</span>`
+              : `<span class="tooltip" data-tip="Conclua a anterior"><i class='fa-solid fa-lock'></i></span>`
           }
         </div>
       `;
@@ -210,9 +192,7 @@ function renderSidebar(curso, currentId){
   });
 }
 
-/* ============================================================
-   BOTOES PREV / NEXT
-   ============================================================ */
+
 function atualizarBotoes(curso, aulaAtual) {
   if (!curso) return;
 
@@ -221,7 +201,7 @@ function atualizarBotoes(curso, aulaAtual) {
   const index = lista.findIndex(a => a.id == aulaAtual.id);
   const proximaAula = lista[index + 1];
 
-  // anterior
+  
   if (index <= 0) {
     prevBtn.disabled = true;
   } else {
@@ -240,14 +220,9 @@ function atualizarBotoes(curso, aulaAtual) {
   }
 }
 
-/* ============================================================
-   VOLTAR
-   ============================================================ */
 if (btnVoltar) btnVoltar.onclick = () => history.back();
 
-/* ============================================================
-   PROGRESSO
-   ============================================================ */
+
 function atualizarProgresso(curso) {
   if (!curso || !curso.modulos) return;
 
@@ -269,13 +244,10 @@ function atualizarProgresso(curso) {
   if (bar) bar.style.width = pct + "%";
 }
 
-/* ============================================================
-   SIDEBAR TOGGLE (botão)
-   ============================================================ */
 function setupSidebarToggle() {
   if (!toggleBtn || !sidebarEl) return;
 
-  // inicial: aberto
+
   sidebarEl.classList.remove('closed');
   sidebarEl.classList.add('open');
 
@@ -285,22 +257,22 @@ function setupSidebarToggle() {
     if (isClosed) {
       sidebarEl.classList.remove('closed');
       sidebarEl.classList.add('open');
-      // on mobile we use 'open' to slide in
+      
     } else {
       sidebarEl.classList.remove('open');
       sidebarEl.classList.add('closed');
     }
-    // acessibilidade
+   
     toggleBtn.setAttribute('aria-expanded', String(!isClosed));
   });
 
-  // clique fora em mobile fecha (opcional)
+  
   document.addEventListener('click', (ev) => {
     const target = ev.target;
     const isMobile = window.matchMedia('(max-width:1000px)').matches;
-    if (!isMobile) return; // só no mobile
+    if (!isMobile) return; 
     if (!sidebarEl.classList.contains('open')) return;
-    // se clicou fora do sidebar e não no toggle, fecha
+    
     if (!sidebarEl.contains(target) && target !== toggleBtn) {
       sidebarEl.classList.remove('open');
       sidebarEl.classList.add('closed');
