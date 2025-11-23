@@ -269,10 +269,11 @@ function atualizarProgresso(curso) {
     const bar = document.querySelector(".progress-bar");
     if (bar) bar.style.width = pct + "%";
 }
+
 const sidebar = document.getElementById("sidebar"); 
 const toggleBtn = document.getElementById("toggleSidebar");
 
 toggleBtn.addEventListener("click", () => {
     sidebar.classList.toggle("open");
-    toggleBtn.classList.toggle("open");
 });
+
