@@ -108,15 +108,17 @@ html, body {
 
 /* Sidebar */
 .sidebar {
-  width: var(--sidebar-w);
-  min-width: var(--sidebar-w);
-  background:#fff;
-  border-radius: var(--radius);
-  padding:14px;
-  box-shadow: 0 8px 30px rgba(16,24,40,0.04);
-  transition: width .3s ease, transform .3s ease;
-  position: relative;
-  z-index:2;
+    position: fixed;
+    top: 64px; /* abaixo da topbar */
+    left: 0;
+    width: 260px;
+    height: calc(100vh - 64px);
+    background: #fff;
+    border-right: 1px solid #ddd;
+    padding: 16px;
+    overflow-y: auto; /* scroll próprio */
+    transition: transform .3s ease;
+    z-index: 20;
 }
 
 /* Sidebar FECHADO — recolhe e some para esquerda */
@@ -131,11 +133,11 @@ html, body {
 /* Botão de abrir/fechar */
 .toggle-sidebar-btn {
     position: absolute;
-    top: 140px;
+    top: 40px;
     right: -16px;
     width: 32px;
     height: 32px;
-    background: #002fff;
+    background: var(--accent);
     color: white;
     border-radius: 50%;
     border: none;
@@ -147,7 +149,7 @@ html, body {
 }
 
 /* Gira seta */
-.sidebar.open .toggle-sidebar-btn span {
+.sidebar:not(.closed) .toggle-sidebar-btn span {
     transform: rotate(180deg);
 }
 
@@ -157,7 +159,10 @@ html, body {
 }
 
 .sidebar.open ~ .conteudo {
-    margin-left: var(--sidebar-w);
+    margin-left: 0;
+}
+.sidebar.closed {
+    transform: translateX(-260px);
 }
 
 .conteudo {
@@ -168,7 +173,9 @@ html, body {
   box-shadow: 0 8px 30px rgba(16,24,40,0.04);
   position:relative;
   transition: margin-left .3s ease;
+  margin-left: 260px;
 }
+
 
 /* Sidebar content */
 .course-title {
