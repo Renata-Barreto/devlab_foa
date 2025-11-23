@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aula</title>
     <link rel="stylesheet" href="css/aula.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
   </head>
 
   <body>
-    <!-- TOPBAR -->
     <div class="topbar">
       <div class="topbar-inner">
         <button id="btnVoltar" class="back-btn">← Voltar</button>
@@ -29,28 +29,26 @@
     </div>
 
     <div class="container">
-      <!-- SIDEBAR -->
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
           <div class="course-title"><h3 id="cursoNome">—</h3></div>
           
           <button id="toggleSidebar" class="toggle-sidebar-btn" aria-label="Abrir/Fechar">
-            <span>&#10095;</span>
+            <span>&#10096;</span>
           </button>
         </div>
 
-        <!-- área rolável -->
+        
         <div class="sidebar-inner">
           <div id="sidebar-modulos"></div>
         </div>
       </aside>
 
-      <!-- CONTEÚDO -->
-      <main class="conteudo" id="mainContent">
-        <!-- espaço para topbar fixa -->
+       <main class="conteudo" id="mainContent">
+   
         <div style="height: 12px;"></div>
 
-        <!-- Topo fixo da aula -->
+    
         <div class="top-info">
           <h2 id="topTitle"></h2>
           <p id="topMeta"></p>
@@ -59,10 +57,7 @@
         <h1 id="lessonTitle"></h1>
         <h3 id="lessonSub"></h3>
 
-        <!-- Corpo da aula -->
         <div id="lessonBody"></div>
-
-        <!-- Status da aula (marcar concluída) -->
         <div id="markStatus"></div>
 
         <div class="nav-buttons">
