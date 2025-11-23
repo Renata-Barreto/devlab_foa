@@ -1,479 +1,166 @@
 /* =========================================================
    ROOT VARIABLES
    ========================================================= */
-:root {
-  --accent: #3c2a4d;
-  --muted: #6b7280;
-  --bg: #ffffff;
-  --radius: 12px;
-
-  /* layout */
-  --sidebar-w: 260px;
+:root{
+  --accent:#3c2a4d;
+  --muted:#6b7280;
+  --bg:#ffffff;
+  --radius:12px;
+  --sidebar-w:260px;
+  --sidebar-collapsed-w:40px; /* largura visível quando fechado */
 }
 
 /* =========================================================
    GLOBAL RESET
    ========================================================= */
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: Poppins, sans-serif;
-  background: var(--bg);
-  color: #111;
-}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;font-family:Poppins,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:#111}
 
 /* =========================================================
    TOPBAR
    ========================================================= */
-.topbar {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 0 20px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.85));
-  box-shadow: 0 1px 0 rgba(16,24,40,0.04);
-  z-index: 50;
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:center;padding:0 20px;z-index:60;
+  background:linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,.85));
+  box-shadow:0 1px 0 rgba(16,24,40,.04);
 }
-
-.topbar-inner {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.progress-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.progress-text {
-  font-size: 13px;
-  color: var(--muted);
-  width: 160px;
-}
-
-.progress-track {
-  flex: 1;
-  height: 8px;
-  background: #eee;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  background: var(--accent);
-  width: 0%;
-}
-
-.nav-actions {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-}
-
-.nav-actions button,
-.back-btn {
-  background: transparent;
-  border: none;
-  color: var(--accent);
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 14px;
-}
+.topbar-inner{width:100%;max-width:1200px;display:flex;align-items:center;gap:16px}
+.progress-wrap{flex:1;display:flex;align-items:center;gap:12px}
+.progress-text{font-size:13px;color:var(--muted);width:160px}
+.progress-track{flex:1;height:8px;background:#eee;border-radius:999px;overflow:hidden}
+.progress-bar{height:100%;background:var(--accent);width:0%}
+.nav-actions{display:flex;gap:18px;align-items:center}
+.nav-actions button,.back-btn{background:transparent;border:none;color:var(--accent);font-weight:600;cursor:pointer;font-size:14px}
 
 /* =========================================================
    MAIN LAYOUT
    ========================================================= */
-.container {
-  display: flex;
-  width: 100%;
-  min-height: 100vh;
-  padding-top: 84px;
-  overflow-x: hidden;
-  transition: margin-left .3s ease;
+.container{display:flex;width:100%;min-height:100vh;padding-top:84px;overflow-x:hidden;}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+/* sidebar principal (abaixo da topbar) */
+.sidebar{
+  position:fixed;
+  top:64px;
+  left:0;
+  width:var(--sidebar-w);
+  height:calc(100vh - 64px);
+  background:#fff;
+  border-right:1px solid #e6e6e6;
+  display:flex;
+  flex-direction:column;
+  z-index:50;
+  transition:transform .28s ease, width .28s ease;
+  box-shadow:0 8px 30px rgba(16,24,40,0.04);
+}
+
+/* cabeçalho fixo dentro do sidebar (não rola) */
+.sidebar-header{
+  position:sticky;
+  top:0;
+  left:0;
+  background:#0b22ff;
+  color:#fff;
+  padding:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  z-index:55;
+  border-bottom-left-radius:8px;
+  border-bottom-right-radius:8px;
+}
+
+/* curso nome estilo */
+.course-title{font-weight:600;font-size:14px;line-height:1.1}
+
+/* area interna que rola */
+.sidebar-inner{overflow-y:auto;padding:12px}
+
+/* quando fechado, desloca para a esquerda, mantendo pequena largura visível */
+.sidebar.closed{
+  transform: translateX(calc(-1 * (var(--sidebar-w) - var(--sidebar-collapsed-w))));
+  width:var(--sidebar-w); /* mantemos a largura para transições coerentes */
+}
+
+/* botão toggle — sempre dentro do header, posicionado visualmente "fora" */
+.toggle-sidebar-btn{
+  position:relative; /* dentro do header; visualmente parece "fora" por negative margin */
+  margin-right:-16px;
+  margin-left:8px;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:none;
+  background:#fff;
+  color:#0b22ff;
+  display:inline-grid;
+  place-items:center;
+  cursor:pointer;
+  z-index:999;
+  box-shadow:0 4px 10px rgba(2,6,23,0.08);
+  transition:transform .2s ease;
+}
+
+/* gira ícone quando fechado */
+.sidebar.closed .toggle-sidebar-btn span{transform:rotate(180deg)}
+
+/* lista / itens */
+.module-block{margin-bottom:16px}
+.module-header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.lessons-list{display:flex;flex-direction:column;gap:8px}
+.sidebar-aula{padding:10px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+.sidebar-aula.atual{background:rgba(60,42,77,.08);border:1px solid rgba(60,42,77,.06)}
+.sidebar-aula.locked{opacity:.55;cursor:not-allowed}
+.sidebar-aula-left{display:flex;align-items:center;gap:10px}
+.sidebar-aula .num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(0,0,0,.08);font-weight:600}
+
+/* =========================================================
+   CONTEÚDO PRINCIPAL (empurra quando sidebar aberto)
+   ========================================================= */
+.conteudo{
+  margin-left:var(--sidebar-w);
+  transition:margin-left .28s ease, max-width .28s ease;
+  padding:28px;
+  min-height:calc(100vh - 84px);
+  background:#fff;
+  box-shadow:0 8px 30px rgba(16,24,40,0.04);
+  border-radius:12px;
+}
+
+/* quando o sidebar está "fechado", o conteúdo ocupa mais espaço
+   e deixamos 40px para o botão visível */
+.sidebar.closed ~ .conteudo{
+  margin-left:var(--sidebar-collapsed-w);
 }
 
 /* =========================================================
-   SIDEBAR 
+   BUTTON / CONTROLS (secundários)
    ========================================================= */
-.sidebar {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  width: var(--sidebar-w);
-  height: calc(100vh - 64px);
-  background: #fff;
-  border-right: 1px solid #ddd;
-  padding: 0;         
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;     
-  transition: transform .3s ease;
-  z-index: 20;
-}
-
-.sidebar-inner {
-  flex: 1;
-  overflow-y: auto;   
-  padding: 16px;
-}
-
-
-.sidebar.closed {
-  transform: translateX(calc(-100% + 40px));
-}
-/* Área fixa no topo do sidebar */
-.sidebar-header {
-  position: sticky;
-  top: 0;
-  left: 0;
-  background: #0b22ff;   /* cor que aparece no seu print */
-  color: #fff;
-  padding: 16px 14px;
-  z-index: 30;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Ajuste do botão para ficar dentro da caixa fixa */
-.sidebar-header .toggle-sidebar-btn {
-  position: static; /* remove absolute */
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #fff;
-  color: #0b22ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Conteúdo que rola */
-.sidebar-content {
-  margin-top: 10px;
-  padding: 10px 0;
-  overflow-y: auto;
-  height: calc(100vh - 64px - 70px); /* altura da tela - topbar - header fixo */
-}
-
-
-
-/* Botão de abrir/fechar */
-.toggle-sidebar-btn {
-  position: absolute;
-  top: 20px;
-  right: -16px;       /* fica para fora, grudado */
-  width: 32px;
-  height: 32px;
-  background: var(--accent);
-  color: #fff;
-  border-radius: 50%;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 9999;
-  transition: transform .3s ease;
-}
-
-/* Quando sidebar fecha → botão vai para borda da tela */
-.sidebar.closed ~ .toggle-sidebar-btn {
-  left: -16px;
-}
-
-/* rotacionar ícone */
-.sidebar.closed ~ .toggle-sidebar-btn span {
-  transform: rotate(180deg);
-}
-
-
-/* =========================================================
-   CONTEÚDO PRINCIPAL (empurra quando sidebar abre)
-   ========================================================= */
-.conteudo {
-  flex: 1;
-  background: #fff;
-  border-radius: 12px;
-  padding: 40px;
-  box-shadow: 0 8px 30px rgba(16,24,40,0.04);
-  position: relative;
-  transition: margin-left .3s ease;
-  margin-left: var(--sidebar-w);
-}
-
-/* Quando sidebar fechado → ocupar a tela inteira */
-.sidebar.closed ~ .conteudo {
-  margin-left: 0 !important;
-}
-.sidebar.closed {
-  transform: translateX(calc(-1 * var(--sidebar-w) + 20px)); 
-}
-
-.sidebar.closed .toggle-sidebar-btn {
-  transform: translateX(0) rotate(180deg); 
-}
-
-/* =========================================================
-   SIDEBAR – ITENS INTERNOS
-   ========================================================= */
-.course-title {
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-.module-block {
-  margin-bottom: 16px;
-}
-
-.module-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.module-header strong {
-  font-size: 13px;
-}
-
-.lessons-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.lesson-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.lesson-item:hover {
-  background: rgba(60,42,77,0.06);
-  border-color: rgba(60,42,77,0.03);
-}
-
-.lesson-item.active {
-  background: rgba(60,42,77,0.08);
-  border-color: rgba(60,42,77,0.06);
-}
-
-.lesson-item .left {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.lesson-index {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 13px;
-  font-weight: 600;
-  border: 2px solid rgba(60,42,77,0.08);
-}
-
-.lesson-title {
-  font-size: 14px;
-}
-
-.lesson-sub {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.badge-done {
-  background: #16a34a;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-}
-
-/* =========================================================
-   MAIN CONTENT
-   ========================================================= */
-.title {
-  font-size: 36px;
-  margin: 6px 0 10px;
-  color: #222;
-}
-
-.subtitle {
-  color: var(--muted);
-  margin-bottom: 14px;
-}
-
-.lesson-body {
-  line-height: 1.7;
-  color: #222;
-  margin-top: 16px;
-}
-
-.controls-top {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.btn {
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(0,0,0,0.06);
-  background: transparent;
-  cursor: pointer;
-}
-
-.btn.primary {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-}
+.nav-buttons{margin-top:18px}
+.btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(0,0,0,.06);background:transparent;cursor:pointer}
+.btn.primary{background:var(--accent);color:#fff;border:none}
+.badge-done{background:#16a34a;color:#fff;padding:4px 8px;border-radius:999px;font-size:12px}
 
 /* =========================================================
    RESPONSIVE
    ========================================================= */
+@media (max-width:1000px){
+  /* no mobile, conteúdo não é empurrado por padrão */
+  .conteudo{margin-left:0;padding:20px}
 
-@media (max-width: 1000px) {
+  /* sidebar vira drawer fora da tela por padrão */
+  .sidebar{transform:translateX(-100%);box-shadow:4px 0 20px rgba(0,0,0,0.12)}
+  /* quando aberta (JS adiciona .open), aparece */
+  .sidebar.open{transform:translateX(0)}
+  /* quando "fechada" mantemos botão visível à esquerda (calc) */
+  .sidebar.closed{transform:translateX(calc(-100% + var(--sidebar-collapsed-w)))}
 
-  /* Conteúdo não é empurrado no mobile */
-  .conteudo {
-    margin-left: 0 !important;
-  }
-
-  /* Sidebar vira drawer */
-  .sidebar {
-    transform: translateX(-100%);
-    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-  }
-
-  .sidebar.closed {
-    transform: translateX(-100% + 40px); /* só 40px pra fora */
-  }
-
-  /* Botão mais colado na borda */
-  .toggle-sidebar-btn {
-    top: 100px;
-  }
+  /* botão do toggle fica mais alto */
+  .toggle-sidebar-btn{top:8px;margin-right:-18px}
 }
 
-
-/* =========================================================
-   CLASSES DINÂMICAS DO JS (LESSONS)
-   ========================================================= */
-.lesson-entry {
-  padding: 8px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.lesson-entry.locked {
-  opacity: 0.5;
-  cursor: not-allowed !important;
-}
-
-.lesson-entry.active {
-  background: rgba(60,42,77,0.08);
-  border: 1px solid rgba(60,42,77,0.15);
-}
-
-.sidebar-aula {
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  border-radius: 10px;
-  margin-bottom: 6px;
-}
-
-.sidebar-aula.atual {
-  background: rgba(60,42,77,0.08);
-  border: 1px solid rgba(60,42,77,0.15);
-}
-
-.sidebar-aula.locked {
-  opacity: .5;
-  cursor: not-allowed;
-}
-
-.sidebar-aula-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sidebar-aula-right {
-  display: flex;
-  align-items: center;
-}
-
-.sidebar-aula .num {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.1);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-/* Tooltip */
-.tooltip:hover::after {
-  content: attr(data-tip);
-  position: absolute;
-  background: #000;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-  transform: translateY(-4px);
-}
-
-/* Botão inferior */
-.btn-bottom {
-  margin-top: 40px;
-  width: 100%;
-  padding: 14px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.btn-bottom:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  opacity: .7;
-}
+/* pequenas melhorias visuais */
+.lesson-item:hover{background:rgba(60,42,77,.06)}

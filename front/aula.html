@@ -31,40 +31,38 @@
     <div class="container">
       <!-- SIDEBAR -->
       <aside class="sidebar" id="sidebar">
-          <button id="toggleSidebar" class="toggle-sidebar-btn">
-        <span>&#10095;</span>
-          </button>
-
         <div class="sidebar-header">
-          <div class="course-title">
-            <h2 id="cursoNome"> Curso De JavaScript</h2>
-          </div>
-        
-
-          
+          <div class="course-title" id="cursoNome">—</div>
+          <!-- toggle fica dentro do header (não é afetada pela rolagem) -->
+          <button id="toggleSidebar" class="toggle-sidebar-btn" aria-label="Abrir/Fechar">
+            <span>&#10095;</span>
+          </button>
         </div>
+
+        <!-- área rolável -->
         <div class="sidebar-inner">
-         
           <div id="sidebar-modulos"></div>
         </div>
       </aside>
 
-      <button id="toggleSidebar" class="toggle-sidebar-btn">
-        <span>&#10095;</span>
-      </button>
-
       <!-- CONTEÚDO -->
-      <main class="conteudo">
-        <div style="height: 80px"></div>
+      <main class="conteudo" id="mainContent">
+        <!-- espaço para topbar fixa -->
+        <div style="height: 12px;"></div>
 
-        <h2 id="topTitle"></h2>
-        <p id="topMeta"></p>
+        <!-- Topo fixo da aula -->
+        <div class="top-info">
+          <h2 id="topTitle"></h2>
+          <p id="topMeta"></p>
+        </div>
 
         <h1 id="lessonTitle"></h1>
         <h3 id="lessonSub"></h3>
 
+        <!-- Corpo da aula -->
         <div id="lessonBody"></div>
 
+        <!-- Status da aula (marcar concluída) -->
         <div id="markStatus"></div>
 
         <div class="nav-buttons">
