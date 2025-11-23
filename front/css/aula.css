@@ -6,7 +6,7 @@
   --muted:#6b7280;
   --bg:#ffffff;
   --radius:12px;
-  --sidebar-w:260px;
+  --sidebar-w:300px;
   --sidebar-collapsed-w:40px; /* largura visível quando fechado */
 }
 
@@ -61,7 +61,7 @@ html,body{margin:0;padding:0;height:100%;font-family:Poppins,system-ui,Segoe UI,
   position:sticky;
   top:0;
   left:0;
-  background:#0b22ff;
+  background:var(--accent);
   color:#fff;
   padding:14px;
   display:flex;
@@ -95,7 +95,7 @@ html,body{margin:0;padding:0;height:100%;font-family:Poppins,system-ui,Segoe UI,
   border-radius:50%;
   border:none;
   background:#fff;
-  color:#0b22ff;
+  color:var(--accent);
   display:inline-grid;
   place-items:center;
   cursor:pointer;
@@ -128,6 +128,8 @@ html,body{margin:0;padding:0;height:100%;font-family:Poppins,system-ui,Segoe UI,
   background:#fff;
   box-shadow:0 8px 30px rgba(16,24,40,0.04);
   border-radius:12px;
+  max-width: 900px;       
+  margin-right: auto;   
 }
 
 /* quando o sidebar está "fechado", o conteúdo ocupa mais espaço
