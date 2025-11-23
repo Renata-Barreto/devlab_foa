@@ -1,51 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aula</title>
-    <link rel="stylesheet" href="css/aula.css" />
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula</title>
+  <link rel="stylesheet" href="css/aula.css">
+</head>
 
-  <body>
-    <div class="container">
-      <!-- Sidebar -->
-      <aside class="sidebar" id="sidebar">
-        <h2 id="cursoNome"></h2>
+<body>
 
-        <!-- ESTE é o ID correto que o JS usa -->
-        <div id="sidebar-modulos"></div>
-      </aside>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <button id="btnVoltar" class="back-btn">← Voltar</button>
 
-      <!-- Conteúdo -->
-      <main class="conteudo">
-        <!-- Título e subtítulo com IDs QUE O JS ESPERA -->
-        <!-- Topo fixo da aula -->
-        <div class="top-info">
-          <h2 id="topTitle"></h2>
-          <p id="topMeta"></p>
+      <div class="progress-wrap">
+        <span class="progress-text">0/0 aulas — 0%</span>
+
+        <div class="progress-track">
+          <div class="progress-bar"></div>
         </div>
+      </div>
 
-        <h1 id="lessonTitle"></h1>
-        <h3 id="lessonSub"></h3>
-
-        <!-- Corpo da aula -->
-        <div id="lessonBody"></div>
-
-        <!-- Status da aula (marcar concluída) -->
-        <div id="markStatus"></div>
-
-        <div class="nav-buttons">
-          <button id="prevBtn">Aula Anterior</button>
-
-          <!-- botao concluir -->
-          <button id="markBtn">Concluir Aula</button>
-
-          <button id="nextBtn">Próxima Aula</button>
-        </div>
-      </main>
+      <div class="nav-actions">
+        <button id="btnPrev">Anterior</button>
+        <button id="btnNext">Próxima</button>
+      </div>
     </div>
+  </div>
 
-    <script src="js/aula.js"></script>
-  </body>
+  <div class="container">
+    
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <h2 id="cursoNome"></h2>
+
+      <div id="sidebar-modulos"></div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="conteudo">
+
+      <!-- Espaço reservado devido à topbar fixa -->
+      <div style="height: 80px;"></div>
+
+      <h2 id="topTitle"></h2>
+      <p id="topMeta"></p>
+
+      <h1 id="lessonTitle"></h1>
+      <h3 id="lessonSub"></h3>
+
+      <div id="lessonBody"></div>
+
+      <div id="markStatus"></div>
+
+      <!-- Botão concluir -->
+      <div class="nav-buttons">
+        <button id="markBtn">Concluir Aula</button>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="js/aula.js"></script>
+</body>
 </html>
