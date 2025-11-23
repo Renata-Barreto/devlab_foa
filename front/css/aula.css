@@ -385,35 +385,34 @@ html, body {
   opacity: .7;
 }
 /* Botão flutuante */
+/* Botão dentro do sidebar */
 .toggle-sidebar-btn {
-    position: fixed;
+    position: absolute;
     top: 140px;
-    left: 0;
-    transform: translateX(-50%);
+    right: -16px; /* sai metade pra fora */
     width: 32px;
     height: 32px;
     background: #002fff;
     color: white;
-    border: none;
-    outline: none;
-    cursor: pointer;
     border-radius: 50%;
-    z-index: 9999;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: 0.3s ease;
+    cursor: pointer;
+    transition: transform .3s ease;
 }
 
-/* Quando o sidebar estiver aberto, vira uma seta para a esquerda */
-.toggle-sidebar-btn.open span {
+/* Quando o sidebar abre, gira a seta */
+#sidebar.open .toggle-sidebar-btn span {
     transform: rotate(180deg);
 }
-#sidebar.open {
-    transform: translateX(0); /* mostra */
+#content {
+    transition: margin-left .3s ease;
 }
 
-#sidebar {
-    transform: translateX(-260px); /* escondido */
-    transition: 0.3s ease;
+/* Quando o sidebar abre */
+#sidebar.open ~ #content {
+    margin-left: 260px;  /* mesma largura do sidebar */
 }
+
