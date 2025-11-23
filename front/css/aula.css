@@ -126,7 +126,6 @@ html, body {
   z-index: 20;
 }
 
-
 .sidebar-inner {
   flex: 1;
   overflow-y: auto;   
@@ -141,11 +140,12 @@ html, body {
 
 /* Botão de abrir/fechar */
 .toggle-sidebar-btn {
-  position: absolute;
-  top: 40px;
-  right: -16px;
+  position: fixed;      /* ← AGORA ele não some nunca */
+  top: 104px;           /* 64px da topbar + 40px */
+  left: calc(var(--sidebar-w) - 16px);
   width: 32px;
   height: 32px;
+
   background: var(--accent);
   color: #fff;
   border-radius: 50%;
@@ -154,13 +154,20 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform .3s ease;
+  z-index: 3000;        /* ← sempre acima de tudo */
+  transition: transform .3s ease, left .3s ease;
 }
 
-/* Girar seta quando fechado */
-.sidebar.closed .toggle-sidebar-btn span {
+/* Quando sidebar fecha → botão vai para borda da tela */
+.sidebar.closed ~ .toggle-sidebar-btn {
+  left: -16px;
+}
+
+/* rotacionar ícone */
+.sidebar.closed ~ .toggle-sidebar-btn span {
   transform: rotate(180deg);
 }
+
 
 /* =========================================================
    CONTEÚDO PRINCIPAL (empurra quando sidebar abre)
@@ -169,7 +176,7 @@ html, body {
   flex: 1;
   background: #fff;
   border-radius: 12px;
-  padding: 28px;
+  padding: 40px;
   box-shadow: 0 8px 30px rgba(16,24,40,0.04);
   position: relative;
   transition: margin-left .3s ease;
@@ -314,44 +321,27 @@ html, body {
 
 @media (max-width: 1000px) {
 
- 
+  /* Conteúdo não é empurrado no mobile */
   .conteudo {
     margin-left: 0 !important;
-    width: 100%;
   }
 
-  
+  /* Sidebar vira drawer */
   .sidebar {
-    width: var(--sidebar-w);
-    min-width: var(--sidebar-w);
-    transform: translateX(-100%); 
-    position: fixed;
-    top: 64px;
-    left: 0;
-    height: calc(100vh - 64px);
-    z-index: 999; 
-    border-right: 1px solid #ddd;
-  }
-
- 
-  .sidebar:not(.closed) {
-    transform: translateX(0);
+    transform: translateX(-100%);
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
   }
 
   .sidebar.closed {
-    transform: translateX(calc(-100% + 40px)); 
-    width: var(--sidebar-w); 
-    min-width: var(--sidebar-w);
-    padding: 16px;
+    transform: translateX(-100% + 40px); /* só 40px pra fora */
   }
 
-
+  /* Botão mais colado na borda */
   .toggle-sidebar-btn {
-    right: -16px;
-    top: 40px;
-    z-index: 2000;
+    top: 100px;
   }
 }
+
 
 /* =========================================================
    CLASSES DINÂMICAS DO JS (LESSONS)
