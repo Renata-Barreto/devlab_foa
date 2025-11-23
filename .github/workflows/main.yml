@@ -2,7 +2,7 @@ name: Deploy Site Windows Server
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]   
 
 jobs:
   deploy:
@@ -12,23 +12,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup SSH agent
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
     - name: Copy files to Windows Server
-      uses: appleboy/scp-action@v0.1.0
+      uses: appleboy/scp-action@0.1.4
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        source: "./"                 # envia todos os arquivos do repo
+        source: "./"                 
         target: ${{ secrets.REMOTE_PATH }}
 
     - name: Restart IIS (optional)
-      uses: appleboy/ssh-action@v0.1.0
+      uses: appleboy/ssh-action@0.1.4
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
@@ -36,3 +31,4 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           iisreset
+
