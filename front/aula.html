@@ -1,52 +1,49 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aula</title>
-  <link rel="stylesheet" href="css/aula.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aula</title>
+    <link rel="stylesheet" href="css/aula.css" />
+  </head>
 
-<body>
+  <body>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-inner">
+        <button id="btnVoltar" class="back-btn">← Voltar</button>
 
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="topbar-inner">
-      <button id="btnVoltar" class="back-btn">← Voltar</button>
+        <div class="progress-wrap">
+          <span class="progress-text">0/0 aulas — 0%</span>
 
-      <div class="progress-wrap">
-        <span class="progress-text">0/0 aulas — 0%</span>
+          <div class="progress-track">
+            <div class="progress-bar"></div>
+          </div>
+        </div>
 
-        <div class="progress-track">
-          <div class="progress-bar"></div>
+        <div class="nav-actions">
+          <button id="btnPrev">Anterior</button>
+          <button id="btnNext">Próxima</button>
         </div>
       </div>
-
-      <div class="nav-actions">
-        <button id="btnPrev">Anterior</button>
-        <button id="btnNext">Próxima</button>
-      </div>
     </div>
-  </div>
 
-  <div class="container">
-    
+   <div class="container">
+
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
 
-    <button id="toggleSidebar" class="toggle-sidebar-btn">
-        <span>&#10095;</span>
-    </button>
+        <button id="toggleSidebar" class="toggle-sidebar-btn">
+            <span>&#10095;</span>
+        </button>
 
-    <h2 id="cursoNome"></h2>
+        <h2 id="cursoNome"></h2>
 
-    <div id="sidebar-modulos"></div>
+        <div id="sidebar-modulos"></div>
 
-</aside>
-
+    </aside>
 
     <!-- CONTEÚDO -->
-   <div id="content">
     <main class="conteudo">
 
         <div style="height: 80px;"></div>
@@ -62,15 +59,15 @@
         <div id="markStatus"></div>
 
         <div class="nav-buttons">
-          <button id="markBtn">Concluir Aula</button>
+            <button id="markBtn">Concluir Aula</button>
         </div>
 
     </main>
-</div>
 
 
-  </div>
 
-  <script src="js/aula.js"></script>
-</body>
+    </div>
+
+    <script src="js/aula.js"></script>
+  </body>
 </html>
