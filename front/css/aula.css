@@ -126,10 +126,8 @@ html,body{margin:0;padding:0;height:100%;font-family:Poppins,system-ui,Segoe UI,
   padding:28px;
   min-height:calc(100vh - 84px);
   background:#fff;
-  box-shadow:0 8px 30px rgba(16,24,40,0.04);
-  border-radius:12px;
-  max-width: 900px;       
-  margin-right: auto;   
+  max-width:900px;        
+ 
 }
 
 /* quando o sidebar está "fechado", o conteúdo ocupa mais espaço
