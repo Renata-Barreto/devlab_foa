@@ -1,8 +1,8 @@
-name: Deploy Site Windows Server
+name: Deploy Linux Server
 
 on:
   push:
-    branches: [ "main" ] 
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -12,7 +12,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Copy files to Windows Server
+    - name: Copy files to Linux Server
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -22,7 +22,7 @@ jobs:
         source: "./"
         target: ${{ secrets.REMOTE_PATH }}
 
-    - name: Restart IIS (optional)
+    - name: Restart web server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -30,6 +30,6 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          iisreset
+          sudo systemctl restart nginx
 
 
