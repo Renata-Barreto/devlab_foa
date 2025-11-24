@@ -21,7 +21,9 @@ app.use(
   cors({
     origin:[
         'https://devlab-foa.onrender.com',
-        'http://localhost:3000',],
+        'http://localhost:3000',
+        'http://thedevlab.com.br', 
+        'http://www.thedevlab.com.br'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
