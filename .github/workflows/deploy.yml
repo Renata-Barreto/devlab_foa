@@ -1,4 +1,4 @@
-name: Deploy Linux Server
+name: Deploy Node.js App
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
         source: "./"
         target: ${{ secrets.REMOTE_PATH }}
 
-    - name: Restart web server
+    - name: Install dependencies and restart Node server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -30,6 +30,10 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          sudo systemctl restart nginx
+          cd ${{ secrets.REMOTE_PATH }}/src/backend
+          npm install
+          pm2 stop meu-site || true
+          pm2 start server.js --name meu-site
+          pm2 save
 
 
