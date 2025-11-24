@@ -15,11 +15,13 @@ jobs:
           script: |
             echo "Deploy iniciado!"
 
-            cd /var/www/devlab   # <-- CAMINHO DO SEU PROJETO NA VM
-
-            echo "Atualizando branch..."
+            cd /var/www/meu-site
             git fetch --all
-            git reset --hard origin/testes-aplicacoes   # <-- AQUI ESCOLHE A BRANCH
+            git reset --hard origin/testes-aplicacoes
+            npm install
+            pm2 reload devlab || pm2 start server.js --name devlab
+            pm2 save
+
 
             echo "Instalando dependências..."
             npm install
