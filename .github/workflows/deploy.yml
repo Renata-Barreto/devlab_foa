@@ -1,4 +1,4 @@
-name: Test SSH
+name: Deploy
 on: [push]
 
 jobs:
@@ -13,9 +13,21 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            echo "Funcionou!"
-            whoami
-            pwd
+            echo "Deploy iniciado!"
+
+            cd /var/www/devlab   # <-- CAMINHO DO SEU PROJETO NA VM
+
+            echo "Atualizando branch..."
+            git fetch --all
+            git reset --hard origin/testes-aplicacoes   # <-- AQUI ESCOLHE A BRANCH
+
+            echo "Instalando dependências..."
+            npm install
+
+            echo "Reiniciando aplicação..."
+            pm2 reload devlab || pm2 start server.js --name devlab
+            pm2 save
+
 
 
 
