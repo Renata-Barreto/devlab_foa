@@ -1,21 +1,19 @@
 name: Test SSH
-
-on:
-  push:
-    branches: [ "main" ]
+on: [push]
 
 jobs:
-  test-ssh:
+  ssh:
     runs-on: ubuntu-latest
     steps:
-      - name: Test SSH
+      - name: SSH into server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
+          port: 22
           script: |
+            echo "Funcionou!"
             whoami
             pwd
 
