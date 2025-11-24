@@ -121,154 +121,175 @@ class Topico {
     };
   }
 
-  static async findById(id, userId) {
-    try {
-      console.log(
-        `Iniciando Topico.findById para id: ${id}, userId: ${userId}`
-      );
-      const { rows } = await pool.query(
-        `
-        SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
-        FROM topicos t
-        JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
-        JOIN categorias c ON t.categoria_id = c.id
-        WHERE t.id = $1 AND t.ativo = true
+static async findById(id, userId) {
+  const client = await pool.connect();
+
+  try {
+    console.log(`Iniciando Topico.findById para id: ${id}, userId: ${userId}`);
+
+    await client.query("BEGIN");
+
+    // --- Tópico principal ---
+    const { rows } = await client.query(
+      `
+      SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
+      FROM topicos t
+      JOIN dev_lab_usuarios u ON t.user_id = u.id_usr
+      JOIN categorias c ON t.categoria_id = c.id
+      WHERE t.id = $1 AND t.ativo = true
       `,
-        [id]
-      );
-      console.log("Resultado da query principal:", rows);
-      if (rows.length === 0) {
-        console.log(`Tópico id ${id} não encontrado ou inativo`);
-        return null;
-      }
-      const row = rows[0];
-      console.log("Buscando tags para tópico id:", id);
-      const tagsQuery = await pool.query(
-        "SELECT t.nome FROM tags t JOIN topico_tags tt ON t.id = tt.tag_id WHERE tt.topico_id = $1",
-        [id]
-      );
-      console.log("Tags encontradas:", tagsQuery.rows);
-      console.log("Buscando respostas para tópico id:", id);
-      const respostasQuery = await pool.query(
-        "SELECT r.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar FROM respostas r JOIN dev_lab_usuarios u ON r.user_id = u.id_usr WHERE r.topico_id = $1",
-        [id]
-      );
-      console.log("Respostas encontradas:", respostasQuery.rows.length);
-      const respostas = await Promise.all(
-        respostasQuery.rows.map(async (resposta) => {
-          console.log(`Buscando replies para resposta id: ${resposta.id}`);
-          const repliesQuery = await pool.query(
-            "SELECT re.*, u.nome_usr AS user_nome FROM replies re JOIN dev_lab_usuarios u ON re.user_id = u.id_usr WHERE re.resposta_id = $1",
-            [resposta.id]
-          );
-          console.log(
-            `Replies para resposta id ${resposta.id}:`,
-            repliesQuery.rows
-          );
-          console.log(`Buscando likes para resposta id: ${resposta.id}`);
-          let likes = 0;
-          let liked = false;
-          try {
-            const likesQuery = await pool.query(
-              "SELECT COUNT(*) as count FROM resposta_likes WHERE resposta_id = $1",
-              [resposta.id]
-            );
-            likes = parseInt(likesQuery.rows[0].count) || 0;
-            if (userId) {
-              const userLikeQuery = await pool.query(
-                "SELECT 1 FROM resposta_likes WHERE resposta_id = $1 AND user_id = $2",
-                [resposta.id, userId]
-              );
-              liked = userLikeQuery.rows.length > 0;
-            }
-          } catch (err) {
-            console.warn(
-              `Erro ao buscar likes da resposta id ${resposta.id}:`,
-              err.message
-            );
-          }
-          return {
-            ...resposta,
-            user_nome: resposta.user_nome,
-            user_avatar: resposta.user_avatar,
-            likes,
-            liked,
-            replies: repliesQuery.rows,
-          };
-        })
-      );
-      console.log("Buscando likes para tópico id:", id);
-      let likes = 0;
-      let liked = false;
-      try {
-        const likesQuery = await pool.query(
-          "SELECT COUNT(*) as count FROM topico_likes WHERE topico_id = $1",
-          [id]
+      [id]
+    );
+
+    if (rows.length === 0) {
+      console.log(`Tópico id ${id} não encontrado ou inativo`);
+      await client.query("ROLLBACK");
+      return null;
+    }
+
+    const row = rows[0];
+
+    // --- Tags ---
+    const tagsQuery = await client.query(
+      `
+      SELECT t.nome 
+      FROM tags t 
+      JOIN topico_tags tt ON t.id = tt.tag_id 
+      WHERE tt.topico_id = $1
+      `,
+      [id]
+    );
+
+    // --- Respostas ---
+    const respostasQuery = await client.query(
+      `
+      SELECT r.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar 
+      FROM respostas r 
+      JOIN dev_lab_usuarios u ON r.user_id = u.id_usr 
+      WHERE r.topico_id = $1
+      `,
+      [id]
+    );
+
+    const respostas = await Promise.all(
+      respostasQuery.rows.map(async (resposta) => {
+        // Replies
+        const repliesQuery = await client.query(
+          `
+          SELECT re.*, u.nome_usr AS user_nome 
+          FROM replies re 
+          JOIN dev_lab_usuarios u ON re.user_id = u.id_usr 
+          WHERE re.resposta_id = $1
+          `,
+          [resposta.id]
         );
+
+        // Likes da resposta
+        let likes = 0;
+        let liked = false;
+
+        const likesQuery = await client.query(
+          "SELECT COUNT(*) AS count FROM resposta_likes WHERE resposta_id = $1",
+          [resposta.id]
+        );
+
         likes = parseInt(likesQuery.rows[0].count) || 0;
+
         if (userId) {
-          const userLikeQuery = await pool.query(
-            "SELECT 1 FROM topico_likes WHERE topico_id = $1 AND user_id = $2",
-            [id, userId]
+          const userLikeQuery = await client.query(
+            "SELECT 1 FROM resposta_likes WHERE resposta_id = $1 AND user_id = $2",
+            [resposta.id, userId]
           );
+
           liked = userLikeQuery.rows.length > 0;
         }
-      } catch (err) {
-        console.warn(`Erro ao buscar likes do tópico id ${id}:`, err.message);
-      }
-      console.log("Buscando avaliações para tópico id:", id);
-      let rating = 0;
-      let rating_count = 0;
-      let user_rating = 0;
-      try {
-        const ratingQuery = await pool.query(
-          "SELECT AVG(rating) as avg_rating, COUNT(*) as count FROM avaliacoes WHERE topico_id = $1",
-          [id]
-        );
-        rating = parseFloat(ratingQuery.rows[0].avg_rating) || 0;
-        rating_count = parseInt(ratingQuery.rows[0].count) || 0;
-        if (userId) {
-          const userRatingQuery = await pool.query(
-            "SELECT rating FROM avaliacoes WHERE topico_id = $1 AND user_id = $2",
-            [id, userId]
-          );
-          user_rating = userRatingQuery.rows[0]?.rating || 0;
-        }
-      } catch (err) {
-        console.warn(
-          `Erro ao buscar avaliações do tópico id ${id}:`,
-          err.message
-        );
-      }
-      return {
-        id: row.id,
-        user_id: row.user_id,
-        user: { nome: row.user_nome, avatar: row.user_avatar },
-        categoria: row.categoria_nome,
-        categoria_id: row.categoria_id,
-        titulo: row.titulo,
-        descricao: row.descricao,
-        views: row.views || 0,
-        likes,
-        liked,
-        comments: row.comments || 0,
-        time: row.created_at,
-        tags: tagsQuery.rows.map((tag) => tag.nome),
-        ativo: row.ativo,
-        status: row.status || "aberto",
-        rating,
-        rating_count,
-        user_rating,
-        respostas,
-      };
-    } catch (error) {
-      console.error(
-        `Erro em Topico.findById (id: ${id}, userId: ${userId}):`,
-        error.stack
+
+        return {
+          ...resposta,
+          likes,
+          liked,
+          replies: repliesQuery.rows,
+        };
+      })
+    );
+
+    // --- Likes do tópico ---
+    let likes = 0;
+    let liked = false;
+
+    const likesQuery = await client.query(
+      "SELECT COUNT(*) as count FROM topico_likes WHERE topico_id = $1",
+      [id]
+    );
+
+    likes = parseInt(likesQuery.rows[0].count) || 0;
+
+    if (userId) {
+      const userLikeQuery = await client.query(
+        "SELECT 1 FROM topico_likes WHERE topico_id = $1 AND user_id = $2",
+        [id, userId]
       );
-      throw error;
+      liked = userLikeQuery.rows.length > 0;
     }
+
+    // --- Avaliações ---
+    let rating = 0;
+    let rating_count = 0;
+    let user_rating = 0;
+
+    const ratingQuery = await client.query(
+      `SELECT AVG(rating) as avg_rating, COUNT(*) as count 
+       FROM avaliacoes 
+       WHERE topico_id = $1`,
+      [id]
+    );
+
+    rating = parseFloat(ratingQuery.rows[0].avg_rating) || 0;
+    rating_count = parseInt(ratingQuery.rows[0].count) || 0;
+
+    if (userId) {
+      const userRatingQuery = await client.query(
+        "SELECT rating FROM avaliacoes WHERE topico_id = $1 AND user_id = $2",
+        [id, userId]
+      );
+      user_rating = userRatingQuery.rows[0]?.rating || 0;
+    }
+
+    await client.query("COMMIT");
+
+    return {
+      id: row.id,
+      user_id: row.user_id,
+      user: { nome: row.user_nome, avatar: row.user_avatar },
+      categoria: row.categoria_nome,
+      categoria_id: row.categoria_id,
+      titulo: row.titulo,
+      descricao: row.descricao,
+      views: row.views || 0,
+      likes,
+      liked,
+      comments: row.comments || 0,
+      time: row.created_at,
+      tags: tagsQuery.rows.map((tag) => tag.nome),
+      ativo: row.ativo,
+      status: row.status || "aberto",
+      rating,
+      rating_count,
+      user_rating,
+      respostas,
+    };
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error(
+      `Erro em Topico.findById (id: ${id}, userId: ${userId}):`,
+      error.stack
+    );
+    throw error;
+  } finally {
+    client.release();
   }
+}
+
 
   static async findByUserId(userId) {
     try {

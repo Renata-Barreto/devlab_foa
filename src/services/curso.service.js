@@ -29,7 +29,7 @@ const cursoService = {
           nome: r.nome_modulo,
           ordem_modulo: r.ordem_modulo,
           concluido: false,
-          aberto: false, // <-- já inicializa
+          aberto: false, 
           aulas: [],
         };
       }
