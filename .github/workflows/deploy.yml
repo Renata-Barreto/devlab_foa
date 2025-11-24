@@ -14,22 +14,11 @@ jobs:
           port: 22
           script: |
             echo "Deploy iniciado!"
-
             cd /var/www/meu-site
-            git fetch --all
-            git reset --hard origin/testes-aplicacoes
+            git fetch origin
+            git reset --hard origin/teste-aplicacoes
             npm install
             pm2 reload devlab || pm2 start server.js --name devlab
             pm2 save
-
-
-            echo "Instalando dependências..."
-            npm install
-
-            echo "Reiniciando aplicação..."
-            pm2 reload devlab || pm2 start server.js --name devlab
-            pm2 save
-
-
 
 
