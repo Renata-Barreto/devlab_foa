@@ -9,31 +9,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      # 1️⃣ Puxa o repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Copy files to Linux Server
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        source: "./"
-        target: ${{ secrets.REMOTE_PATH }}
+      # 2️⃣ Copia todos os arquivos para a VM
+      - name: Copy files to Linux Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "./"
+          target: ${{ secrets.REMOTE_PATH }}
 
-    - name: Install dependencies and restart Node server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        script: |
-          cd ${{ secrets.REMOTE_PATH }}/src/backend
-          npm install
-          pm2 stop meu-site || true
-          pm2 start server.js --name meu-site
-          pm2 save
+      # 3️⃣ Instala dependências e reinicia Node.js via PM2
+      - name: Install dependencies and restart Node server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}
+            npm install
+            pm2 stop meu-site || true
+            pm2 start src/server.js --name meu-site
+            pm2 save
 
 
