@@ -157,7 +157,7 @@ function renderModulos(modulos) {
         <div style="margin-left:8px">
           ${
             a.liberada
-              ? `<button class="btn-small open-aula" data-id="${a.id}">Abrir</button>`
+              ? `<button class="btn-small open-aula" data-id="${a.aula_id}">Abrir</button>`
               : `<span class="tooltip" data-tip="Conclua a aula anterior para liberar"><i class='fa-solid fa-lock'></i></span>`
           }
         </div>
@@ -166,8 +166,8 @@ function renderModulos(modulos) {
       if (a.liberada) {
         la.querySelector(".open-aula").addEventListener("click", () => {
           // salva última aula e abre
-          localStorage.setItem("ultimaAula", a.id);
-          window.location.href = `/aula.html?id=${a.id}`;
+          localStorage.setItem("ultimaAula", a.aula_idid);
+          window.location.href = `/aula.html?id=${a.aula_id}`;
         });
       } else {
        

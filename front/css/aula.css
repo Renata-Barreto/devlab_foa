@@ -148,3 +148,7 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.sidebar-aula a{
+  text-decoration:none;
+  color: inherit;
+}
