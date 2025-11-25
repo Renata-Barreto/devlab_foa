@@ -24,7 +24,7 @@ const cursoController = {
     try {
       const { idAula } = req.params;
       const userId = req.user.id_usr;
-
+console.log('Chamando CursoService.concluirAula com', idAula, userId);
       const response = await CursoService.concluirAula(idAula, userId);
       res.json(response);
     } catch (e) {
