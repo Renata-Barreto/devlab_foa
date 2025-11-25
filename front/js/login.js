@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const apiUrl = "https://devlab-foa.onrender.com/api/auth/login"; // Novo endpoint
+      const apiUrl = "/api/auth/login"; 
       console.log(`Enviando requisição para: ${apiUrl}`);
       const response = await fetch(apiUrl, {
         method: "POST",
