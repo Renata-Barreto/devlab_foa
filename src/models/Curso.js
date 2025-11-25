@@ -49,24 +49,28 @@ const Curso = {
     return result;
   },
 
-  concluirAula: async (aulaId, userId) => {
-  const aulaCheck = await pool.query('SELECT * FROM aulas WHERE aula_id = $1', [aulaId]);
-  console.log("aulaCheck.rows:", aulaCheck.rows);
+ concluirAula: async (aulaId, userId) => {
+  const aulaCheck = await pool.query(`
+    SELECT aula_id, modulo_id, curso_id
+    FROM aulas
+    WHERE aula_id = $1
+  `, [aulaId]);
+
   if (!aulaCheck.rowCount) throw new Error('Aula não encontrada');
 
+  const aula = aulaCheck.rows[0];
+
   const result = await pool.query(`
-    INSERT INTO progresso_aluno (id_usr, aula_id, status, atualizado_em)
-    VALUES ($1, $2, 'concluida', NOW())
+    INSERT INTO progresso_aluno (id_usr, curso_id, modulo_id, aula_id, status, atualizado_em)
+    VALUES ($1, $2, $3, $4, 'concluida', NOW())
     ON CONFLICT (id_usr, aula_id)
     DO UPDATE SET status = 'concluida', atualizado_em = NOW()
     RETURNING *;
-  `, [userId, aulaId]);
-
-  console.log("result.rows:", result.rows);
-  if (!result.rowCount) throw new Error('Não foi possível concluir a aula');
+  `, [userId, aula.curso_id, aula.modulo_id, aulaId]);
 
   return { message: 'Aula concluída com sucesso' };
 },
+
 
 
   getAulaById: async (aulaId) => {
