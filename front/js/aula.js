@@ -1,6 +1,6 @@
 
 
-const API_BASE = "https://devlab-foa.onrender.com/api";
+const API_BASE = "/api";
 
 // auth
 const raw = localStorage.getItem("auth");
@@ -71,11 +71,7 @@ async function carregarAula() {
 
 function renderAula(aula, curso){
   titleEl.textContent = aula.titulo || "Sem título";
-  subEl.textContent = aula.nome_modulo || "";
   bodyEl.innerHTML = aula.conteudo || "<p>Sem conteúdo</p>";
-
-  topTitle.textContent = aula.titulo;
-  topMeta.textContent = `${aula.nome_modulo} — ${aula.nome_curso}`;
 
   try { localStorage.setItem("ultimaAula", aula.aula_id); } catch {}
 

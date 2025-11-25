@@ -1,5 +1,5 @@
 // app.curso.js
-const API_BASE = "https://devlab-foa.onrender.com/api";
+const API_BASE = "/api";
 const authRaw = localStorage.getItem("auth");
 let auth;
 try {

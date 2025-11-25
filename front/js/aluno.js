@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     console.log('Enviando requisição para /api/users com token:', token);
-    const response = await fetch("https://devlab-foa.onrender.com/api/users", {
+    const response = await fetch("/api/users", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
