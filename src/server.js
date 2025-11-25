@@ -16,14 +16,15 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Configuração de CORS
+// Configura
 app.use(
   cors({
     origin:[
         'https://devlab-foa.onrender.com',
         'http://localhost:3000',
-        'http://thedevlab.com.br', 
-        'http://www.thedevlab.com.br'],
+        'https://thedevlab.com.br', 
+        'https://www.thedevlab.com.br',
+      'http://devlab-teste.eastus.cloudapp.azure.com/'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
