@@ -51,12 +51,14 @@ const Curso = {
 
   concluirAula: async (aulaId, userId) => {
     const result = await pool.query(
-      `UPDATE progresso_aluno
-        SET status = 'concluida', atualizado_em = NOW()
-        WHERE id_usr = $1 AND aula_id = $2
-        RETURNING *;`,
+      `INSERT INTO progresso_aluno (id_usr, aula_id, status, atualizado_em)
+      VALUES ($1, $2, 'concluida', NOW())
+      ON CONFLICT (id_usr, aula_id)
+      DO UPDATE SET status = 'concluida', atualizado_em = NOW()
+      RETURNING *;`,
       [userId, aulaId]
     );
+
     console.log("Resultado da query:", result);
 
     if (!result.rowCount) {
