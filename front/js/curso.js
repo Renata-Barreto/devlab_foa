@@ -166,7 +166,7 @@ function renderModulos(modulos) {
       if (a.liberada) {
         la.querySelector(".open-aula").addEventListener("click", () => {
           // salva última aula e abre
-          localStorage.setItem("ultimaAula", a.aula_idid);
+          localStorage.setItem("ultimaAula", a.aula_id);
           window.location.href = `/aula.html?id=${a.aula_id}`;
         });
       } else {
