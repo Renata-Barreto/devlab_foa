@@ -29,13 +29,13 @@ const cursoService = {
           nome: r.nome_modulo,
           ordem_modulo: r.ordem_modulo,
           concluido: false,
-          aberto: false, 
+          aberto: false,
           aulas: [],
         };
       }
 
       mapa[r.modulo_id].aulas.push({
-        id: r.aula_id,
+        aula_id: r.aula_id,          // ← padronizado
         titulo: r.nome_aula,
         conteudo: r.conteudo || "",
         status: r.aula_concluida ? "concluida" : "pendente",
@@ -44,6 +44,7 @@ const cursoService = {
       });
     });
 
+    // ordenar módulos e aulas
     curso.modulos = Object.values(mapa)
       .sort((a, b) => a.ordem_modulo - b.ordem_modulo)
       .map((mod) => {
@@ -52,44 +53,46 @@ const cursoService = {
         return mod;
       });
 
-    curso.modulos.forEach((mod) => {
-      // 1. liberar primeira aula
-      if (curso.modulos.length > 0 && curso.modulos[0].aulas.length > 0) {
-        curso.modulos[0].aulas[0].liberada = true;
+    curso.modulos.forEach((mod, index) => {
+
+      // 1. liberar a primeira aula do curso
+      if (index === 0 && mod.aulas.length > 0) {
+        mod.aulas[0].liberada = true;
       }
-      // 2. liberar a próxima aula após concluída
+
+      // 2. liberar próxima aula dentro do módulo
       for (let i = 0; i < mod.aulas.length - 1; i++) {
         if (mod.aulas[i].status === "concluida") {
           mod.aulas[i + 1].liberada = true;
         }
       }
-      // 3. definir módulo aberto (se tem aula liberada OU concluída)
-      mod.aberto = mod.aulas.some(
-        (a) => a.liberada || a.status === "concluida"
-      );
-      // 4. módulo concluído
-      mod.concluido = mod.aulas.every((a) => a.status === "concluida");
-      // NUMERAÇÃO GLOBAL
+
+      // módulo aberto se contém aula liberada ou concluída
+      mod.aberto = mod.aulas.some(a => a.liberada || a.status === "concluida");
+
+      // módulo concluído
+      mod.concluido = mod.aulas.every(a => a.status === "concluida");
     });
+
+    // numeração global
     let numeroGlobal = 1;
-    curso.modulos.forEach((mod) => {
-      mod.aulas.forEach((a) => {
-        a.numeroGlobal = numeroGlobal;
-        numeroGlobal++;
+    curso.modulos.forEach(mod => {
+      mod.aulas.forEach(a => {
+        a.numeroGlobal = numeroGlobal++;
       });
     });
 
     return curso;
   },
 
-  concluirAula: async (aulaId, userId) => {
-    console.log('Dentro do service, aulaId:', aulaId, 'userId:', userId);
+  concluirAula: async (aula_id, userId) => {
+    console.log("Service: concluir aula", aula_id, "userId", userId);
 
-  return await Curso.concluirAula(aulaId, userId);;
+    return await Curso.concluirAula(aula_id, userId);
   },
 
-  getAulaById: async (aulaId) => {
-    const aula = await Curso.getAulaById(aulaId);
+  getAulaById: async (aula_id) => {
+    const aula = await Curso.getAulaById(aula_id);
     if (!aula) throw new Error("Aula não encontrada");
     return aula;
   },

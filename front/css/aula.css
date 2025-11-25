@@ -115,8 +115,6 @@ html,body{margin:0;padding:0;height:100%;font-family:Poppins,system-ui,Segoe UI,
  
 }
 
-/* quando o sidebar está "fechado", o conteúdo ocupa mais espaço
-   e deixamos 40px para o botão visível */
 .sidebar.closed ~ .conteudo{
   margin-left:var(--sidebar-collapsed-w);
 }
@@ -143,5 +141,10 @@ html,body{margin:0;padding:0;height:100%;font-family:Poppins,system-ui,Segoe UI,
   .toggle-sidebar-btn{top:8px;margin-right:-18px}
 }
 
-/* pequenas melhorias visuais */
+
 .lesson-item:hover{background:rgba(60,42,77,.06)}
+button.disabled,
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
