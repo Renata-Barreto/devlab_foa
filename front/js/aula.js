@@ -44,6 +44,25 @@ async function carregarAula() {
       headers: { Authorization: `Bearer ${auth.token}` }
     });
     const curso = rCurso.ok ? await rCurso.json() : null;
+    if (curso && curso.modulos) {
+      let aulaNoCurso = null;
+      
+      
+      curso.modulos.forEach(mod => {
+        const encontrada = (mod.aulas || []).find(a => String(a.aula_id) === String(aula.aula_id));
+        if (encontrada) aulaNoCurso = encontrada;
+      });
+
+     
+      if (aulaNoCurso) {
+        if (aulaNoCurso.status === 'concluida' || aulaNoCurso.concluida === true) {
+          aula.concluida = true; 
+        }
+        if (aulaNoCurso.liberada) {
+            aula.liberada = true;
+        }
+      }
+    }
 
     renderAula(aula, curso);
 
