@@ -83,10 +83,9 @@ const cursoService = {
   },
 
   concluirAula: async (aulaId, userId) => {
-    const aula = await Curso.concluirAula(aulaId, userId);
-    if (!aula.rowCount) throw new Error("Aula não encontrada");
+    const result = await Curso.concluirAula(aulaId, userId);
 
-    return { message: "Aula concluída com sucesso" };
+  return result;
   },
 
   getAulaById: async (aulaId) => {
