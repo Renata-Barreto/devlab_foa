@@ -68,8 +68,6 @@ console.log(result.rows); // <-- Confirma que a linha foi criada ou atualizada
 
 if (!result.rowCount) throw new Error('Não foi possível concluir a aula');
 return { message: 'Aula concluída com sucesso' };
-
-    return { message: "Aula concluída com sucesso" };;
   },
 
   getAulaById: async (aulaId) => {

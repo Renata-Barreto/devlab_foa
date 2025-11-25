@@ -84,9 +84,8 @@ const cursoService = {
 
   concluirAula: async (aulaId, userId) => {
     console.log('Dentro do service, aulaId:', aulaId, 'userId:', userId);
-    const result = await Curso.concluirAula(aulaId, userId);
 
-  return result;
+  return await Curso.concluirAula(aulaId, userId);;
   },
 
   getAulaById: async (aulaId) => {
