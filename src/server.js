@@ -24,7 +24,7 @@ app.use(
         'http://localhost:3000',
         'https://thedevlab.com.br', 
         'https://www.thedevlab.com.br',
-      'http://devlab-teste.eastus.cloudapp.azure.com/'],
+      'http://devlab-teste.eastus.cloudapp.azure.com'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
