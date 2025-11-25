@@ -52,6 +52,7 @@ const Curso = {
   concluirAula: async (aulaId, userId) => {
  // 1. Verifica se a aula existe
 const aulaCheck = await pool.query('SELECT * FROM aula WHERE id = $1', [aulaId]);
+console.log(aulaCheck.rows); // <-- Verifica se a consulta retornou resultados
 if (!aulaCheck.rowCount) throw new Error('Aula não encontrada');
 
 // 2. Insere ou atualiza o progresso do aluno
