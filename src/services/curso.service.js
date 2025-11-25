@@ -35,7 +35,7 @@ const cursoService = {
       }
 
       mapa[r.modulo_id].aulas.push({
-        aula_id: r.aula_id,          // ← padronizado
+        aula_id: r.aula_id,         
         titulo: r.nome_aula,
         conteudo: r.conteudo || "",
         status: r.aula_concluida ? "concluida" : "pendente",
@@ -44,7 +44,6 @@ const cursoService = {
       });
     });
 
-    // ordenar módulos e aulas
     curso.modulos = Object.values(mapa)
       .sort((a, b) => a.ordem_modulo - b.ordem_modulo)
       .map((mod) => {
@@ -53,28 +52,37 @@ const cursoService = {
         return mod;
       });
 
-    curso.modulos.forEach((mod, index) => {
+   curso.modulos.forEach((mod, index) => {
 
-      // 1. liberar a primeira aula do curso
-      if (index === 0 && mod.aulas.length > 0) {
-        mod.aulas[0].liberada = true;
-      }
+  
+  if (index === 0) {
+   
+    mod.aulas[0].liberada = true;
+  } else {
+  
+    const anterior = curso.modulos[index - 1];
+    const anteriorConcluido = anterior.aulas.every(a => a.status === "concluida");
 
-      // 2. liberar próxima aula dentro do módulo
-      for (let i = 0; i < mod.aulas.length - 1; i++) {
-        if (mod.aulas[i].status === "concluida") {
-          mod.aulas[i + 1].liberada = true;
-        }
-      }
+    if (anteriorConcluido) {
+      mod.aulas[0].liberada = true;
+    }
+  }
 
-      // módulo aberto se contém aula liberada ou concluída
-      mod.aberto = mod.aulas.some(a => a.liberada || a.status === "concluida");
+ 
+  for (let i = 0; i < mod.aulas.length - 1; i++) {
+    if (mod.aulas[i].status === "concluida") {
+      mod.aulas[i + 1].liberada = true;
+    }
+  }
 
-      // módulo concluído
-      mod.concluido = mod.aulas.every(a => a.status === "concluida");
-    });
+  
+  mod.aberto = mod.aulas.some(a => a.liberada || a.status === "concluida");
 
-    // numeração global
+  
+  mod.concluido = mod.aulas.every(a => a.status === "concluida");
+});
+
+   
     let numeroGlobal = 1;
     curso.modulos.forEach(mod => {
       mod.aulas.forEach(a => {
