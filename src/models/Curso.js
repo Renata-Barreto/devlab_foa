@@ -57,6 +57,14 @@ const Curso = {
         RETURNING *;`,
       [userId, aulaId]
     );
+    console.log("Resultado da query:", result);
+
+    if (!result.rowCount) {
+      console.log(
+        `Nenhuma aula encontrada para id_usr=${userId} e aula_id=${aulaId}`
+      );
+      throw new Error("Aula não encontrada");
+    }
     return result;
   },
 
