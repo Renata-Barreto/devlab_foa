@@ -152,3 +152,14 @@ button:disabled {
   text-decoration:none;
   color: inherit;
 }
+#markBtn{
+    background-color: var(--accent); 
+  color: #fff; 
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px; 
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+
+}
