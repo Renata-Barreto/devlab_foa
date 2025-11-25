@@ -148,7 +148,7 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-.sidebar-aula a{
+.sidebar-aula{
   text-decoration:none;
   color: inherit;
 }
