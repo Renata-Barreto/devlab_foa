@@ -50,25 +50,24 @@ const Curso = {
   },
 
   concluirAula: async (aulaId, userId) => {
- // 1. Verifica se a aula existe
-const aulaCheck = await pool.query('SELECT * FROM aula WHERE id = $1', [aulaId]);
-console.log(aulaCheck.rows); // <-- Verifica se a consulta retornou resultados
-if (!aulaCheck.rowCount) throw new Error('Aula não encontrada');
+  const aulaCheck = await pool.query('SELECT * FROM aulas WHERE aula_id = $1', [aulaId]);
+  console.log("aulaCheck.rows:", aulaCheck.rows);
+  if (!aulaCheck.rowCount) throw new Error('Aula não encontrada');
 
-// 2. Insere ou atualiza o progresso do aluno
-const result = await pool.query(`
-  INSERT INTO progresso_aluno (id_usr, aula_id, status, atualizado_em)
-  VALUES ($1, $2, 'concluida', NOW())
-  ON CONFLICT (id_usr, aula_id)
-  DO UPDATE SET status = 'concluida', atualizado_em = NOW()
-  RETURNING *;
-`, [userId, aulaId]);
+  const result = await pool.query(`
+    INSERT INTO progresso_aluno (id_usr, aula_id, status, atualizado_em)
+    VALUES ($1, $2, 'concluida', NOW())
+    ON CONFLICT (id_usr, aula_id)
+    DO UPDATE SET status = 'concluida', atualizado_em = NOW()
+    RETURNING *;
+  `, [userId, aulaId]);
 
-console.log(result.rows); // <-- Confirma que a linha foi criada ou atualizada
+  console.log("result.rows:", result.rows);
+  if (!result.rowCount) throw new Error('Não foi possível concluir a aula');
 
-if (!result.rowCount) throw new Error('Não foi possível concluir a aula');
-return { message: 'Aula concluída com sucesso' };
-  },
+  return { message: 'Aula concluída com sucesso' };
+},
+
 
   getAulaById: async (aulaId) => {
     const query = `
