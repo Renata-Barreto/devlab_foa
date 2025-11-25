@@ -44,11 +44,15 @@ class Topico {
   }
 
   static async findAll(
+    
     filtro = "top",
     page = 1,
     limit = 10,
     categoriaId = null
   ) {
+    const client = await pool.connect();
+    try{
+    await client.query("BEGIN");
     let orderBy;
     switch (filtro) {
       case "novo":
@@ -66,7 +70,7 @@ class Topico {
 
     const offset = (page - 1) * limit;
 
-    const { rows } = await pool.query(
+    const { rows } = await client.query(
       `
       SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
       FROM topicos t
@@ -80,7 +84,7 @@ class Topico {
       [categoriaId, limit, offset]
     );
 
-    const totalResult = await pool.query(
+    const totalResult = await client.query(
       `SELECT COUNT(*) FROM topicos t WHERE t.ativo = true AND ($1::int IS NULL OR t.categoria_id = $1)`,
       [categoriaId]
     );
@@ -88,7 +92,7 @@ class Topico {
 
     const posts = await Promise.all(
       rows.map(async (row) => {
-        const tagsQuery = await pool.query(
+        const tagsQuery = await client.query(
           "SELECT t.nome FROM tags t JOIN topico_tags tt ON t.id = tt.tag_id WHERE tt.topico_id = $1",
           [row.id]
         );
@@ -119,9 +123,15 @@ class Topico {
         totalPages: Math.ceil(total / limit),
       },
     };
-  }
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error(error.stack);
+    throw error;
+  } finally {
+    client.release();
+  }}
 
-static async findById(id, userId) {
+  static async findById(id, userId) {
   const client = await pool.connect();
 
   try {
@@ -129,7 +139,7 @@ static async findById(id, userId) {
 
     await client.query("BEGIN");
 
-    // --- Tópico principal ---
+
     const { rows } = await client.query(
       `
       SELECT t.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar, c.nome AS categoria_nome
@@ -149,7 +159,6 @@ static async findById(id, userId) {
 
     const row = rows[0];
 
-    // --- Tags ---
     const tagsQuery = await client.query(
       `
       SELECT t.nome 
@@ -160,7 +169,7 @@ static async findById(id, userId) {
       [id]
     );
 
-    // --- Respostas ---
+
     const respostasQuery = await client.query(
       `
       SELECT r.*, u.nome_usr AS user_nome, u.img_usr AS user_avatar 
@@ -173,7 +182,7 @@ static async findById(id, userId) {
 
     const respostas = await Promise.all(
       respostasQuery.rows.map(async (resposta) => {
-        // Replies
+
         const repliesQuery = await client.query(
           `
           SELECT re.*, u.nome_usr AS user_nome 
@@ -184,7 +193,6 @@ static async findById(id, userId) {
           [resposta.id]
         );
 
-        // Likes da resposta
         let likes = 0;
         let liked = false;
 
@@ -213,7 +221,6 @@ static async findById(id, userId) {
       })
     );
 
-    // --- Likes do tópico ---
     let likes = 0;
     let liked = false;
 
